@@ -67,12 +67,16 @@ model Role {
 
 // Define junction table for the many-to-many relationship
 model UserRoles {
-    id     String @id @default(uuid())
     userId String @unique
     roleId String @unique
 
     user User @relation(fields: [userId], references: [id])
     role Role @relation(fields: [roleId], references: [id])
 
-    // @@id([userId, roleId])
+    createdAt DateTime @default(now())
+    createdBy String   @default("system")
+    updatedAt DateTime @updatedAt
+    updatedBy String   @default("system")
+
+    @@id([userId, roleId])
 }

@@ -6,13 +6,15 @@ import { AppConfigModule } from 'src/config';
 import { LoggerMiddleware } from 'src/common/middlewares/loggerMiddleware';
 import { UserModule } from 'src/modules/user';
 import { AuthModule } from 'src/modules/auth';
+import { AccountModule } from 'src/modules/account';
 
 @Module({
 	imports: [
 		AppConfigModule,
 		DatabaseModule,
 		UserModule,
-		AuthModule
+		AuthModule,
+		AccountModule
 	],
 	controllers: [],
 	providers: [Logger],

@@ -2,17 +2,15 @@ import { IUser } from "@modules/user/types";
 
 export interface AccountDTO {
     username: string;
-    email: string;
+    email?: string;
     createdAt: string;
     roles: string[];
+    // user: IUser;
 }
 
 export interface IAccount {
-    // Define an interface for the Account entity
-    id: string;
     username: string;
-    password: string;
-    isActivated: boolean;
+    email?: string;
     user?: IUser; // Optional user association
-    createdAt: Date
+    createdAt: Date;
 }

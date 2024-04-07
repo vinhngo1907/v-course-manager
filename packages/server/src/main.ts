@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/helpers/http-exception.filter';
 // import * as winston from 'winston';
 import * as cookieParser from 'cookie-parser';
+import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -34,7 +35,7 @@ async function bootstrap() {
 	setupSwagger(app);
 
 	const NODE_ENV = process.env.NODE_ENV || 'development';
-
+	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
 	app.enableCors({
 		origin: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

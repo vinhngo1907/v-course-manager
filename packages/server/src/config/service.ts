@@ -8,7 +8,7 @@ export class AppConfigService {
 		// private readonly env: { [k: string]: string | undefined },
 		private readonly configService: ConfigService
 	) { }
-	
+
 	// private getValue(key: string, throwOnMissing = true): string {
 	// 	const value = this.env[key];
 	// 	if(!value && throwOnMissing){
@@ -26,9 +26,13 @@ export class AppConfigService {
 	// 	keys.forEach((k) => this.getValue(k,true));
 	// }
 
-	public getAdminPassword():string{
+	public getAdminPassword(): string {
 		// return this.getValue('ADMIN_PASSWORD');
 		return this.configService.get(configKeys.ADMIN_PASSWORD)
+	}
+
+	public getClientUr(): string {
+		return "";
 	}
 }
 

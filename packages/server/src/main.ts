@@ -6,6 +6,9 @@ import { DatabaseService } from '@modules/database/service';
 import { AppLoggerService } from './common/logger/service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/helpers/http-exception.filter';
+// import * as winston from 'winston';
+import * as cookieParser from 'cookie-parser';
+import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -18,6 +21,7 @@ async function bootstrap() {
 	);
 
 	app.useGlobalFilters(new HttpExceptionFilter());
+	app.use(cookieParser());
 
 	const appConfigService = app.get(AppConfigService);
 	const prismaSerivce = app.get(DatabaseService);
@@ -30,8 +34,16 @@ async function bootstrap() {
 
 	setupSwagger(app);
 
+	const NODE_ENV = process.env.NODE_ENV || 'development';
+	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
+	app.enableCors({
+		origin: true,
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+		credentials: true,
+	});
 	await app.listen(port, () => {
 		logger.log(`Server is running on port ${port}`, 'Bootstrap');
+		logger.log(`Current node environment: ${NODE_ENV}`);
 	});
 
 	await prismaSerivce.enableShutdownHooks(app);

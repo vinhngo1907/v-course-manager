@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IRole } from './types';
 import { DatabaseService } from '@modules/database/service';
-import { In } from 'typeorm';
+import { RoleDTO } from './dto/role';
 
 @Injectable()
 export class RoleService {
@@ -10,11 +9,13 @@ export class RoleService {
         private readonly databaseService: DatabaseService
     ) { }
 
-    // async getRolesByRolesStrArr(roles: string[]): Promise<IRole[]> {
-    //     return await this.databaseService.role.findMany({
-    //         where: {
-    //             name: In(roles)
-    //         }
-    //     })
-    // }
+    async getRolesByRolesStrArr(roles: string[]): Promise<RoleDTO[]> {
+        return await this.databaseService.role.findMany({
+            where: {
+                name: {
+                    in: roles
+                }
+            }
+        });
+    }
 }

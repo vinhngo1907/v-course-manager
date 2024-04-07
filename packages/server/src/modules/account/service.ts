@@ -31,7 +31,7 @@ export class AccountService {
             if (!account) {
                 throw new NotFoundException(`Account with id ${id} is not found`);
             }
-
+            
             return mappAccountToAccountDTO(account)
 
         } catch (error) {

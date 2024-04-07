@@ -2,7 +2,7 @@ import { IUser } from "@modules/user/types";
 
 export interface AccountDTO {
     username: string;
-    email?: string;
+    email: string;
     createdAt: string;
     roles: string[];
     // user: IUser;

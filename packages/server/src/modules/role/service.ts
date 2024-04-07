@@ -10,11 +10,11 @@ export class RoleService {
         private readonly databaseService: DatabaseService
     ) { }
 
-    async getRolesByRolesStrArr(roles: string[]): Promise<IRole[]> {
-        // return await this.databaseService.role.findMany({
-        //     where: {
-        //         name: In(roles)
-        //     }
-        // })
-    }
+    // async getRolesByRolesStrArr(roles: string[]): Promise<IRole[]> {
+    //     return await this.databaseService.role.findMany({
+    //         where: {
+    //             name: In(roles)
+    //         }
+    //     })
+    // }
 }

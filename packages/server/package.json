@@ -1,5 +1,5 @@
 {
-  "name": "book-exchange-cms",
+  "name": "v-course-manager",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "pretest:int": "dotenv -e .env -- npx prisma migrate reset --force && dotenv -e .env -- ts-node --transpile-only src/sees/01-roleSeeder.ts",
+    "pretest:int": "dotenv -e .env -- npx prisma migrate reset --force && dotenv -e .env -- ts-node --transpile-only src/seeds/01-roleSeeder.ts",
     "test:int": "dotenv -e .env -- jest -i --no-cache --watch --config jest-int.json"
   },
   "dependencies": {

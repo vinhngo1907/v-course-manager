@@ -7,6 +7,7 @@ import { LoggerMiddleware } from 'src/common/middlewares/loggerMiddleware';
 import { UserModule } from 'src/modules/user';
 import { AuthModule } from 'src/modules/auth';
 import { AccountModule } from 'src/modules/account';
+import { RoleModule } from 'src/modules/role';
 
 @Module({
 	imports: [
@@ -14,7 +15,8 @@ import { AccountModule } from 'src/modules/account';
 		DatabaseModule,
 		UserModule,
 		AuthModule,
-		AccountModule
+		AccountModule,
+		RoleModule
 	],
 	controllers: [],
 	providers: [Logger],

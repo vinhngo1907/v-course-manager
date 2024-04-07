@@ -1,7 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { AuthService } from "../auth/service";
 import { DatabaseService } from "../database/service";
-import { IAccount } from "./dto/account";
+import { AccountDTO, IAccount } from "./dto/account";
+import { mappAccountToAccountDTO } from "./mapper";
 
 @Injectable()
 export class AccountService {
@@ -22,13 +23,16 @@ export class AccountService {
     }
 
     // Find Account by Id
-    async findById(id: string): Promise<IAccount | undefined> {
+    async findById(id: string): Promise<AccountDTO> {
         try {
-            const account = await this.databaseService.account.findFirst({ where: { id } });
+            const account = await this.databaseService.account.findFirst({ 
+                where: { id },
+            });
             if (!account) {
                 throw new NotFoundException(`Account with id ${id} is not found`);
             }
-
+            
+            return mappAccountToAccountDTO(account)
 
         } catch (error) {
             this.logger.error(error.message);

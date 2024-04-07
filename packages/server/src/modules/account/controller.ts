@@ -11,8 +11,8 @@ export class AccountController {
         private readonly logger: Logger,
     ) { }
 
-    // @Get("/:id")
-    // async findById(@Param('id') id: string): Promise<AccountDTO> {
-    //     return this.accountService.findById(id);
-    // }
+    @Get("/:id")
+    async findById(@Param('id') id: string): Promise<AccountDTO> {
+        return this.accountService.findById(id);
+    }
 }

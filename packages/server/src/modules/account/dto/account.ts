@@ -14,4 +14,5 @@ export interface IAccount {
     password: string;
     isActivated: boolean;
     user?: IUser; // Optional user association
+    createdAt: Date
 }

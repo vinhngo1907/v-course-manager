@@ -1,29 +1,30 @@
-// insertRoles.ts
+import { DatabaseService } from '../modules/database/service';
+import { Logger } from '@nestjs/common';
+import { roles } from '../../prisma/mock/data';
 
-import { PrismaClient } from '@prisma/client';
+async function createRoles() {
+    if (process.env.NODE_ENV === 'production') return;
+    const prisma = new DatabaseService();
+    const logger = new Logger();
+    try {
+        await prisma.role.createMany({
+            data: roles,
+        });
 
-const prisma = new PrismaClient();
-
-async function main() {
-    const roles = [
-        { name: 'ADMIN' },
-        { name: 'USER' },
-        { name: 'SUPPORTER' },
-        { name: 'MOD' },
-    ];
-
-    await prisma.role.createMany({
-        data: roles,
-    });
-
-    console.log('Roles inserted successfully.');
+        console.log('Roles inserted successfully.');
+    } catch (error) {
+        logger.error("Error: ",error);
+        process.exit(1);
+    } finally {
+        prisma.$disconnect();
+    }
 }
 
-main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+createRoles()
+// .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+// })
+// .finally(async () => {
+//     await prisma.$disconnect();
+// });

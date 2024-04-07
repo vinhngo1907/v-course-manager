@@ -19,7 +19,7 @@ export class AppConfigService {
 	// }
 
 	public get port(): number {
-		return this.configService.get('PORT') || 3333;
+		return this.configService.get(configKeys.HTTP_SERVER_PORT) || 3333;
 	}
 
 	// public ensureValues(keys: string[]){

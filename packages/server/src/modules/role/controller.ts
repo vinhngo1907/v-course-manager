@@ -4,11 +4,6 @@ import { Crud } from '@nestjsx/crud';
 import { RoleService } from './service';
 
 @ApiTags('Roles')
-@Crud({
-    model: {
-        type: 'Role'
-    }
-})
 @Controller('roles')
 export class RoleController {
     constructor(

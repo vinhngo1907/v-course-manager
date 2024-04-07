@@ -4,7 +4,7 @@ import { DatabaseService } from "../database/service";
 import { AuthController } from "./controller";
 @Global()
 @Module({
-    providers:[DatabaseService,Logger],
+    providers:[DatabaseService,Logger, AuthService],
     exports: [AuthService],
     controllers:[AuthController],
 

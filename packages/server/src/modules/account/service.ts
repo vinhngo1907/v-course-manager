@@ -9,4 +9,22 @@ export class AccountService {
         private readonly databaseService: DatabaseService,
         private readonly logger: Logger,
     ) { }
+
+    async findOne(username: string) {
+        return this.databaseService.account.findFirst({
+            where: {
+                username,
+                isActivated: true
+            },
+            include: { user: true }
+        });
+    }
+
+    // Find Account by Id
+    async findById(id: string) {
+        return this.databaseService.account.findFirst({
+            where: { id },
+            include: {user: true}
+        })
+    }
 }

@@ -2,3 +2,9 @@
 
 ###
 
+GET {{serverUrl}}/roles
+Content-Type: application/json
+
+{
+    "roles": ["MODE"]
+}

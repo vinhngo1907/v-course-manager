@@ -2,9 +2,9 @@
 
 ###
 
-GET {{serverUrl}}/roles
+POST {{serverUrl}}/roles
 Content-Type: application/json
 
 {
-    "roles": ["MODE"]
+    "roles": ["ADMIN", "MOD"]
 }

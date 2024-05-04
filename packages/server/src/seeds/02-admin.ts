@@ -1,8 +1,8 @@
-import { AppConfigService } from 'src/config/service';
+import { AppConfigService } from '../../src/config/service';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseService } from '@modules/database/service';
+import { DatabaseService } from '../modules/database/service';
 import { Logger } from '@nestjs/common';
-import { hashPassword } from '@modules/auth/utils';
+import { hashPassword } from '../modules/auth/utils';
 
 
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
     const logger = new Logger();
     try {
         const userRole = await prisma.role.findFirst({ where: { name: 'ADMIN' } });
-        console.log(userRole)
+
         if (!userRole) {
             throw new Error('Admin role not found');
         }
@@ -19,27 +19,42 @@ async function main() {
         const adminPassword = appConfigService.getAdminPassword();
         const hashedPassword = await hashPassword(adminPassword); // Await the password hashing
 
-        // const newAccount = await prisma.account.create({
-        //     data: {
-        //         username: 'admin',
-        //         password: hashedPassword, // Use the hashed password
-        //     },
-        // });
+        const newAccount = await prisma.account.create({
+            data: {
+                username: 'admin',
+                password: hashedPassword, // Use the hashed password
+            },
+        });
 
-        // const newUser = await prisma.user.create({
-        //     data: {
-        //         email: 'admin@vdev.com',
-        //         fullName: 'V Dev',
-        //         accountId: newAccount.id,
-        //         roles:userRole,
-        //     },
-        // });
+        console.log('New account created:', newAccount);
 
-        // await prisma.admin.create({
-        //     data: {
-        //         userId: newUser.id,
-        //     },
-        // });
+        const newUser = await prisma.user.create({
+            data: {
+                email: 'admin@vdev.com',
+                fullName: 'V Dev',
+                
+                account: {
+                    connect: { id: newAccount.id }
+                },
+                roles: {
+                    connect: [
+                        {
+                            id: userRole.id
+                        }
+                    ]
+                },
+            },
+            include: {
+                account: true,
+                roles: true,
+            },
+        });
+
+        await prisma.admin.create({
+            data: {
+                userId: newUser.id,
+            },
+        });
 
         console.log('Admin created successfully.');
     } catch (error) {

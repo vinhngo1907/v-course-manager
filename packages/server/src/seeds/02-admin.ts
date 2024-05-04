@@ -1,50 +1,70 @@
-// createAdmin.ts
+import { AppConfigService } from '../../src/config/service';
+import { ConfigService } from '@nestjs/config';
+import { DatabaseService } from '../modules/database/service';
+import { Logger } from '@nestjs/common';
+import { hashPassword } from '../modules/auth/utils';
 
-import { PrismaClient } from '@prisma/client';
-import { hashPassword } from '@modules/auth/utils';
-import { vConfigService } from 'src/config/service';
-
-const prisma = new PrismaClient();
 
 async function main() {
-    const userRole = await prisma.role.findFirst({ where: { name: 'ADMIN' } });
-    if (!userRole) {
-        throw new Error('Admin role not found');
+    const appConfigService = new AppConfigService(new ConfigService()); // Await the password retrieval
+    const prisma = new DatabaseService();
+    const logger = new Logger();
+    try {
+        const userRole = await prisma.role.findFirst({ where: { name: 'ADMIN' } });
+
+        if (!userRole) {
+            throw new Error('Admin role not found');
+        }
+
+        const adminPassword = appConfigService.getAdminPassword();
+        const hashedPassword = await hashPassword(adminPassword); // Await the password hashing
+
+        const newAccount = await prisma.account.create({
+            data: {
+                username: 'admin',
+                password: hashedPassword, // Use the hashed password
+                
+            },
+        });
+
+        console.log('New account created:', newAccount);
+
+        const newUser = await prisma.user.create({
+            data: {
+                email: 'admin@vdev.com',
+                fullName: 'V Dev',
+                
+                account: {
+                    connect: { id: newAccount.id }
+                },
+                roles: {
+                    connect: [
+                        {
+                            id: userRole.id
+                        }
+                    ]
+                },
+            },
+            include: {
+                account: true,
+                roles: true,
+            },
+        });
+
+        await prisma.admin.create({
+            data: {
+                userId: newUser.id,
+            },
+        });
+
+        console.log('Admin created successfully.');
+    } catch (error) {
+        logger.error("Error: ", error);
+        process.exit(1);
+    } finally {
+        prisma.$disconnect()
     }
-    
-    const adminPassword = await vConfigService.getAdminPassword(); // Await the password retrieval
-    const hashedPassword = await hashPassword(adminPassword); // Await the password hashing
-    
-    const newAccount = await prisma.account.create({
-        data: {
-            username: 'admin',
-            password: hashedPassword, // Use the hashed password
-        },
-    });
-
-    const newUser = await prisma.user.create({
-        data: {
-            email: 'admin@vdev.com',
-            fullName: 'Ong Dev',
-            accountId: newAccount.id,
-            roles: { connect: { name: 'ADMIN' } },
-        },
-    });
-
-    await prisma.admin.create({
-        data: {
-            userId: newUser.id,
-        },
-    });
-
-    console.log('Admin created successfully.');
 }
 
 main()
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+

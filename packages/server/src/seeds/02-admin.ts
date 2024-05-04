@@ -23,6 +23,7 @@ async function main() {
             data: {
                 username: 'admin',
                 password: hashedPassword, // Use the hashed password
+                
             },
         });
 

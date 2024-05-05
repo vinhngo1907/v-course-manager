@@ -22,42 +22,44 @@ async function main() {
         const newAccount = await prisma.account.create({
             data: {
                 username: 'admin',
-                password: hashedPassword, // Use the hashed password
-                
+                password: hashedPassword, // Use the hashed password        
+                user: {
+                    connect: {id: "uuid()-test-user-1"}
+                }        
             },
         });
 
         console.log('New account created:', newAccount);
 
-        const newUser = await prisma.user.create({
-            data: {
-                email: 'admin@vdev.com',
-                fullName: 'V Dev',
+        // const newUser = await prisma.user.create({
+        //     data: {
+        //         email: 'admin@vdev.com',
+        //         fullName: 'V Dev',
                 
-                account: {
-                    connect: { id: newAccount.id }
-                },
-                roles: {
-                    connect: [
-                        {
-                            id: userRole.id
-                        }
-                    ]
-                },
-            },
-            include: {
-                account: true,
-                roles: true,
-            },
-        });
+        //         account: {
+        //             connect: { id: newAccount.id }
+        //         },
+        //         roles: {
+        //             connect: [
+        //                 {
+        //                     id: userRole.id
+        //                 }
+        //             ]
+        //         },
+        //     },
+        //     include: {
+        //         account: true,
+        //         roles: true,
+        //     },
+        // });
 
-        await prisma.admin.create({
-            data: {
-                userId: newUser.id,
-            },
-        });
+        // await prisma.admin.create({
+        //     data: {
+        //         userId: newUser.id,
+        //     },
+        // });
 
-        console.log('Admin created successfully.');
+        // console.log('Admin created successfully.');
     } catch (error) {
         logger.error("Error: ", error);
         process.exit(1);

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Logger, Param, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AccountService } from "./service";
 import { AccountDTO } from "./dto/account";
+import { AccountUpdationDTO } from "./dto/account-updation.dto";
 
 @ApiTags('Accounts')
 @Controller('accounts')
@@ -23,7 +24,7 @@ export class AccountController {
 
     // Update Account by Id
     @Patch("/:id")
-    async update(@Body() data) {
-
+    async update(@Param("id") accountId: string, @Body() accountUpdateDto: AccountUpdationDTO) {
+        return await this.accountService.update(accountId, accountUpdateDto);
     }
 }

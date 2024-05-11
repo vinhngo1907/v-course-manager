@@ -4,9 +4,10 @@ import {
     HttpStatus,
     NotFoundException,
     UnauthorizedException,
+    InternalServerErrorException,
 } from '@nestjs/common';
 
-export const catchError = (error: any) => {
+export const filterExceptionByStatus = (error: { status: number, message: string }) => {
     switch (error.status) {
         case HttpStatus.BAD_REQUEST:
             throw new BadRequestException(error.message);
@@ -20,7 +21,10 @@ export const catchError = (error: any) => {
         case HttpStatus.NOT_FOUND:
             throw new NotFoundException(error.message);
 
-        default:
+        case HttpStatus.BAD_REQUEST:
             throw new BadRequestException(error.message);
+
+        default:
+            return new InternalServerErrorException(error.message);
     }
 };

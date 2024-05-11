@@ -24,6 +24,17 @@ async function bootstrap() {
 	app.use(cookieParser());
 
 	const appConfigService = app.get(AppConfigService);
+	const requiredEnvVariables = [
+		'POSTGRES_HOST',
+		'POSTGRES_PORT',
+		'POSTGRES_USER',
+		'POSTGRES_PASSWORD',
+		'POSTGRES_DATABASE',
+		'JWT_SECRET',
+		'JWT_EXPIRATION_TIME',
+	];
+
+	appConfigService.ensureValues(requiredEnvVariables);
 	const prismaSerivce = app.get(DatabaseService);
 	prismaSerivce.$connect();
 

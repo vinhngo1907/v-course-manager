@@ -6,12 +6,17 @@ import { DatabaseService } from '@modules/database/service';
 import { AppLoggerService } from './common/logger/service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/helpers/http-exception.filter';
-// import * as winston from 'winston';
+import {
+	utilities as nestWinstonModuleUtilities,
+	WinstonModule,
+  } from 'nest-winston';
 import * as cookieParser from 'cookie-parser';
 import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule, {
+		// logger: WinstonModule
+	});
 
 	app.useGlobalPipes(
 		new ValidationPipe({
@@ -24,6 +29,17 @@ async function bootstrap() {
 	app.use(cookieParser());
 
 	const appConfigService = app.get(AppConfigService);
+	const requiredEnvVariables = [
+		'POSTGRES_HOST',
+		'POSTGRES_PORT',
+		'POSTGRES_USER',
+		'POSTGRES_PASSWORD',
+		'POSTGRES_DATABASE',
+		'JWT_SECRET',
+		'JWT_EXPIRATION_TIME',
+	];
+
+	appConfigService.ensureValues(requiredEnvVariables);
 	const prismaSerivce = app.get(DatabaseService);
 	prismaSerivce.$connect();
 

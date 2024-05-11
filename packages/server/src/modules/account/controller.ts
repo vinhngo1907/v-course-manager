@@ -17,7 +17,11 @@ export class AccountController {
     }
 
     @Get()
-    async getAll() {
-        return await this.accountService.findAll();
+    async getAll(): Promise<AccountDTO[]> {
+        try {
+            return await this.accountService.findAll();
+        } catch (error) {
+            this.logger.error(error);
+        }
     }
 }

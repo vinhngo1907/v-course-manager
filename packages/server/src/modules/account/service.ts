@@ -2,7 +2,8 @@ import { Injectable, InternalServerErrorException, Logger, NotFoundException } f
 import { AuthService } from "../auth/service";
 import { DatabaseService } from "../database/service";
 import { AccountDTO, IAccount } from "./dto/account";
-import { mappAccountToAccountDTO } from "./mapper";
+import { mapAccountToAccountDTO } from "./mapper";
+import { AccountUpdationDTO } from "./dto/account-updation.dto";
 
 @Injectable()
 export class AccountService {
@@ -32,7 +33,7 @@ export class AccountService {
                 throw new NotFoundException(`Account with id ${id} is not found`);
             }
 
-            return mappAccountToAccountDTO(account);
+            return mapAccountToAccountDTO(account);
 
         } catch (error) {
             this.logger.error(error.message);
@@ -40,6 +41,7 @@ export class AccountService {
         }
     }
 
+    // Get all accounts are activated
     async findAll(): Promise<AccountDTO[]> {
         try {
             const accounts = await this.databaseService.account.findMany({
@@ -54,13 +56,33 @@ export class AccountService {
                     }
                 }
             });
-            
-            return accounts.map(mappAccountToAccountDTO);
+
+            return accounts.map(mapAccountToAccountDTO);
         } catch (error) {
             this.logger.error(error);
             throw new InternalServerErrorException(error);
         }
     }
 
+    async update(accountId: string, updateAccountDto: AccountUpdationDTO): Promise<AccountDTO> {
+        try {
+            if (!accountId) {
+                throw new NotFoundException(`Account with id ${accountId} is not found`);
+            }
 
+            const updatedAccount = await this.databaseService.account.update({
+                where: {
+                    id: accountId
+                },
+                data: {
+                    ...updateAccountDto
+                }
+            });
+            
+            return mapAccountToAccountDTO(updatedAccount);
+        } catch (error) {
+            this.logger.error(error);
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

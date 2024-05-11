@@ -6,8 +6,9 @@ export function mappAccountToAccountDTO(account: IAccount): AccountDTO {
     const userRoles = roles && roles.map((role) => role.name);
 
     return {
-        username, email, 
+        username, 
+        email,
+        roles: userRoles,
         createdAt: createdAt.toLocaleString(),
-        roles: userRoles
     }
 }

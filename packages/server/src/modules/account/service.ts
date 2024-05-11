@@ -47,14 +47,17 @@ export class AccountService {
                     isActivated: true
                 },
                 include: {
-                    user: true
+                    user: {
+                        include: {
+                            roles: true
+                        }
+                    }
                 }
             });
-            console.log({ accounts })
+            
             return accounts.map(mappAccountToAccountDTO);
         } catch (error) {
             this.logger.error(error);
-            console.log(error)
             throw new InternalServerErrorException(error);
         }
     }

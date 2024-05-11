@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param } from "@nestjs/common";
+import { Body, Controller, Get, Logger, Param, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AccountService } from "./service";
 import { AccountDTO } from "./dto/account";
@@ -17,7 +17,13 @@ export class AccountController {
     }
 
     @Get()
-    async getAll() {
+    async getAll(): Promise<AccountDTO[]> {
         return await this.accountService.findAll();
+    }
+
+    // Update Account by Id
+    @Patch("/:id")
+    async update(@Body() data) {
+
     }
 }

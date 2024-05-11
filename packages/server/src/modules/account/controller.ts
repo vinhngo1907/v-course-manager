@@ -15,4 +15,9 @@ export class AccountController {
     async findById(@Param('id') id: string): Promise<AccountDTO> {
         return this.accountService.findById(id);
     }
+
+    @Get()
+    async getAll() {
+        return await this.accountService.findAll();
+    }
 }

@@ -25,18 +25,39 @@ export class AccountService {
     // Find Account by Id
     async findById(id: string): Promise<AccountDTO> {
         try {
-            const account = await this.databaseService.account.findFirst({ 
+            const account = await this.databaseService.account.findFirst({
                 where: { id },
             });
             if (!account) {
                 throw new NotFoundException(`Account with id ${id} is not found`);
             }
-            
-            return mappAccountToAccountDTO(account)
+
+            return mappAccountToAccountDTO(account);
 
         } catch (error) {
             this.logger.error(error.message);
             throw new InternalServerErrorException(error);
         }
     }
+
+    async findAll(): Promise<AccountDTO[]> {
+        try {
+            const accounts = await this.databaseService.account.findMany({
+                where: {
+                    isActivated: true
+                },
+                include: {
+                    user: true
+                }
+            });
+            console.log({ accounts })
+            return accounts.map(mappAccountToAccountDTO);
+        } catch (error) {
+            this.logger.error(error);
+            console.log(error)
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+
 }

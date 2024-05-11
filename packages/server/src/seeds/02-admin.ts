@@ -32,7 +32,7 @@ async function main() {
             data: {
                 email: 'admin@vdev.com',
                 fullName: 'V Dev',
-                
+
                 account: {
                     connect: { id: newAccount.id }
                 },
@@ -50,13 +50,46 @@ async function main() {
             },
         });
 
-        await prisma.admin.create({
+        await prisma.account.update({
+            where: {
+                id: newUser.accountId
+            },
+
+            data: {
+                userId: newUser.id,
+                user: {
+                    connect: { id: newUser.id }
+                }
+            },
+            include: {
+                user: true
+            }
+        })
+
+        const newAdmin = await prisma.admin.create({
             data: {
                 userId: newUser.id,
             },
         });
 
-        // console.log('Admin created successfully.');
+        console.log('Admin created successfully.');
+
+        await prisma.user.update({
+            where: {
+                accountId: newAccount.id
+            },
+            data: {
+                admin: {
+                    connect: { id: newAdmin.id }
+                },
+                adminId: newAdmin.id
+            },
+            include: {
+                admin: true
+            }
+        });
+
+        console.log('User updated successfully!!!');
     } catch (error) {
         logger.error("Error: ", error);
         process.exit(1);

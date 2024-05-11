@@ -8,3 +8,5 @@ Content-Type: application/json
 {
     "roles": ["ADMIN", "MOD"]
 }
+###
+GET {{serverUrl}}/accounts

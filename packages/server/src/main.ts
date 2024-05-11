@@ -5,7 +5,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DatabaseService } from '@modules/database/service';
 import { AppLoggerService } from './common/logger/service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter } from './common/helpers/http-exception.filter';
+// import { HttpExceptionFilter } from './common/infras/http-exception.filter';
+import { AllExceptionsFilter } from './common/infras/all-exceptions.filter';
 import {
 	utilities as nestWinstonModuleUtilities,
 	WinstonModule,
@@ -25,7 +26,7 @@ async function bootstrap() {
 		}),
 	);
 
-	app.useGlobalFilters(new HttpExceptionFilter());
+	app.useGlobalFilters(new AllExceptionsFilter());
 	app.use(cookieParser());
 
 	const appConfigService = app.get(AppConfigService);

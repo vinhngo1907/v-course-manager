@@ -9,7 +9,8 @@ import { AuthModule } from 'src/modules/auth';
 import { AccountModule } from 'src/modules/account';
 import { RoleModule } from 'src/modules/role';
 import { LoggerModule } from 'src/common/logger';
-
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
 @Module({
 	imports: [
 		AppConfigModule,
@@ -20,7 +21,13 @@ import { LoggerModule } from 'src/common/logger';
 		RoleModule,
 		LoggerModule
 	],
-	providers: [Logger],
+	providers: [
+		Logger,
+		{
+			provide: APP_FILTER,
+			useClass: HttpExceptionFilter
+		}
+	],
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {

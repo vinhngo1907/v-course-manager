@@ -37,6 +37,7 @@ async function bootstrap() {
 		}),
 		cors: true
 	});
+	// if(!configSer)
 
 	app.useGlobalPipes(
 		new ValidationPipe({
@@ -57,26 +58,32 @@ async function bootstrap() {
 		'POSTGRES_DATABASE',
 		'JWT_SECRET',
 		'JWT_EXPIRATION_TIME',
+		// 'MODE',
 	];
 
 	appConfigService.ensureValues(requiredEnvVariables);
+	if (!appConfigService.isProduction()) {
+		setupSwagger(app);
+	}
+
 	const prismaSerivce = app.get(DatabaseService);
 	prismaSerivce.$connect();
 
 	const logger = app.get(AppLoggerService);
 	app.useLogger(logger);
 
-	const port = appConfigService.port;
-
-	setupSwagger(app);
+	const port = appConfigService.port || 3333;
 
 	const NODE_ENV = process.env.NODE_ENV || 'development';
+
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
+
 	app.enableCors({
 		origin: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 	});
+
 	await app.listen(port, () => {
 		logger.log(`Server is running on port ${port}`, 'Bootstrap');
 		logger.log(`Current node environment: ${NODE_ENV}`);
@@ -90,7 +97,7 @@ bootstrap();
 function setupSwagger(app: INestApplication) {
 	const config = new DocumentBuilder()
 		.setTitle('Book auth example')
-		.setDescription('The book auth API description')
+		.setDescription('The V Course API description')
 		.setVersion('1.0')
 		.addTag('auth')
 		.build();

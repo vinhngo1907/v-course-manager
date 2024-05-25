@@ -9,6 +9,9 @@ export class RegisterPayload {
 
     @ApiProperty()
     password: string;
+
+    @ApiProperty()
+    email: string;
 }
 
 export class LoginPayload {
@@ -24,4 +27,9 @@ export enum Role {
     Admin = "ADMIN",
     Supporter = "SUPPORTER",
     Mod = "MOD"
+}
+
+export interface TokenPayload {
+    username: string;
+    userId: string;
 }

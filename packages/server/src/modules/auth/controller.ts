@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Crud, CrudController } from "@nestjsx/crud";
 import { AuthService } from "./service";
@@ -14,12 +14,17 @@ export class AuthController {
     ) { }
 
     @Post("/login")
-    async login(@Req() req: RequestWithAccount, @Res() res: Response){
+    async login(@Req() req: RequestWithAccount, @Res() res: Response) {
         // const { cookie, user: par}
     }
 
-    @Post("/reigster")
-    async register(@Body() registerPayload: RegisterPayload, @Res() res: Response){
+    @Get("isLoggedIn")
+    isLoggedIn(@Res() res: Response) {
+        return res.send(true);
+    }
 
+    @Post("/reigster")
+    async register(@Body() registerPayload: RegisterPayload, @Res() res: Response) {
+        const {cookie, user} = await this.authService.register(registerPayload);
     }
 }

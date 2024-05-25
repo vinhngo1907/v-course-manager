@@ -39,4 +39,13 @@ export class AppConfigService {
 		const mode = this.getValue(configKeys.MODE, false);
 		return mode != 'DEV';
 	}
+
+	public getJwtConfig(): JWT_CONFIG {
+		return {
+			secret: this.getValue(configKeys.JWT_SECRET),
+			signOptions: {
+				expiresIn: `${this.getValue(configKeys.JWT_EXPIRATION_TIME)}s` || '60s',
+			},
+		};
+	}
 }

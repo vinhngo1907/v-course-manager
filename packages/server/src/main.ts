@@ -62,7 +62,7 @@ async function bootstrap() {
 		'POSTGRES_DATABASE',
 		'JWT_SECRET',
 		'JWT_EXPIRATION_TIME',
-		// 'MODE',
+		'MODE',
 	];
 
 	appConfigService.ensureValues(requiredEnvVariables);

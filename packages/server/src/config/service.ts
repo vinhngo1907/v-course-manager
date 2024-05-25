@@ -36,7 +36,7 @@ export class AppConfigService {
 	}
 
 	public isProduction() {
-		const mode = this.getValue('MODE', false);
+		const mode = this.getValue(configKeys.MODE, false);
 		return mode != 'DEV';
 	}
 }

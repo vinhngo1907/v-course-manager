@@ -34,9 +34,9 @@ export class AppConfigService {
 	public getClientUr(): string {
 		return "";
 	}
+
+	public isProduction() {
+		const mode = this.getValue('MODE', false);
+		return mode != 'DEV';
+	}
 }
-
-// const appConfigService = new AppConfigService(process.env, new ConfigService());
-
-
-// export { appConfigService }

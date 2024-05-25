@@ -10,13 +10,32 @@ import { AllExceptionsFilter } from './common/infras/all-exceptions.filter';
 import {
 	utilities as nestWinstonModuleUtilities,
 	WinstonModule,
-  } from 'nest-winston';
+} from 'nest-winston';
+import * as winston from "winston";
 import * as cookieParser from 'cookie-parser';
 import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
-		// logger: WinstonModule
+		logger: WinstonModule.createLogger({
+			level: process.env.LOG_LEVEL || 'info',
+			format: winston.format.combine(
+				winston.format.colorize(),
+				winston.format.simple()
+			),
+			transports: [
+				new winston.transports.Console({
+					format: winston.format.combine(
+						winston.format.timestamp(),
+						winston.format.ms(),
+						nestWinstonModuleUtilities.format.nestLike(),
+					),
+				}),
+				new winston.transports.File({ filename: './src/common/logger/logs/error.log', level: 'error' }),
+				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
+			],
+		}),
+		cors: true
 	});
 
 	app.useGlobalPipes(

@@ -4,9 +4,10 @@ import { DatabaseService } from "../database/service";
 import { AccountDTO, IAccount } from "./dto/account";
 import { mapAccountToAccountDTO } from "./mapper";
 import { AccountUpdationDTO } from "./dto/account-updation.dto";
+import { AccountBadRequestException } from "./exception";
 
 @Injectable()
-export class AccountService {
+export class AccountsService {
     // private readonly logger: Logger = new Logger(AuthService.name);
     constructor(
         private readonly databaseService: DatabaseService,
@@ -78,11 +79,28 @@ export class AccountService {
                     ...updateAccountDto
                 }
             });
-            
+
             return mapAccountToAccountDTO(updatedAccount);
         } catch (error) {
             this.logger.error(error);
             throw new InternalServerErrorException(error);
+        }
+    }
+
+    async checkUsernameExisted(username: string): Promise<void> {
+        try {
+            const existedAccount = await this.databaseService.account.findUnique({
+                where: {
+                    username: username
+                }
+            });
+
+            if (existedAccount) {
+                throw new AccountBadRequestException('Username is existed');
+            }
+        } catch (error) {
+            this.logger.error(error);
+            throw new AccountBadRequestException('Username is existed');
         }
     }
 }

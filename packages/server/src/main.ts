@@ -31,6 +31,10 @@ async function bootstrap() {
 						nestWinstonModuleUtilities.format.nestLike(),
 					),
 				}),
+				/** 
+				 * - Write all logs with level `error` and below to `error.log`
+				 * git- Write all logs with level `info` and below to `combined.log`
+				*/
 				new winston.transports.File({ filename: './src/common/logger/logs/error.log', level: 'error' }),
 				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
 			],
@@ -96,7 +100,7 @@ bootstrap();
 
 function setupSwagger(app: INestApplication) {
 	const config = new DocumentBuilder()
-		.setTitle('Book auth example')
+		.setTitle('V Course Management API')
 		.setDescription('The V Course API description')
 		.setVersion('1.0')
 		.addTag('auth')

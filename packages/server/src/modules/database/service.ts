@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
-import { camelCase, flattenDeep, snakeCase } from 'lodash';
 import * as path from 'path';
+import { camelCase, flattenDeep, snakeCase } from 'lodash';
+import { middlewares } from './middleware';
 
 @Injectable()
 export class DatabaseService extends PrismaClient implements OnModuleInit {
@@ -16,6 +17,8 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     constructor() {
         super();
         this.logger = new Logger(DatabaseService.name);
+        // Apply all middleware functions
+        middlewares.forEach(middleware => this.$use(middleware()));
     }
 
     async onModuleInit() {
@@ -43,7 +46,7 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
         return Promise.all(
             modelKeys.map((modelName) => (this[camelCase(modelName)] as any).deleteMany()),
         );
-    }   
+    }
 
     // async seedDatabase() {
     //     if (process.env.NODE_ENV === 'production') {

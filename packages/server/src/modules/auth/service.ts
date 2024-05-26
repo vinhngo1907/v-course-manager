@@ -64,8 +64,8 @@ export class AuthService {
                 const createdUser = await this.usersService.createUserTransaction(
                     manager as any,
                     username,
-                    hashedPassword,
                     email,
+                    hashedPassword,
                     fullName,
                     [userRole],
                 )
@@ -80,7 +80,7 @@ export class AuthService {
                 });
             });
         } catch (error) {
-            this.logger.error(`${error.message}`);
+            this.logger.error(`${error}`);
             throw new InternalServerErrorException(error.message);
         }
     }

@@ -14,3 +14,13 @@ GET {{serverUrl}}/accounts
 
 Get {{serverUrl}}/accounts/334fa5f4-c987-4c70-9460-85e515075e46
 ###
+
+POST {{serverUrl}}/auth/register
+Content-Type: application/json
+
+{
+   "email": "vinhtrungngo@yahoo.com",
+   "username":"vinhngo",
+   "fullName": "Ngô Trung Vinh",
+   "password": "123456"
+}

@@ -2,16 +2,16 @@ import { ApiProperty } from "@nestjsx/crud/lib/crud";
 
 export class RegisterPayload {
     @ApiProperty()
+    email: string;
+
+    @ApiProperty()
     username: string;
 
     @ApiProperty()
     fullName: string;
 
     @ApiProperty()
-    password: string;
-
-    @ApiProperty()
-    email: string;
+    password: string;    
 }
 
 export class LoginPayload {

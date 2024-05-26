@@ -83,7 +83,7 @@ async function bootstrap() {
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
 
 	app.enableCors({
-		origin: true,
+		origin: "*",
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 	});

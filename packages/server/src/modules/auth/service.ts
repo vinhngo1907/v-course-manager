@@ -97,4 +97,26 @@ export class AuthService {
     getEmptyCookie() {
         return `Authentication=; HttpOnly; Path=/; Max-Age=0;SameSite=None; Secure`;
     }
+
+    async validateJwtUser({ userId, username }): Promise<any> {
+        try {
+            const user = await this.databaseService.user.findUnique({
+                where: {
+                    id: userId
+                }
+            });
+            if (!user) {
+                return null;
+            }
+            const { id, email, fullName } = user;
+            return {
+                username,
+                id,
+                email,
+                fullName,
+            };
+        } catch (error) {
+            return null;
+        }
+    }
 }

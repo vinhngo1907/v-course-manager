@@ -17,7 +17,7 @@ export class ResponseAddAccessTokenToHeaderInterceptor
         ResponseObj.setHeader(
             'Access-Control-Allow-Origin',
             // configService.getClientUrl(),
-            "http://localhost:3002"
+            "http://localhost:3002",
         );
         return next.handle();
     }

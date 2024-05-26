@@ -41,7 +41,7 @@ export class UsersService {
             }
         });
         this.logger.verbose(newAccount);
-        await manager.save(newAccount);
+        // await manager.save(newAccount);
         const newUser = await this.databaseService.user.create({
             data: {
                 email,
@@ -56,8 +56,8 @@ export class UsersService {
         });
 
         this.logger.verbose(newUser);
-        const createdUser = await manager.save(newUser);
-        this.logger.verbose(createdUser.id);
-        return createdUser;
+        // const createdUser = await manager.save(newUser);
+        this.logger.verbose(newUser.id);
+        return newUser;
     }
 }

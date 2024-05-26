@@ -1,8 +1,8 @@
 import { Request } from "express";
 import { IAccount } from "@modules/account/dto/account";
-
+import { Account } from "@prisma/client";
 interface RequestWithAccount extends Request {
-    account: IAccount;
+    account: Account;
 }
 
-export default RequestWithAccount
+export default RequestWithAccount;

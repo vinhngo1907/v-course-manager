@@ -15,8 +15,8 @@ import { ConfigService } from "@nestjs/config";
         UsersService,
         AppConfigService,
         JwtService,
-        ConfigService
-    ],
+        ConfigService, 
+      ],
     exports: [AuthService],
     controllers: [AuthController],
 

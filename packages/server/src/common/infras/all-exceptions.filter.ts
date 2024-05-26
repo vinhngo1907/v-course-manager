@@ -50,10 +50,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 }
             }
         }
-        response.setHeader(
-            'Access-Control-Allow-Origin',
-            // configService.getClientUrl(),
-        );
+        // response.setHeader(
+        //     'Access-Control-Allow-Origin',
+        //     // configService.getClientUrl(),
+        // );
         response.status(status).json({
             status,
             timestamp: new Date().toUTCString(),

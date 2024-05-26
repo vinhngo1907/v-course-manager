@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Injectable, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { Crud, CrudController } from "@nestjsx/crud";
 import { AuthService } from "./service";
@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { LoginPayload, RegisterPayload } from "./types";
 import { Public } from "./decorator";
 
+@Injectable()
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -40,14 +41,14 @@ export class AuthController {
         return res.send();
     }
 
-    @HttpCode(200)
-    @ApiBody({
-        type: RegisterPayload,
-    })
-    @Public()
-    @Post("reigster")
+    // @HttpCode(200)
+    // @ApiBody({
+    //     type: RegisterPayload,
+    // })
+    // @Public()
+    @Post("register")
     async register(
-        @Body() registerPayload: RegisterPayload,
+        @Body() registerPayload,
         @Res() res: Response
     ): Promise<any> {
         const { cookie, user } = await this.authService.register(registerPayload);

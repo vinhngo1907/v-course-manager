@@ -19,8 +19,11 @@ POST {{serverUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "vinhtrungngo@yahoo.com",
-   "username":"vinhngo",
+   "email": "vinhtrungngo1@yahoo.com",
+   "username":"vinhngo1",
    "fullName": "Ngô Trung Vinh",
    "password": "123456"
 }
+###
+GET {{serverUrl}}/auth/logout
+Content-Type: application/json

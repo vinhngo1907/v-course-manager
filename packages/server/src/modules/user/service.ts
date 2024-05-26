@@ -40,7 +40,8 @@ export class UsersService {
                 username, password: hashedPassword
             }
         });
-        this.logger.verbose(newAccount);
+        // console.log({ manager });
+        // this.logger.verbose(newAccount);
         // await manager.save(newAccount);
         const newUser = await this.databaseService.user.create({
             data: {
@@ -52,12 +53,16 @@ export class UsersService {
                 roles: {
                     connect: userRole.map((role) => ({ id: role.id }))
                 },
-            }
+            },
+            include: {
+                roles: true, // Include roles in the response
+            },
         });
 
-        this.logger.verbose(newUser);
+        // this.logger.verbose(newUser);
         // const createdUser = await manager.save(newUser);
-        this.logger.verbose(newUser.id);
+        // this.logger.verbose(newUser.id);
         return newUser;
+
     }
 }

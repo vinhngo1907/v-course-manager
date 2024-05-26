@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 // Middleware to update userId in Account after creating a User
 export function updateUserIdInAccountMiddleware(): Prisma.Middleware {
     return async (params, next) => {
-        console.log("🥃🥃🥃", params.args)
+        // console.log("🥃🥃🥃", params.args)
         if (params.model === 'User' && params.action === 'create') {
             const result = await next(params);
             const userId = result.id;

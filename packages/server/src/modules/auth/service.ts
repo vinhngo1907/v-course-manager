@@ -3,7 +3,7 @@ import { DatabaseService } from "../database/service";
 import { AccountBadRequestException } from "@modules/account/exception";
 import { AuthDTO } from "./dto/auth";
 import { RegisterPayload, TokenPayload } from "./types";
-import { hashPassword } from "./utils";
+import { hashPassword, isMatch } from "./utils";
 import { UsersService } from "@modules/user/service";
 import { AccountsService } from "@modules/account/service";
 import { Prisma, } from '@prisma/client';
@@ -29,7 +29,7 @@ export class AuthService {
                 user: { userId, email, fullName },
             } = account;
             const cookie = this.getCookieWithJwtToken(username, userId);
-            console.log({cookie})
+            console.log({ cookie })
             return {
                 cookie,
                 user: {
@@ -42,6 +42,28 @@ export class AuthService {
         } catch (error) {
             this.logger.error(error);
             throw new InternalServerErrorException(`Error when logining: ${error}`);
+        }
+    }
+
+    async validateUser(username: string, pass: string): Promise<any> {
+        try {
+            const account = await this.accountsService.findOne(username);
+            this.logger.log(account);
+            if (account && (await isMatch(pass, account.password))) {
+                const { id, email, fullName } = account.user;
+                return {
+                    username: account.username,
+                    user: {
+                        id,
+                        email,
+                        fullName,
+                    },
+                };
+            }
+            return null;
+        } catch (error) {
+            this.logger.error(error.message);
+            return null;
         }
     }
 
@@ -70,7 +92,7 @@ export class AuthService {
                     fullName,
                     [userRole],
                 )
-                
+
                 return this.login({
                     username,
                     user: {
@@ -93,7 +115,7 @@ export class AuthService {
                 signOptions: { expiresIn },
             } = this.appConfigService.getJwtConfig();
             const token = this.jwtService.sign(payload);
-            
+
             return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn};SameSite=None; Secure`;
         } catch (error) {
             // this.logger.error(error);

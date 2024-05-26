@@ -24,3 +24,6 @@ Content-Type: application/json
    "fullName": "Ngô Trung Vinh",
    "password": "123456"
 }
+###
+GET {{serverUrl}}/auth/logout
+Content-Type: application/json

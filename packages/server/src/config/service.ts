@@ -41,17 +41,14 @@ export class AppConfigService {
 	}
 
 	public getJwtConfig(): JWT_CONFIG {
-		console.log({
-			secret: `${this.getValue(configKeys.JWT_SECRET)}`,
-			signOptions: {
-				expiresIn: `${this.getValue(configKeys.JWT_EXPIRATION_TIME)}s` || '60s',
-			},
-		})
-		return {
-			secret: `${this.getValue(configKeys.JWT_SECRET)}`,
-			signOptions: {
-				expiresIn: `${this.getValue(configKeys.JWT_EXPIRATION_TIME)}s` || '60s',
-			},
-		};
+		const secret = this.getValue(configKeys.JWT_SECRET);
+        const expiresIn = this.getValue(configKeys.JWT_EXPIRATION_TIME, false) || '60s';
+        console.log(`JWT Config - Secret: ${secret}, Expires In: ${expiresIn}`);
+        return {
+            secret: `${secret}`,
+            signOptions: {
+                expiresIn: `${expiresIn}s`,
+            },
+        };
 	}
 }

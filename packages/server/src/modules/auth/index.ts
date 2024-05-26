@@ -12,6 +12,7 @@ import { UserModule } from "@modules/user";
 import { AccountModule } from "@modules/account";
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "./guards/role";
+import { LocalStrategy } from './strategies/local';
 import { JwtStrategy } from "./strategies/jwt";
 @Global()
 @Module({
@@ -22,18 +23,18 @@ import { JwtStrategy } from "./strategies/jwt";
             inject: [AppConfigService],
         }),
         // JwtModule.register(new AppConfigService(new ConfigService).getJwtConfig()),
-        AccountModule,
-        UserModule,
     ],
+    controllers: [AuthController],
     providers: [
         DatabaseService,
         AuthService,
         AccountsService,
         UsersService,
         AppConfigService,
-        JwtService,
         ConfigService,
+        // JwtService,
         Logger,
+        LocalStrategy,
         JwtStrategy,
         {
             provide: APP_GUARD,
@@ -41,7 +42,6 @@ import { JwtStrategy } from "./strategies/jwt";
         }
     ],
     exports: [AuthService, JwtModule],
-    controllers: [AuthController],
 
 })
 

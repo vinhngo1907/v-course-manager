@@ -68,13 +68,29 @@ model Subtitle {
     id       String    @id @default(uuid())
     sublines Subline[]
     language String
+    // videos   Video[]
+    Video    Video?    @relation(fields: [videoId], references: [id])
+    videoId  String?
 }
 
 model Subline {
-    id        String     @id @default(uuid())
-    content   String
-    subtitles Subtitle[]
-    timestamp DateTime   @default(now())
+    id         String    @id @default(uuid())
+    content    String
+    // subtitles Subtitle[]
+    Subtitle   Subtitle? @relation(fields: [subtitleId], references: [id])
+    subtitleId String?
+    timestamp  DateTime  @default(now())
+}
+
+model Video {
+    id          String     @id @default(uuid())
+    title       String     @db.VarChar(300)
+    description String     @db.VarChar(300)
+    thumbnail   String     @db.VarChar(300)
+    videoUrl    String     @db.VarChar(300)
+    order       Int        @db.SmallInt
+    subtitles   Subtitle[]
+    publishAt   DateTime   @default(now())
 }
 
 // Define junction table for the many-to-many relationship

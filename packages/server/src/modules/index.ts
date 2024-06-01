@@ -10,6 +10,9 @@ import { LoggerModule } from 'src/common/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
 import { SubtilesModule } from './subtiles';
+import { VideoModule } from './video';
+import { SubLinesModule } from './sub-lines';
+import { CourseModule } from './course';
 
 @Module({
 	imports: [
@@ -20,7 +23,10 @@ import { SubtilesModule } from './subtiles';
 		AccountModule,
 		RoleModule,
 		LoggerModule,
-		SubtilesModule
+		VideoModule,
+		SubtilesModule,
+		SubLinesModule,
+		CourseModule
 	],
 	providers: [
 		Logger,

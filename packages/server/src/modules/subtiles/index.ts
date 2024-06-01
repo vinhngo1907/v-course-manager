@@ -7,4 +7,4 @@ import { DatabaseService } from '@modules/database/service';
   controllers: [SubtilesController],
   providers: [SubtilesService, DatabaseService]
 })
-export class SubtilesModule {}
+export class SubtilesModule { }

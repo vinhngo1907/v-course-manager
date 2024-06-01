@@ -32,7 +32,6 @@ import { JwtStrategy } from "./strategies/jwt";
         UsersService,
         AppConfigService,
         ConfigService,
-        // JwtService,
         Logger,
         LocalStrategy,
         JwtStrategy,

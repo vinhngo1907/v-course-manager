@@ -9,6 +9,7 @@ import { RoleModule } from 'src/modules/role';
 import { LoggerModule } from 'src/common/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
+import { SubtilesModule } from './subtiles';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
 		AuthModule,
 		AccountModule,
 		RoleModule,
-		LoggerModule
+		LoggerModule,
+		SubtilesModule
 	],
 	providers: [
 		Logger,

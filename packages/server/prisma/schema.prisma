@@ -86,25 +86,25 @@ model Video {
     id          String     @id @default(uuid())
     title       String     @db.VarChar(300)
     description String     @db.VarChar(300)
-    thumbnail   String     @db.VarChar(300)
-    videoUrl    String     @db.VarChar(300)
+    thumbnail   String?     @db.VarChar(300)
+    videoUrl    String?     @db.VarChar(300)
     order       Int        @db.SmallInt
     subtitles   Subtitle[]
     Course      Course?    @relation(fields: [courseId], references: [id])
     courseId    String?
     publishAt   DateTime   @default(now())
 
-    @@map("video")
+    @@map("Video")
 }
 
 model Course {
     id          String  @id @default(uuid())
     title       String  @db.VarChar(300)
     description String  @db.VarChar(300)
-    thumbnail   String  @db.VarChar(300)
+    thumbnail   String?  @db.VarChar(300)
     videos      Video[]
     
-    @@map("course")
+    @@map("Course")
 }
 
 // Define junction table for the many-to-many relationship

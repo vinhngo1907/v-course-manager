@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AccountsService } from "./service";
 import { AccountDTO } from "./dto/account";
@@ -26,5 +26,11 @@ export class AccountController {
     @Patch("/:id")
     async update(@Param("id") accountId: string, @Body() accountUpdateDto: AccountUpdationDTO) {
         return await this.accountsService.update(accountId, accountUpdateDto);
+    }
+
+    // Delete Account by Id
+    @Delete("/:id")
+    async remove(@Param("id") accountId: string): Promise<boolean> {
+        return await this.accountsService.remove(accountId);
     }
 }

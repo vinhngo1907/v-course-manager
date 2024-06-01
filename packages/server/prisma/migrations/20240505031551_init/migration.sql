@@ -28,7 +28,7 @@ CREATE TABLE "Account" (
     "username" VARCHAR(20) NOT NULL,
     "password" VARCHAR(200) NOT NULL,
     "isActivated" BOOLEAN NOT NULL DEFAULT true,
-    "userId" TEXT NOT NULL,
+    "userId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdBy" TEXT NOT NULL DEFAULT 'system',
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -42,10 +42,9 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "fullName" VARCHAR(255) NOT NULL,
-    "roleId" TEXT NOT NULL,
-    "modId" TEXT NOT NULL,
-    "adminId" TEXT NOT NULL,
-    "supporterId" TEXT NOT NULL,
+    "modId" TEXT,
+    "adminId" TEXT,
+    "supporterId" TEXT,
     "accountId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -64,15 +63,9 @@ CREATE TABLE "Role" (
 );
 
 -- CreateTable
-CREATE TABLE "UserRoles" (
-    "userId" TEXT NOT NULL,
-    "roleId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdBy" TEXT NOT NULL DEFAULT 'system',
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "updatedBy" TEXT NOT NULL DEFAULT 'system',
-
-    CONSTRAINT "UserRoles_pkey" PRIMARY KEY ("userId","roleId")
+CREATE TABLE "_RoleToUser" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
 );
 
 -- CreateIndex
@@ -88,13 +81,7 @@ CREATE UNIQUE INDEX "Mod_userId_key" ON "Mod"("userId");
 CREATE UNIQUE INDEX "Account_username_key" ON "Account"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Account_userId_key" ON "Account"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_roleId_key" ON "User"("roleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_accountId_key" ON "User"("accountId");
@@ -103,10 +90,10 @@ CREATE UNIQUE INDEX "User_accountId_key" ON "User"("accountId");
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserRoles_userId_key" ON "UserRoles"("userId");
+CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserRoles_roleId_key" ON "UserRoles"("roleId");
+CREATE INDEX "_RoleToUser_B_index" ON "_RoleToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "Supporter" ADD CONSTRAINT "Supporter_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -118,10 +105,10 @@ ALTER TABLE "Admin" ADD CONSTRAINT "Admin_userId_fkey" FOREIGN KEY ("userId") RE
 ALTER TABLE "Mod" ADD CONSTRAINT "Mod_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRoles" ADD CONSTRAINT "UserRoles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "_RoleToUser" ADD CONSTRAINT "_RoleToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRoles" ADD CONSTRAINT "UserRoles_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "_RoleToUser" ADD CONSTRAINT "_RoleToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

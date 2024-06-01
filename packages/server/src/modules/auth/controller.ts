@@ -58,4 +58,9 @@ export class AuthController {
         res.setHeader('Set-header', cookie);
         return res.send(user);
     }
+
+    @Get("profile")
+    async getProfile(@Req() req, @Res() res: Response) {
+        return res.send(req.user)
+    }
 }

@@ -29,7 +29,7 @@ export class AuthService {
                 user: { userId, email, fullName },
             } = account;
             const cookie = this.getCookieWithJwtToken(username, userId);
-            console.log({ cookie })
+            // console.log({ cookie })
             return {
                 cookie,
                 user: {

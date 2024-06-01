@@ -64,6 +64,19 @@ model Role {
     updatedBy String   @default("system")
 }
 
+model Subtitle {
+    id       String    @id @default(uuid())
+    sublines Subline[]
+    language String
+}
+
+model Subline {
+    id        String     @id @default(uuid())
+    content   String
+    subtitles Subtitle[]
+    timestamp DateTime   @default(now())
+}
+
 // Define junction table for the many-to-many relationship
 // model UserRoles {
 //     userId String @unique

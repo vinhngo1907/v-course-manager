@@ -1,6 +1,4 @@
 import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
-// import { AppController } from '../app.controller';
-// import { AppService } from '../app.service';
 import { DatabaseModule } from './database';
 import { AppConfigModule } from 'src/config';
 import { LoggerMiddleware } from 'src/common/middlewares/loggerMiddleware';
@@ -9,6 +7,9 @@ import { AuthModule } from 'src/modules/auth';
 import { AccountModule } from 'src/modules/account';
 import { RoleModule } from 'src/modules/role';
 import { LoggerModule } from 'src/common/logger';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
+import { SubtilesModule } from './subtiles';
 
 @Module({
 	imports: [
@@ -18,9 +19,16 @@ import { LoggerModule } from 'src/common/logger';
 		AuthModule,
 		AccountModule,
 		RoleModule,
-		LoggerModule
+		LoggerModule,
+		SubtilesModule
 	],
-	providers: [Logger],
+	providers: [
+		Logger,
+		{
+			provide: APP_FILTER,
+			useClass: HttpExceptionFilter
+		}
+	],
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {

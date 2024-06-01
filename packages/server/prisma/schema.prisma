@@ -31,7 +31,7 @@ model Account {
     password    String   @db.VarChar(200)
     isActivated Boolean  @default(true)
     user        User?
-    userId      String   @unique
+    userId      String?  @db.Uuid
     createdAt   DateTime @default(now())
     createdBy   String   @default("system")
     updatedAt   DateTime @updatedAt
@@ -39,44 +39,43 @@ model Account {
 }
 
 model User {
-    id          String      @id @default(uuid())
-    email       String      @unique @db.VarChar(255)
-    fullName    String      @db.VarChar(255)
-    roles       UserRoles[]
-    roleId      String      @unique
-    modId       String
+    id          String     @id @default(uuid())
+    email       String     @unique @db.VarChar(255)
+    fullName    String     @db.VarChar(255)
+    roles       Role[]
+    modId       String?
     mod         Mod?
-    adminId     String
+    adminId     String?
     admin       Admin?
-    supporterId String
+    supporterId String?
     supporter   Supporter?
 
-    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    account   Account @relation(fields: [accountId], references: [id])
     accountId String  @unique
 }
 
 model Role {
-    id        String      @id @default(uuid())
-    name      String      @unique @db.VarChar(200)
-    users     UserRoles[]
-    createdAt DateTime    @default(now())
-    createdBy String      @default("system")
-    updatedAt DateTime    @updatedAt
-    updatedBy String      @default("system")
-}
-
-// Define junction table for the many-to-many relationship
-model UserRoles {
-    userId String @unique
-    roleId String @unique
-
-    user User @relation(fields: [userId], references: [id])
-    role Role @relation(fields: [roleId], references: [id])
-
+    id        String   @id @default(uuid())
+    name      String   @unique @db.VarChar(200)
+    users     User[]
     createdAt DateTime @default(now())
     createdBy String   @default("system")
     updatedAt DateTime @updatedAt
     updatedBy String   @default("system")
-
-    @@id([userId, roleId])
 }
+
+// Define junction table for the many-to-many relationship
+// model UserRoles {
+//     userId String @unique
+//     roleId String @unique
+
+//     user User @relation(fields: [userId], references: [id])
+//     role Role @relation(fields: [roleId], references: [id])
+
+//     createdAt DateTime @default(now())
+//     createdBy String   @default("system")
+//     updatedAt DateTime @updatedAt
+//     updatedBy String   @default("system")
+
+//     @@id([userId, roleId])
+// }

@@ -2,13 +2,16 @@ import { ApiProperty } from "@nestjsx/crud/lib/crud";
 
 export class RegisterPayload {
     @ApiProperty()
+    email: string;
+
+    @ApiProperty()
     username: string;
 
     @ApiProperty()
     fullName: string;
 
     @ApiProperty()
-    password: string;
+    password: string;    
 }
 
 export class LoginPayload {
@@ -24,4 +27,9 @@ export enum Role {
     Admin = "ADMIN",
     Supporter = "SUPPORTER",
     Mod = "MOD"
+}
+
+export interface TokenPayload {
+    username: string;
+    userId: string;
 }

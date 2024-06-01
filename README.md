@@ -10,6 +10,7 @@ The "MERN stack" consists of:
 - **Nextjs** to build the Admin CMS
 - **React** to build the web browser UI
 - **Node.js** to run the web server in general
+- **UI/UX** https://www.figma.com/community/file/978217394826446327/ong-dev-course-storage
 
 In addition to the above tools, this project also uses
 

@@ -5,13 +5,43 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DatabaseService } from '@modules/database/service';
 import { AppLoggerService } from './common/logger/service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter } from './common/helpers/http-exception.filter';
-// import * as winston from 'winston';
+// import { HttpExceptionFilter } from './common/infras/http-exception.filter';
+import { AllExceptionsFilter } from './common/infras/all-exceptions.filter';
+import {
+	utilities as nestWinstonModuleUtilities,
+	WinstonModule,
+} from 'nest-winston';
+import * as winston from "winston";
 import * as cookieParser from 'cookie-parser';
 import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule, {
+		logger: WinstonModule.createLogger({
+			level: process.env.LOG_LEVEL || 'info',
+			format: winston.format.combine(
+				winston.format.colorize(),
+				winston.format.simple()
+			),
+			transports: [
+				new winston.transports.Console({
+					format: winston.format.combine(
+						winston.format.timestamp(),
+						winston.format.ms(),
+						nestWinstonModuleUtilities.format.nestLike(),
+					),
+				}),
+				/** 
+				 * - Write all logs with level `error` and below to `error.log`
+				 * - Write all logs with level `info` and below to `combined.log`
+				*/
+				new winston.transports.File({ filename: './src/common/logger/logs/error.log', level: 'error' }),
+				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
+			],
+		}),
+		cors: true
+	});
+	// if(!configSer)
 
 	app.useGlobalPipes(
 		new ValidationPipe({
@@ -20,27 +50,44 @@ async function bootstrap() {
 		}),
 	);
 
-	app.useGlobalFilters(new HttpExceptionFilter());
+	app.useGlobalFilters(new AllExceptionsFilter());
 	app.use(cookieParser());
 
 	const appConfigService = app.get(AppConfigService);
+	const requiredEnvVariables = [
+		'POSTGRES_HOST',
+		'POSTGRES_PORT',
+		'POSTGRES_USER',
+		'POSTGRES_PASSWORD',
+		'POSTGRES_DATABASE',
+		'JWT_SECRET',
+		'JWT_EXPIRATION_TIME',
+		'MODE',
+	];
+
+	appConfigService.ensureValues(requiredEnvVariables);
+	if (!appConfigService.isProduction()) {
+		setupSwagger(app);
+	}
+
 	const prismaSerivce = app.get(DatabaseService);
 	prismaSerivce.$connect();
 
 	const logger = app.get(AppLoggerService);
 	app.useLogger(logger);
 
-	const port = appConfigService.port;
-
-	setupSwagger(app);
+	const port = appConfigService.port || 3333;
 
 	const NODE_ENV = process.env.NODE_ENV || 'development';
+
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
+
 	app.enableCors({
-		origin: true,
+		origin: "*",
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 	});
+
 	await app.listen(port, () => {
 		logger.log(`Server is running on port ${port}`, 'Bootstrap');
 		logger.log(`Current node environment: ${NODE_ENV}`);
@@ -53,8 +100,8 @@ bootstrap();
 
 function setupSwagger(app: INestApplication) {
 	const config = new DocumentBuilder()
-		.setTitle('Book auth example')
-		.setDescription('The book auth API description')
+		.setTitle('V Course Management API')
+		.setDescription('The V Course API description')
 		.setVersion('1.0')
 		.addTag('auth')
 		.build();

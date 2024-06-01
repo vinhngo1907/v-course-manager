@@ -6,6 +6,7 @@ import RequestWithAccount from "./interfaces/RequestWithAccount";
 import { Response } from 'express';
 import { LoginPayload, RegisterPayload } from "./types";
 import { Public } from "./decorator";
+import { LocalAuthGuard } from "./guards/local";
 
 @Injectable()
 @ApiTags('Auth')
@@ -20,13 +21,15 @@ export class AuthController {
     //     type:LoginPayload
     // )
     // @Public()
-    // @UseGuards(LocalAuth)
-    // @Post("login")
-    // async login(
-    //     @Req() req: RequestWithAccount, 
-    //     @Res() res: Response) {
-    //     // const { cookie, user: par}
-    // }
+    @UseGuards(LocalAuthGuard)
+    @Post("login")
+    async login(
+        @Req() req: RequestWithAccount,
+        @Res() res: Response) {
+        const { cookie, user: paredUser } = await this.authService.login(req.user);
+        res.setHeader('Set-cookie', cookie);
+        return res.send(paredUser)
+    };
 
     @Get("isLoggedIn")
     isLoggedIn(@Res() res: Response) {

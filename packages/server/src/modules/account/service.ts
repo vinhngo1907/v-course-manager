@@ -103,4 +103,12 @@ export class AccountsService {
             throw new AccountBadRequestException('Username is existed');
         }
     }
+    async remove(accountId: string): Promise<boolean> {
+        const result = await this.databaseService.account.delete({
+            where: {
+                id: accountId
+            }
+        });
+        return result !== null;
+    }
 }

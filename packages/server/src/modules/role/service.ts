@@ -10,12 +10,13 @@ export class RoleService {
     ) { }
 
     async getRolesByRolesStrArr(roles: string[]): Promise<RoleDTO[]> {
-        return await this.databaseService.role.findMany({
+        const listRole = await this.databaseService.role.findMany({
             where: {
                 name: {
                     in: roles
                 }
             }
         });
+        return listRole;
     }
 }

@@ -2,9 +2,28 @@
 
 ###
 
-GET {{serverUrl}}/roles
+POST {{serverUrl}}/roles
 Content-Type: application/json
 
 {
-    "roles": ["MODE"]
+    "roles": ["ADMIN", "MOD"]
 }
+###
+GET {{serverUrl}}/accounts
+###
+
+Get {{serverUrl}}/accounts/334fa5f4-c987-4c70-9460-85e515075e46
+###
+
+POST {{serverUrl}}/auth/register
+Content-Type: application/json
+
+{
+   "email": "vinhtrungngo1@yahoo.com",
+   "username":"vinhngo1",
+   "fullName": "Ngô Trung Vinh",
+   "password": "123456"
+}
+###
+GET {{serverUrl}}/auth/logout
+Content-Type: application/json

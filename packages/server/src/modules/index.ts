@@ -13,6 +13,7 @@ import { SubtilesModule } from './subtiles';
 import { VideoModule } from './video';
 import { SubLinesModule } from './sub-lines';
 import { CourseModule } from './course';
+import { CommentsModule } from './comments';
 
 @Module({
 	imports: [
@@ -26,7 +27,8 @@ import { CourseModule } from './course';
 		VideoModule,
 		SubtilesModule,
 		SubLinesModule,
-		CourseModule
+		CourseModule,
+		CommentsModule
 	],
 	providers: [
 		Logger,

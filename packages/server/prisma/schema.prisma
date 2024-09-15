@@ -82,12 +82,30 @@ model Subline {
     timestamp  DateTime  @default(now())
 }
 
+model Comment {
+    id                String             @id @default(uuid())
+    content           String
+    commentReactions  CommentReactions[]
+    commentReactionId String
+
+    @@map("Comment")
+}
+
+model CommentReactions {
+    id        String   @id @default(uuid())
+    type      String
+    Comment   Comment? @relation(fields: [commentId], references: [id])
+    commentId String?
+
+    @@map("Comment_Reaction")
+}
+
 model Video {
     id          String     @id @default(uuid())
     title       String     @db.VarChar(300)
     description String     @db.VarChar(300)
-    thumbnail   String?     @db.VarChar(300)
-    videoUrl    String?     @db.VarChar(300)
+    thumbnail   String?    @db.VarChar(300)
+    videoUrl    String?    @db.VarChar(300)
     order       Int        @db.SmallInt
     subtitles   Subtitle[]
     Course      Course?    @relation(fields: [courseId], references: [id])
@@ -101,9 +119,9 @@ model Course {
     id          String  @id @default(uuid())
     title       String  @db.VarChar(300)
     description String  @db.VarChar(300)
-    thumbnail   String?  @db.VarChar(300)
+    thumbnail   String? @db.VarChar(300)
     videos      Video[]
-    
+
     @@map("Course")
 }
 

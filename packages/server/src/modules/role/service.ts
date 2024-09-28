@@ -19,4 +19,12 @@ export class RoleService {
         });
         return listRole;
     }
+
+    async createRolesByRolesStrArr(roles: string[]) {
+        const newRoles = roles.map(role => ({ 'name': role }))
+        const results = await this.databaseService.role.createMany({
+            data: newRoles
+        });
+        return results;
+    }
 }

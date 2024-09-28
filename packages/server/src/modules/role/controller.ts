@@ -15,8 +15,9 @@ export class RoleController {
     @Post('/')
     async getRoles(@Body('roles') roles: string[]) {
         try {
-            console.log({roles})
+            // console.log({roles})
             const results = await this.roleService.getRolesByRolesStrArr(roles);
+            // console.log({results})
             return {
                 statusCode: HttpStatus.OK,
                 message: 'success',
@@ -25,7 +26,16 @@ export class RoleController {
         } catch (error) {
             this.logger.error('Error while fetching roles:', error.message);
             throw error; // Ensure errors are propagated correctly
+        }
+    }
 
+    @Post("/create")
+    async createRoles(@Body('roles') roles: string[]) {
+        try {
+            return await this.roleService.createRolesByRolesStrArr(roles);
+        } catch (error) {
+            this.logger.error('Error while creating roles:', error.message);
+            throw error; // Ensure errors are propagated correctly
         }
     }
 }

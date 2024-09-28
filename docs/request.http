@@ -9,6 +9,14 @@ Content-Type: application/json
     "roles": ["ADMIN", "MOD"]
 }
 ###
+
+POST {{serverUrl}}/roles/create
+Content-Type: application/json
+
+{
+    "roles": ["ADMIN", "MOD", "SUPPORTER", "USER"]
+}
+###
 GET {{serverUrl}}/accounts
 ###
 

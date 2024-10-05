@@ -62,6 +62,7 @@ model Role {
     createdBy String   @default("system")
     updatedAt DateTime @updatedAt
     updatedBy String   @default("system")
+    isActive    Boolean  @default(true)
 }
 
 model Subtitle {

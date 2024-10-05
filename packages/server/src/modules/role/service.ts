@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '@modules/database/service';
-import { RoleDTO } from './dto/role';
+import { RoleDTO, RoleUpdateDTO } from './dto/role';
 
 @Injectable()
 export class RoleService {
@@ -26,5 +26,28 @@ export class RoleService {
             data: newRoles
         });
         return results;
+    }
+
+    async getRoleById(id: string) {
+        return await this.databaseService.role.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                users: true
+            }
+        });
+    }
+
+    async updateRole(id: string, data: RoleUpdateDTO) {
+        return await this.databaseService.role.update({
+            where: {
+                id: id,
+                isActive: true,
+            },
+            data: {
+                ...data
+            }
+        });
     }
 }

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '@modules/database/service';
 import { RoleDTO, RoleUpdateDTO } from './dto/role';
+import { RoleNotFoundException } from './exception';
 
 @Injectable()
 export class RoleService {
@@ -38,12 +39,19 @@ export class RoleService {
             }
         });
     }
+    async findRole(id: string) {
+        return await this.databaseService.role.findFirst({
+            where: { id, isActive: true }
+        });
+    }
 
-    async updateRole(id: string, data: RoleUpdateDTO) {
+    async updateRole(roleId: string, data: RoleUpdateDTO) {
+        const role = await this.findRole(roleId);
+        if (!role) throw new RoleNotFoundException(roleId);
+        
         return await this.databaseService.role.update({
             where: {
-                id: id,
-                isActive: true,
+                id: role.id
             },
             data: {
                 ...data

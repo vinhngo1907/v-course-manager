@@ -34,7 +34,7 @@ export default function LoginModal({ toggleModal }: Props) {
 			const response = await axios.post("/auth/login", data, {
 				withCredentials: true,
 			});
-
+			console.log(response.data);
 		} catch (error) {
 			console.log(error.message);
 			setErrorMessage('Failed to login, please try again!');
@@ -47,7 +47,7 @@ export default function LoginModal({ toggleModal }: Props) {
 			<div
 				className={styles.blurBg}
 				onClick={() => toggleModal(ModalTypeEnum.None)}
-			>
+			/>
 				<form id={styles.loginForm} onSubmit={handleSubmit(submitForm)}>
 					<div className={styles.formHeader}>Sign In</div>
 					<div className={styles.registerNavigator}>
@@ -78,8 +78,43 @@ export default function LoginModal({ toggleModal }: Props) {
 							}
 						})}
 					/>
+					<FormItem
+						isFirstVisit={isFirstVisit}
+						labelName="Password"
+						name="password"
+						placeholder="Enter your password"
+						inputId="passwordInput"
+						type="password"
+						error={errors.password}
+						register={register('password', {
+							required: 'Password is required'
+						})}
+					/>
+					<div className={styles.forgotPassword}>
+						<span
+							tabIndex={0}
+							role="button"
+							onClick={() => toggleModal(ModalTypeEnum.Register)}
+							onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
+						>
+							Forgot password?
+						</span>
+					</div>
+					<button
+						form={styles.loginForm}
+						disabled={loading}
+						className={styles.submitButton}
+						onClick={() => {
+							setIsFirstVisit(false);
+						}}
+						value="Submit"
+						type="submit"
+					>
+						{loading && <FontAwesomeIcon icon={faSpinner} spin />}
+						{!loading && <span>Login</span>}
+					</button>
 				</form>
-			</div>
+			
 		</>
 	)
 }

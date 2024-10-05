@@ -4,6 +4,8 @@ import { ModalTypeEnum } from "@components/Layouts";
 import FormItem from "@components/FormItem";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     toggleModal: Function;
@@ -47,21 +49,20 @@ export default function RegisterModal({ toggleModal }: Props) {
             <div
                 className={styles.blurBg}
                 onClick={() => toggleModal(ModalTypeEnum.None)}
+            />
+            <form id={styles.registerForm}
+                onSubmit={handleSubmit(submitForm)}
             >
-                <form id={styles.registerForm}
-                    onSubmit={handleSubmit(submitForm)}
-                >
-                    <div className={styles.formHeader}>Sign Up</div>
-                    <div className={styles.loginNavigator}>
-                        I have an account!{' '}
-                        <span
-                            tabIndex={0}
-                            role='button'
-                            onClick={() => toggleModal(ModalTypeEnum.Login)}
-                            onKeyDown={() => toggleModal(ModalTypeEnum.Login)}
-                        >Click here</span>
-                    </div>
-                </form>
+                <div className={styles.formHeader}>Sign Up</div>
+                <div className={styles.loginNavigator}>
+                    I have an account!{' '}
+                    <span
+                        tabIndex={0}
+                        role='button'
+                        onClick={() => toggleModal(ModalTypeEnum.Login)}
+                        onKeyDown={() => toggleModal(ModalTypeEnum.Login)}
+                    >Click here</span>
+                </div>
                 {errorMessage && <span>{errorMessage}</span>}
                 <FormItem
                     isFirstVisit={isFirstVisit}
@@ -79,7 +80,85 @@ export default function RegisterModal({ toggleModal }: Props) {
                         }
                     })}
                 />
-            </div>
+                <FormItem
+                    isFirstVisit={isFirstVisit}
+                    labelName="Fullname"
+                    name="fullname"
+                    placeholder="Enter your fullname"
+                    inputId="fullnameInput"
+                    type="text"
+                    error={errors.fullname}
+                    register={register('fullname', {
+                        required: 'Fullname is required'
+                    })}
+                />
+                <FormItem
+                    isFirstVisit={isFirstVisit}
+                    labelName="Email"
+                    name="email"
+                    placeholder="Enter your email"
+                    inputId="emailInput"
+                    type="text"
+                    error={errors.email}
+                    register={register('email', {
+                        required: {
+                            value: true,
+                            message: 'Email is required'
+                        },
+                        pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: 'Invalid email address'
+                        }
+                    })}
+                />
+                <FormItem
+                    isFirstVisit={isFirstVisit}
+                    labelName="Password"
+                    name="password"
+                    placeholder="Enter your password"
+                    inputId="passwordInput"
+                    type="password"
+                    error={errors.password}
+                    register={register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                            value: 8,
+                            message: 'Password must have at least 8 characters'
+                        }
+                    })}
+                />
+                <FormItem
+                    isFirstVisit={isFirstVisit}
+                    labelName="RetypedPassword"
+                    name="retypedPassword"
+                    placeholder="Enter your password"
+                    inputId="retypedPasswordInput"
+                    type="password"
+                    error={errors.retypedPassword}
+                    register={register('retypedPassword', {
+                        required: 'Username is required',
+                        minLength: {
+                            value: 8,
+                            message: 'Username must have at least 8 characters'
+                        },
+                        validate: value =>
+                            value === password.current || 'The passwords do not match'
+                    })}
+                />
+                <button
+                    form={styles.registerForm}
+                    disabled={loading}
+                    className={styles.submitButton}
+                    onClick={() => {
+                        setIsFirstVisit(false);
+                    }}
+                    value="Submit"
+                    type="submit"
+                >
+                    {loading && <FontAwesomeIcon icon={faSpinner} spin />}
+                    {!loading && <span>Sign Up</span>}
+                </button>
+            </form>
         </>
     )
 }

@@ -53,10 +53,10 @@ export class RoleController {
         }
     }
 
-    @Delete('/')
-    async deleteRole(@Body() id: string) {
+    @Delete('/:id')
+    async remove(@Param('id') id: string) {
         try {
-
+            return await this.roleService.deleteRoleById(id);
         } catch (error) {
             this.logger.error('Error while deleteing roles:', error.message);
             throw error;
@@ -66,7 +66,7 @@ export class RoleController {
     @Put('/:id')
     async updateRole(@Param('id') id: string, @Body() roleData: RoleUpdateDTO) {
         try {
-            return await this.roleService.updateRole(id,roleData)
+            return await this.roleService.updateRole(id, roleData);
         } catch (error) {
             this.logger.error('Error while update role:', error.message);
             throw error;

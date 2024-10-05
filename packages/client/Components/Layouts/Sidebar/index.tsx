@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import styles from './index.module.css'
-import LogoComponent from '@components/Globals/Logo'
-import sidebars from './sidebars'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import styles from './index.module.css';
+import LogoComponent from '@components/Globals/Logo';
+import sidebars from './sidebars';
+
 function Sidebar({ isWide }) {
 	const [currentIndex, setCurrentIndex] = useState(0)
 	return (
@@ -35,4 +36,4 @@ Sidebar.propsType = {
 	isWide: PropTypes.bool
 }
 
-export default Sidebar
+export default Sidebar;

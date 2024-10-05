@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
 import HeaderComponent from './Header'
-import SidebarComponent from './Sidebar'
+import SidebarComponent from '.'
 import styles from './index.module.css'
 import { DOTS as DotsIcon } from '@constants/icons'
-// import LoginModal from '@components/Login';
+import LoginModal from '@components/Login';
 // import Register from '@components/Register';
 import { Profile } from 'types';
 import { axios, setUpdateLoginState } from 'utils/axios';
@@ -30,6 +30,7 @@ function Layout({ children, isWide, title }: Layout) {
         localStorage.setItem('email', newProfile?.email || '');
         localStorage.setItem('username', newProfile?.username || '');
     });
+
     useEffect(() => {
         (async function () {
             try {
@@ -39,15 +40,18 @@ function Layout({ children, isWide, title }: Layout) {
             }
         })();
     }, []);
+
     const toggleModal = (type: ModalType) => {
+        console.log()
         setModalType(type);
     }
+
     return (
         <>
-            {/* {modalType === ModalTypeEnum.Register && <Register toggleModal={toggleModal} />}
-            {modalType === ModalTypeEnum.Login && <LoginModal toggleModal={toggleModal} />} */}
+            {/* {modalType === ModalTypeEnum.Register && <Register toggleModal={toggleModal} />} */}
+            {modalType === ModalTypeEnum.Login && <LoginModal toggleModal={toggleModal} />}
             <div className={styles.container}>
-                <SidebarComponent isWide={isWide}></SidebarComponent>
+                {/* <SidebarComponent isWide={isWide}></SidebarComponent> */}
                 <section className={styles.main}>
                     <HeaderComponent profile={profile} toggleModal={toggleModal}></HeaderComponent>
                     <div className={styles.content}>
@@ -66,6 +70,7 @@ function Layout({ children, isWide, title }: Layout) {
         </>
     );
 }
+
 Layout.defaultProps = {
     isWide: false
 }
@@ -74,4 +79,4 @@ Layout.propsType = {
     title: PropTypes.string
 }
 
-export default Layout
+export default Layout;

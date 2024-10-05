@@ -2,7 +2,7 @@ import React from 'react';
 import { PROFILE as ProfileIcon, SEARCH as SearchIcon } from '@constants/icons';
 import { Profile } from '../../../types';
 import styles from './index.module.css';
-import { ModalTypeEnum } from '..';
+import { ModalTypeEnum } from '../Sidebar';
 
 type Props = {
     profile: null | Profile;

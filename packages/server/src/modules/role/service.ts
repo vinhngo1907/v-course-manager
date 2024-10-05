@@ -48,7 +48,7 @@ export class RoleService {
     async updateRole(roleId: string, data: RoleUpdateDTO) {
         const role = await this.findRole(roleId);
         if (!role) throw new RoleNotFoundException(roleId);
-        
+
         return await this.databaseService.role.update({
             where: {
                 id: role.id
@@ -57,5 +57,16 @@ export class RoleService {
                 ...data
             }
         });
+    }
+
+    async deleteRoleById(roleId: string){
+        return await this.databaseService.role.update({
+            where: {
+                id: roleId
+            },
+            data:{
+                isActive: false
+            }
+        })
     }
 }

@@ -33,3 +33,5 @@ yarn-error.log*
 
 # environment
 .env
+
+./public/videos/*

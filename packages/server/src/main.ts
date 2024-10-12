@@ -80,7 +80,7 @@ async function bootstrap() {
 
 	const NODE_ENV = process.env.NODE_ENV || 'development';
 
-	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
+	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
 
 	app.enableCors({
 		origin: "*",

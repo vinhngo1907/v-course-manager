@@ -35,3 +35,13 @@ Content-Type: application/json
 ###
 GET {{serverUrl}}/auth/logout
 Content-Type: application/json
+
+###
+POST {{serverUrl}}/auth/login
+Content-Type: application/json
+
+{
+   "email": "vinhtrungngo1@yahoo.com",
+   "username":"vinhngo1",
+   "password": "123456"
+}

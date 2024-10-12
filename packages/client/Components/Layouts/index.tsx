@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types'
-import HeaderComponent from './Header'
-import SidebarComponent from '.'
-import styles from './index.module.css'
-import { DOTS as DotsIcon } from '@constants/icons'
+import PropTypes from 'prop-types';
+import HeaderComponent from './Header';
+import SidebarComponent from './Sidebar';
+import styles from './index.module.css';
+import { DOTS as DotsIcon } from '@constants/icons';
 import LoginModal from '@components/Login';
-// import Register from '@components/Register';
 import { Profile } from 'types';
 import { axios, setUpdateLoginState } from 'utils/axios';
+import RegisterModal from '@components/Register';
 
 interface Layout {
     isWide: boolean
@@ -20,7 +20,6 @@ export enum ModalTypeEnum {
     Register = 'register',
     None = 'none'
 };
-
 
 function Layout({ children, isWide, title }: Layout) {
     const [modalType, setModalType] = useState<ModalType>(ModalTypeEnum.None);
@@ -42,16 +41,16 @@ function Layout({ children, isWide, title }: Layout) {
     }, []);
 
     const toggleModal = (type: ModalType) => {
-        console.log()
+        console.log("Toggle Ne")
         setModalType(type);
     }
 
     return (
         <>
-            {/* {modalType === ModalTypeEnum.Register && <Register toggleModal={toggleModal} />} */}
+            {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}
             {modalType === ModalTypeEnum.Login && <LoginModal toggleModal={toggleModal} />}
             <div className={styles.container}>
-                {/* <SidebarComponent isWide={isWide}></SidebarComponent> */}
+                <SidebarComponent isWide={isWide}></SidebarComponent>
                 <section className={styles.main}>
                     <HeaderComponent profile={profile} toggleModal={toggleModal}></HeaderComponent>
                     <div className={styles.content}>

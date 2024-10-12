@@ -2,7 +2,7 @@ import React from 'react';
 import { TEST_VIDEO } from '@constants/videos';
 import VideoViewer from '@components/Video/VideoViewer';
 import styles from './index.module.css';
-import Layout from '@components/Layouts'
+import Layout from '@components/Layouts';
 
 export default function Course() {
     return (

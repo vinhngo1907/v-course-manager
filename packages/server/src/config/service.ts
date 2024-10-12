@@ -31,8 +31,8 @@ export class AppConfigService {
 		return this.configService.get(configKeys.ADMIN_PASSWORD);
 	}
 
-	public getClientUr(): string {
-		return "";
+	public getClientUrl(): string {
+		return this.configService.get(configKeys.CLIENT_URL);
 	}
 
 	public isProduction() {

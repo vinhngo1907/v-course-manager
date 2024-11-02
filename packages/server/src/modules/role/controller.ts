@@ -1,7 +1,8 @@
-import { Body, Controller, Get, HttpStatus, Injectable, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Injectable, Logger, Post, Delete, Put, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Crud } from '@nestjsx/crud';
 import { RoleService } from './service';
+import { RoleUpdateDTO } from './dto/role';
 
 @Injectable()
 @ApiTags('roles')
@@ -28,7 +29,20 @@ export class RoleController {
             throw error; // Ensure errors are propagated correctly
         }
     }
-
+    @Get('/')
+    async getRoleById(@Param('id') id: string) {
+        try {
+            const result = await this.roleService.getRoleById(id);
+            return {
+                statusCode: HttpStatus.OK,
+                message: 'success',
+                data: result,
+            }
+        } catch (error) {
+            this.logger.error('Error while fetching roles:', error.message);
+            throw error; // Ensure errors are propagated correctly
+        }
+    }
     @Post("/create")
     async createRoles(@Body('roles') roles: string[]) {
         try {
@@ -36,6 +50,26 @@ export class RoleController {
         } catch (error) {
             this.logger.error('Error while creating roles:', error.message);
             throw error; // Ensure errors are propagated correctly
+        }
+    }
+
+    @Delete('/:id')
+    async remove(@Param('id') id: string) {
+        try {
+            return await this.roleService.deleteRoleById(id);
+        } catch (error) {
+            this.logger.error('Error while deleteing roles:', error.message);
+            throw error;
+        }
+    }
+
+    @Put('/:id')
+    async updateRole(@Param('id') id: string, @Body() roleData: RoleUpdateDTO) {
+        try {
+            return await this.roleService.updateRole(id, roleData);
+        } catch (error) {
+            this.logger.error('Error while update role:', error.message);
+            throw error;
         }
     }
 }

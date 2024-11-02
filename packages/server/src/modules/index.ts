@@ -16,6 +16,7 @@ import { CourseModule } from './course';
 import { CommentsModule } from './comments';
 import { StreamModule } from './stream';
 import { CommentReactionsModule } from './comment-reactions';
+import { FileUploadModule } from './file-upload';
 
 @Module({
 	imports: [
@@ -32,7 +33,8 @@ import { CommentReactionsModule } from './comment-reactions';
 		CourseModule,
 		CommentsModule,
 		StreamModule,
-		CommentReactionsModule
+		CommentReactionsModule,
+		FileUploadModule
 	],
 	providers: [
 		Logger,

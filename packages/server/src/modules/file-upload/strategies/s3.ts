@@ -50,11 +50,15 @@ export class FileUploadByS3 implements FileUpload {
             const bucketName = process.env.MINIO_BUCKET_NAME;
             console.log({ fileType, fileName, objectName, bucketName });
             const uploadPromise =
-                file.size <= 6000000
+                file.size <= 60000000
                     ? await this.uploadSinglePart(bucketName, objectName, file)
                     : await this.uploadMultiplePart(bucketName, objectName, file);
 
             console.log({ uploadPromise });
+            console.log(">>>>" + file.size + "<<<<")
+            // await this.uploadSinglePart(bucketName, objectName, file);
+            // await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
+            console.log(`${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`)
             return `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`;
         } catch (error) {
 
@@ -66,7 +70,7 @@ export class FileUploadByS3 implements FileUpload {
         file: Express.Multer.File,
     ) {
         const uploadResult = await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
-        console.log({uploadResult});
+        console.log({ uploadResult });
         return uploadResult;
     }
     private async uploadMultiplePart(

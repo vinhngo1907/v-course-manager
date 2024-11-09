@@ -18,8 +18,8 @@ export class FileUploadController {
         @UploadedFile() file: Express.Multer.File,
         @Body() fileUploadDTO: FileUploadDTO,
     ) {
+        console.log(">>>>", fileUploadDTO)
         if (!file) throw new BadRequestException('File is required');
-
         if (!fileUploadDTO.type) throw new BadRequestException('Type is required');
 
         const data = await this.fileUpload.uploadFile(file, fileUploadDTO.type);

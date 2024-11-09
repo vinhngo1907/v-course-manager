@@ -4,7 +4,7 @@ import { FileUploadType } from 'src/common/enums/file-upload-type.enum';
 
 export class FileUploadDTO {
     @ApiProperty({ default: 'this is type' })
-    @IsEnum(FileUploadDTO)
+    @IsEnum(FileUploadType)
     @IsNotEmpty()
     readonly type: FileUploadType;
 }

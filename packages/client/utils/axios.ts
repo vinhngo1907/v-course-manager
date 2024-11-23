@@ -11,7 +11,7 @@ const setUpdateLoginState = (updateLoginStateFunction: UpdateLoginState) => {
 
 const instance = axios.create({
     withCredentials: true,
-    // baseURL: config.ServerUrl
+    // baseURL: `${config.ServerUrl}`
     baseURL: "http://localhost:3001"
 });
 

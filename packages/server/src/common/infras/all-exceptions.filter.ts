@@ -5,10 +5,12 @@ import {
     HttpException,
     HttpStatus,
 } from '@nestjs/common';
+import { AppConfigService } from 'src/config/service';
 // import { configService } from 'src/config/config.service';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+    constructor(private readonly appConfigService: AppConfigService){}
     catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
@@ -25,7 +27,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ) {
             response.setHeader(
                 'Access-Control-Allow-Origin',
-                "http://localhost:3000"
+                this.appConfigService.getClientUrl()
                 // configService.getClientUrl(),
             );
 

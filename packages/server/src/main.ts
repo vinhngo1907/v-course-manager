@@ -50,9 +50,6 @@ async function bootstrap() {
 		}),
 	);
 
-	app.useGlobalFilters(new AllExceptionsFilter());
-	app.use(cookieParser());
-
 	const appConfigService = app.get(AppConfigService);
 	const requiredEnvVariables = [
 		'POSTGRES_HOST',
@@ -80,10 +77,12 @@ async function bootstrap() {
 
 	const NODE_ENV = process.env.NODE_ENV || 'development';
 
+	app.useGlobalFilters(new AllExceptionsFilter(appConfigService));
+	app.use(cookieParser());
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
 
 	app.enableCors({
-		origin: "*",
+		origin: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 	});

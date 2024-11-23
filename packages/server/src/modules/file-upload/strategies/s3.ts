@@ -3,11 +3,11 @@ import { FileUpload } from '../file-upload.interface';
 import { FileUploadType } from 'src/common/enums/file-upload-type.enum';
 
 const minioClient = new Minio.Client({
-    endPoint: process.env.MINIO_ENDPOINT,          // MinIO server endpoint
-    port: parseInt(process.env.MINIO_PORT, 10),    // MinIO server port (e.g., 9000)
-    useSSL: process.env.MINIO_USE_SSL === 'true',  // true if using SSL
-    accessKey: process.env.MINIO_ACCESS_KEY,       // Access key for MinIO
-    secretKey: process.env.MINIO_SECRET_KEY,       // Secret key for MinIO
+    endPoint: process.env.MINIO_ENDPOINT,
+    port: parseInt(process.env.MINIO_PORT, 10),
+    useSSL: process.env.MINIO_USE_SSL === 'true',
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY,
 });
 
 
@@ -48,11 +48,17 @@ export class FileUploadByS3 implements FileUpload {
             const fileName = new Date().getTime();
             const objectName = `${process.env.MINIO_FOLDER}/${type}/${fileName}.${fileType}`;
             const bucketName = process.env.MINIO_BUCKET_NAME;
+            console.log({ fileType, fileName, objectName, bucketName });
             const uploadPromise =
-                file.size <= 6000000
-                    && await this.uploadSinglePart(bucketName, objectName, file)
-                    // : await this.uploadMultiplePart(bucketName, objectName, file);
+                file.size <= 60000000
+                    ? await this.uploadSinglePart(bucketName, objectName, file)
+                    : await this.uploadMultiplePart(bucketName, objectName, file);
 
+            console.log({ uploadPromise });
+            console.log(">>>>" + file.size + "<<<<")
+            // await this.uploadSinglePart(bucketName, objectName, file);
+            // await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
+            console.log(`${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`)
             return `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`;
         } catch (error) {
 
@@ -63,41 +69,50 @@ export class FileUploadByS3 implements FileUpload {
         objectName: string,
         file: Express.Multer.File,
     ) {
-        await minioClient.putObject(bucketName, objectName, file.buffer, null, {'Content-type': file.mimetype});
+        const uploadResult = await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
+        console.log({ uploadResult });
+        return uploadResult;
     }
-    // private async uploadMultiplePart(
-    //     bucketName: string, 
-    //     objectName: string, 
-    //     file: Express.Multer.File
-    // ) {
-    //     const partSize = 1024 * 1024 * 5; // 5MB parts
-    //     const etags: { etag: string; part: number }[] = [];
+    private async uploadMultiplePart(
+        bucketName: string,
+        objectName: string,
+        file: Express.Multer.File
+    ) {
+        const partSize = 1024 * 1024 * 5; // 5MB parts
+        const etags: { etag: string; part: number }[] = [];
 
-    //     let uploadId;
-    //     try {
-    //         uploadId = await minioClient.initiateNewMultipartUpload(bucketName, objectName);
+        let uploadId;
+        try {
+            uploadId = await minioClient.initiateNewMultipartUpload(
+                bucketName,
+                objectName,
+                { 'Content-Type': file.mimetype }
+            );
 
-    //         for (let part = 1, start = 0; start < file.buffer.length; start += partSize, part++) {
-    //             const end = Math.min(start + partSize, file.buffer.length);
-    //             const partBuffer = file.buffer.slice(start, end);
+            let partNumber = 1;
 
-    //             const etag = await minioClient.putObjectPart(
-    //                 bucketName,
-    //                 objectName,
-    //                 uploadId,
-    //                 part,
-    //                 partBuffer,
-    //             );
+            for (let part = 1, start = 0; start < file.buffer.length; start += partSize, part++) {
+                const end = Math.min(start + partSize, file.buffer.length);
+                const partBuffer = file.buffer.slice(start, end);
 
-    //             etags.push({ etag, part });
-    //         }
+                const partUploadInfo = await minioClient.putObject(
+                    bucketName,
+                    objectName,
+                    uploadId,
+                    part,
+                    partBuffer,
+                );
 
-    //         await minioClient.completeMultipartUpload(bucketName, objectName, uploadId, etags);
-    //     } catch (error) {
-    //         if (uploadId) {
-    //             await minioClient.abortMultipartUpload(bucketName, objectName, uploadId);
-    //         }
-    //         throw error;
-    //     }
-    // }
+                etags.push({ etag: partUploadInfo.etag, part: partNumber });
+                partNumber++;
+            }
+
+            await minioClient.completeMultipartUpload(bucketName, objectName, uploadId, etags);
+        } catch (error) {
+            if (uploadId) {
+                await minioClient.abortMultipartUpload(bucketName, objectName, uploadId);
+            }
+            throw error;
+        }
+    }
 }

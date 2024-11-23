@@ -48,73 +48,73 @@ export default function LoginModal({ toggleModal }: Props) {
 				className={styles.blurBg}
 				onClick={() => toggleModal(ModalTypeEnum.None)}
 			/>
-				<form id={styles.loginForm} onSubmit={handleSubmit(submitForm)}>
-					<div className={styles.formHeader}>Sign In</div>
-					<div className={styles.registerNavigator}>
-						Don't have an account?{' '}
-						<span
-							tabIndex={0}
-							role="button"
-							onClick={() => toggleModal(ModalTypeEnum.Register)}
-							onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
-						>
-							Click here
-						</span>
-					</div>
-					{errorMessage && <span>{errorMessage}</span>}
-					<FormItem
-						isFirstVisit={isFirstVisit}
-						labelName="Username"
-						name="username"
-						placeholder="Enter your username"
-						inputId="usernameInput"
-						type="text"
-						error={errors.username}
-						register={register('username', {
-							required: 'Username is required',
-							minLength: {
-								value: 8,
-								message: 'Username must be at least'
-							}
-						})}
-					/>
-					<FormItem
-						isFirstVisit={isFirstVisit}
-						labelName="Password"
-						name="password"
-						placeholder="Enter your password"
-						inputId="passwordInput"
-						type="password"
-						error={errors.password}
-						register={register('password', {
-							required: 'Password is required'
-						})}
-					/>
-					<div className={styles.forgotPassword}>
-						<span
-							tabIndex={0}
-							role="button"
-							onClick={() => toggleModal(ModalTypeEnum.Register)}
-							onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
-						>
-							Forgot password?
-						</span>
-					</div>
-					<button
-						form={styles.loginForm}
-						disabled={loading}
-						className={styles.submitButton}
-						onClick={() => {
-							setIsFirstVisit(false);
-						}}
-						value="Submit"
-						type="submit"
+			<form id={styles.loginForm} onSubmit={handleSubmit(submitForm)}>
+				<div className={styles.formHeader}>Sign In</div>
+				<div className={styles.registerNavigator}>
+					Don't have an account?{' '}
+					<span
+						tabIndex={0}
+						role="button"
+						onClick={() => toggleModal(ModalTypeEnum.Register)}
+						onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
 					>
-						{loading && <FontAwesomeIcon icon={faSpinner} spin />}
-						{!loading && <span>Login</span>}
-					</button>
-				</form>
-			
+						Click here
+					</span>
+				</div>
+				{errorMessage && <span>{errorMessage}</span>}
+				<FormItem
+					isFirstVisit={isFirstVisit}
+					labelName="Username"
+					name="username"
+					placeholder="Enter your username"
+					inputId="usernameInput"
+					type="text"
+					error={errors.username}
+					register={register('username', {
+						required: 'Username is required',
+						minLength: {
+							value: 8,
+							message: 'Username must be at least'
+						}
+					})}
+				/>
+				<FormItem
+					isFirstVisit={isFirstVisit}
+					labelName="Password"
+					name="password"
+					placeholder="Enter your password"
+					inputId="passwordInput"
+					type="password"
+					error={errors.password}
+					register={register('password', {
+						required: 'Password is required'
+					})}
+				/>
+				<div className={styles.forgotPassword}>
+					<span
+						tabIndex={0}
+						role="button"
+						onClick={() => toggleModal(ModalTypeEnum.Register)}
+						onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
+					>
+						Forgot password?
+					</span>
+				</div>
+				<button
+					form={styles.loginForm}
+					disabled={loading}
+					className={styles.submitButton}
+					onClick={() => {
+						setIsFirstVisit(false);
+					}}
+					value="Submit"
+					type="submit"
+				>
+					{loading && <FontAwesomeIcon icon={faSpinner} spin />}
+					{!loading && <span>Login</span>}
+				</button>
+			</form>
+
 		</>
 	)
 }

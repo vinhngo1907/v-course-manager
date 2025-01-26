@@ -3,18 +3,22 @@ import * as icons from '@constants/icons'
 export default [
 	{
 		icon: icons.HOME,
-		label: 'Home'
+		label: 'Home',
+		path: "/"
 	},
 	{
 		icon: icons.PROGRESS,
-		label: 'Progress'
+		label: 'Progress',
+		path: "/progress"
 	},
 	{
 		icon: icons.MESSAGE,
-		label: 'Message'
+		label: 'Message',
+		path: "messages"
 	},
 	{
 		icon: icons.SETTING,
-		label: 'Settings'
+		label: 'Settings',
+		path: "settings"
 	}
 ]

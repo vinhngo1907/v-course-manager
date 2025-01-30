@@ -19,11 +19,13 @@ function Sidebar({ isWide }) {
 				{sidebars.map((sidebar, index) => (
 					<div
 						onClick={() => setCurrentIndex(index)}
-						className={`${styles.sidebarItem} ${index === currentIndex ? styles.itemActive : ''
-							}`}
+						className={
+							`${styles.sidebarItem} 
+							${index === currentIndex ? styles.itemActive : ''}`
+						}
 						key={'sidebarItem' + index}
 					>
-						<a href={sidebar.path || '#'}>
+						<a href={`${sidebar.path || '#'}`}>
 							<div className={styles.itemIcon}>
 								<img src={`/${sidebar.icon}`} alt="icon" />
 							</div>

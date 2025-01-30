@@ -16,7 +16,7 @@ export default function Header({ profile, toggleModal }: Props) {
                 <div className={styles.headerLeft}>
                     <div className={styles.search}>
                         <div className={styles.searchIcon}>
-                            <img src={SearchIcon} alt="search-icon" />
+                            <img src={`/${SearchIcon}`} alt="search-icon" />
                         </div>
                         <input
                             className={styles.searchInput}
@@ -29,7 +29,7 @@ export default function Header({ profile, toggleModal }: Props) {
                     <ul className={styles.icons}>
                         <li>
                             <a href="#" onClick={() => toggleModal(ModalTypeEnum.Login)}>
-                                <img src={ProfileIcon} alt="icon" />
+                                <img src={`/${ProfileIcon}`} alt="icon" />
                                 {profile && profile.fullName}
                             </a>
                         </li>

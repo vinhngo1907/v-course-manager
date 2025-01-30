@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import style from '@styles/Course.module.css';
 import courses from '../../Components/Video/VideoList/courses';
+import Layout from "@components/Layouts";
 
 const VideoPage = () => {
     const router = useRouter();
@@ -20,11 +21,13 @@ console.log({id});
     }
 
     return (
+        <Layout>
         <div className={style.videoDetail}>
             <h1 className={style.videoTitle}>{videoDetail.username}</h1>
             <video src={videoDetail.backgroundVideo} controls className={style.videoPlayer} />
             <p className={style.videoDesc}>{videoDetail.desc}</p>
         </div>
+        </Layout>
     );
 };
 

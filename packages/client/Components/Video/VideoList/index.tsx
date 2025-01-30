@@ -8,7 +8,7 @@ const VideoList = () => {
     const [videos] = useState(courses);
     const router = useRouter();
     const handleWatchDetail = (id) => {
-        router.push(`video/${id}`);
+        router.push(`course/${id}`);
     }
 
     return (
@@ -22,8 +22,10 @@ const VideoList = () => {
                         key={index}
                         username={username}
                         subname={subname}
-                        avatar={`https://picsum.photos/200/300?v=${index}`}
-                        backgroundVideo={`https://picsum.photos/200/300?v=${index}`}
+                        // avatar={`https://picsum.photos/200/300?v=${index}`}
+                        avatar={avatar}
+                        // backgroundVideo={`https://picsum.photos/200/300?v=${index}`}
+                        backgroundVideo={backgroundVideo}
                         time={time}
                         desc={desc}
                         onWatchDetail={() => handleWatchDetail(id)}

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import style from '@styles/Video.module.css';
-import courses from '@components/Video/VideoList';
+import style from '@styles/Course.module.css';
+import courses from '../../Components/Video/VideoList/courses';
 
 const VideoPage = () => {
     const router = useRouter();
     const { id } = router.query;
-
+console.log({id});
     const [videoDetail, setVideoDetail] = useState(null);
 
     useEffect(() => {
         if (!id) return;
-        const video = courses.find((course) => course.id === parseInt(id, 10)); // Ép kiểu nếu id là số
+        const video = courses.find((course) => course.id === id);
         setVideoDetail(video || null);
     }, [id]);
 

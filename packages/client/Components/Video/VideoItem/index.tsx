@@ -2,11 +2,16 @@ import { IVideo } from '@interfaces/video';
 import React from 'react';
 import style from '@styles/Video.module.css';
 
-const VideoItem: React.FC<IVideo> = ({
-   username, subname, avatar, backgroundVideo, time, desc
+const VideoItem = ({
+    username, subname, avatar, backgroundVideo,
+    time, desc, onWatchDetail
 }) => {
     return (
-        <div className={style.video} style={{ background: `url(${backgroundVideo})` }}>
+
+        <div className={style.video}
+            style={{ background: `url(${backgroundVideo})` }}
+            onClick={onWatchDetail}
+        >
             <div className={style.videoHeader}>
                 <div className={style.videoHeaderInfor}>
                     <img src={avatar} alt="user" className={style.avatar} />

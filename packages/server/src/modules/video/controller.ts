@@ -11,6 +11,6 @@ export class VideoController {
     async getVideosByCourse(
         @Param("id") id: string
     ){
-        
+        return await this.videoService.findVideosByCourse(id);
     }
 }

@@ -36,6 +36,7 @@ function Layout({ children, isWide, title }: Layout) {
                 await axios.get('/auth/profile');
             } catch (error) {
                 // ignore
+                console.log("Loi ne >>>>", { error });
             }
         })();
     }, []);
@@ -50,7 +51,7 @@ function Layout({ children, isWide, title }: Layout) {
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}
             {modalType === ModalTypeEnum.Login && <LoginModal toggleModal={toggleModal} />}
             <div className={styles.container}>
-                <SidebarComponent isWide={isWide}></SidebarComponent>
+                <SidebarComponent isWide={isWide} />
                 <section className={styles.main}>
                     <HeaderComponent profile={profile} toggleModal={toggleModal}></HeaderComponent>
                     <div className={styles.content}>
@@ -58,7 +59,7 @@ function Layout({ children, isWide, title }: Layout) {
                             <h2 className={styles.pageTitle}>{title}</h2>
                             <div className="action">
                                 <div className="icon">
-                                    <img src={DotsIcon} alt="icon" />
+                                    <img src={`/${DotsIcon}`} alt="icon" />
                                 </div>
                             </div>
                         </div>

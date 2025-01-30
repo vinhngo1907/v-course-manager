@@ -5,4 +5,5 @@ export interface IVideo {
     backgroundVideo: string;
     time: string;
     desc: string;
+    onWatchDetail: Function;
 }

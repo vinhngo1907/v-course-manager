@@ -7,7 +7,7 @@ const CourseCommentItem = () => {
         <div className={style.courseCommentItem}>
             <img
                 className={style.courseCommentAvatar}
-                src="http://yeu16.com/wp-content/uploads/2021/03/top-10-dien-vien-jav-nhat-ban.jpg"
+                src="https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png"
                 alt="user"
             />
             <div className={style.courseCommentItemInfor}>
@@ -21,22 +21,22 @@ const CourseCommentItem = () => {
                 </p>
                 <div className={style.courseCommentItemComment}>
                     <span>
-                        <img src={LIKE} alt="like comment" />
+                        <img src={`${LIKE}`} alt="like comment" />
                         145
                     </span>
 
                     <span>
-                        <img src={DISLIKE} alt="dislike comment" />5
+                        <img src={`${DISLIKE}`} alt="dislike comment" />5
                     </span>
 
                     <span>
-                        <img src={FLAG} alt="like comment" />
+                        <img src={`${FLAG}`} alt="like comment" />
                     </span>
 
                     <span>Reply</span>
                 </div>
                 <div className={style.courseCommentItemInforAll}>
-                    <span /> View 99 replys
+                    <span/> View 99 replys
                 </div>
             </div>
         </div>

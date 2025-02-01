@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { IsString, IsNotEmpty } from "class-validator";
 import { Course } from "@prisma/client";
 
-export class VideoCreateDto {
+export class VideoCreationDTO {
     @ApiProperty({ default: 'this is title' })
     @IsString()
     @Type(() => String)
@@ -22,16 +22,17 @@ export class VideoCreateDto {
     @IsNotEmpty()
     readonly thumbnail?: string
 
-    @ApiProperty({ default: "this is courseId" })
-    @IsString()
-    @Type(() => String)
-    readonly courseId?: String
-
     @ApiProperty({ default: 'this is videoUrl' })
     @IsString()
     @Type(() => String)
     @IsNotEmpty()
     readonly videoUrl?: string;
 
-    readonly course?: Course
+    @ApiProperty({ default: "this is courseId" })
+    @IsString()
+    @Type(() => String)
+    @IsNotEmpty()
+    readonly courseId?: string
+
+    course?: Course
 }

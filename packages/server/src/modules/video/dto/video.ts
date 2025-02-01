@@ -1,4 +1,4 @@
-export interface VideoDTO {
+export class VideoDTO {
     title: string;
     description: string;
     thumbnail: string;

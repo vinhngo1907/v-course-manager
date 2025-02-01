@@ -1,6 +1,7 @@
 import { DatabaseService } from '@modules/database/service';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
+import { CourseCreationDTO } from "./dto/create-course.dto";
 
 @Injectable()
 export class CourseService {
@@ -42,5 +43,22 @@ export class CourseService {
                 courseId: dto.courseId,
             },
         });
+    }
+
+    async addCourse(dto: CourseCreationDTO): Promise<CourseCreationDTO> {
+        try {
+            const newCourse = await this.databaseService.course.create({
+                data: {
+                    title: dto.title,
+                    description: dto.description,
+                    thumbnail: dto.thumbnailUrl
+                }
+            });
+
+            return newCourse;
+        } catch (error) {
+            this.logger.error(error.message);
+            throw new InternalServerErrorException(error);
+        }
     }
 }

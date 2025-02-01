@@ -4,13 +4,13 @@ import { IsNotEmpty } from "class-validator";
 export class CourseCreationDTO {
     @IsNotEmpty()
     @ApiProperty()
-    title: String
+    title: string
 
     @IsNotEmpty()
     @ApiProperty()
-    description: String
+    description: string
 
     @IsNotEmpty()
     @ApiProperty()
-    thumbnailUrl: String
+    thumbnailUrl?: string
 }

@@ -61,4 +61,15 @@ export class CourseService {
             throw new InternalServerErrorException(error);
         }
     }
+
+    async findOne(courseId: string) {
+        return await this.databaseService.course.findUnique({
+            where: {
+                id: courseId
+            },
+            include:{
+                videos: true
+            }
+        })
+    }
 }

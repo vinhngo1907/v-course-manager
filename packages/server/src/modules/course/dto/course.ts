@@ -4,3 +4,8 @@ export interface CourseDTO {
     thumbnail?: string;
     videos?: string[];
 }
+
+export interface RegisterCourseDTO {
+    userId: string;
+    courseId: string;
+}

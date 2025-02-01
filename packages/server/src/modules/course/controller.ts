@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CourseService } from './service';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 
@@ -20,5 +20,10 @@ export class CourseController {
     @Get(':userId')
     async getUserRegistrations(@Param('userId') userId: string) {
         return this.courseService.getUserRegistrations(userId);
+    }
+
+    @Delete()
+    async unregister(@Body() dto: RegisterCourseDTO) {
+        return this.courseService.unregisterCourse(dto);
     }
 }

@@ -34,4 +34,13 @@ export class CourseService {
             include: { course: true },
         });
     }
+
+    async unregisterCourse(dto: RegisterCourseDTO) {
+        return await this.databaseService.courseRegistration.deleteMany({
+            where: {
+                userId: dto.userId,
+                courseId: dto.courseId,
+            },
+        });
+    }
 }

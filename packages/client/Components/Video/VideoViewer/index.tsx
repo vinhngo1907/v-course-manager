@@ -15,6 +15,8 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
     const [isVolumeMuted, setIsVolumeMuted] = useState(false);
     const [speed, setSpeed] = useState(SpeedOptions[1]);
     const videoEnd = useCallback(() => setIsVideoStarted(false), []);
+    const [progress, setProgress] = useState(0);
+
     const startVideo = () => {
         const video = videoRef.current;
         setIsVideoStarted(!isVideoStarted);
@@ -24,6 +26,7 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
             else { video.pause(); }
         }
     }
+
     const toggleVolume = () => {
         const video = videoRef.current;
         if (video) {
@@ -31,6 +34,20 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
             setIsVolumeMuted(!isVolumeMuted);
         }
     }
+    
+    const openFullScreen = () => {
+        const video = videoRef.current;
+        if(video){
+            if(video.requestFullscreen){
+                video.requestFullscreen();
+            } else if(video.webkitRequestFullscreen){
+                video.webkitRequestFullscreen();
+            } else if(video.msRequestFullscreen){
+                video.msRequestFullscreen();
+            }
+        }
+    };
+
     const setPlaySpeed = (speed: string) => {
         const video = videoRef.current;
         if (video) {
@@ -57,6 +74,16 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
                             ))}
                         </ul>
                     )}
+                </span>
+                <VideoDuration videoRef={videoRef} endVideo={videoEnd} />
+                <span className={style.Volume} onClick={toggleVolume}>
+                    <img src={isVolumeMuted ? MUTED_VOLUME :VOLUME}/>
+                </span>
+                <span>
+                    <img src={HD} alt="hd"/>
+                </span>
+                <span>
+                    <img src={ZOOM} alt="zoom" onClick={openFullScreen}/>
                 </span>
             </div>
         </div>

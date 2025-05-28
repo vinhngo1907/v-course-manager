@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "@styles/Video.module.css";
 
 interface IProps {
@@ -20,6 +20,24 @@ const VideoDuration: React.FC<IProps> = ({ videoRef, endVideo }) => {
         }
         return time;
     }
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            video.addEventListener('timeupdate', () => {
+                setCurrentSeconds(Math.floor(video.currentTime));
+                setPercent(`${(video.currentTime / video.duration) * 100}% `);
+
+                if (video.currentTime == video.duration) {
+                    endVideo();
+                }
+            });
+
+            setDurationSeconds(Math.floor(video.duration));
+        }
+
+        return video?.removeEventListener('timeupdate', () => { });
+    }, [endVideo, videoRef])
 
     const selectTime = (event: React.MouseEvent<HTMLDivElement>) => {
         const bar = barRef.current;

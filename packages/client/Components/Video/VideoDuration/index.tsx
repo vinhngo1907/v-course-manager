@@ -18,6 +18,7 @@ const VideoDuration: React.FC<IProps> = ({ videoRef, endVideo }) => {
         if (seconds) {
             time = new Date(seconds * 1000).toISOString().substring(11, 8);
         }
+        
         return time;
     }
 
@@ -37,7 +38,7 @@ const VideoDuration: React.FC<IProps> = ({ videoRef, endVideo }) => {
         }
 
         return video?.removeEventListener('timeupdate', () => { });
-    }, [endVideo, videoRef])
+    }, [endVideo, videoRef]);
 
     const selectTime = (event: React.MouseEvent<HTMLDivElement>) => {
         const bar = barRef.current;

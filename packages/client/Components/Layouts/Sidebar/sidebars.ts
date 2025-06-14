@@ -14,11 +14,16 @@ export default [
 	{
 		icon: icons.MESSAGE,
 		label: 'Message',
-		path: "messages"
+		path: "message"
 	},
 	{
 		icon: icons.SETTING,
 		label: 'Settings',
 		path: "settings"
+	},
+	{
+		icon: icons.UPLOAD,
+		label: 'Upload',
+		path: "upload-video"
 	}
 ]

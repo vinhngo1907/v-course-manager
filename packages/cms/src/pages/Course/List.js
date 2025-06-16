@@ -30,6 +30,7 @@ export default function Courses() {
             }
         });
         const response = await apis.course.find(queryString.query());
+        console.log(response)
         const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
         if (count > 0) {
             setCourses(

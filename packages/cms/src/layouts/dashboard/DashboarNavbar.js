@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
-import { Toolbar } from "@material-ui/core";
 
-import { experimentalStyled as styled } from '@material-ui/core/styles';
+import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
+import { Box, Stack, AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { MHidden } from '../../components/@material-extend';
+
+import Searchbar from './Searchbar';
+import AccountPopover from './AccountPopover';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -26,20 +30,25 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
         padding: theme.spacing(0, 5)
     }
 }));
-DashboardNavbar.prototype = {
+DashboardNavbar.propTypes = {
     profile: PropTypes.object,
     onOpenSidebar: PropTypes.func
 }
-export default function DashboardNavbar() {
+export default function DashboardNavbar({ profile, onOpenSidebar }) {
     return (
         <RootStyle>
             <ToolbarStyle>
+                <MHidden width="lgUp">
+                    <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+                        <Icon icon={menu2Fill} />
+                    </IconButton>
+                </MHidden>
+                <Searchbar />
                 <Box sx={{ flexGrow: 1 }} />
-                {/* <Searchbar /> */}
                 <Stack direction="row" spacing={{ xs: 0.5, sm: 1.5 }}>
                     {/* <LanguagePopover /> */}
                     {/* <NotificationsPopover /> */}
-                    {/* {profile && <AccountPopover profile={profile} />} */}
+                    {profile && <AccountPopover profile={profile} />}
                 </Stack>
             </ToolbarStyle>
         </RootStyle>

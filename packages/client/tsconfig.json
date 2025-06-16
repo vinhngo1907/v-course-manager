@@ -33,6 +33,15 @@
 			],
 			"@constants/*": [
 				"constants/*"
+			],
+			"@context/*": [
+				"context/*"
+			],
+			"@Config/*": [
+				"config/*"
+			],
+			"@Services/*" : [
+				"services"
 			]
 		},
 		"incremental": true

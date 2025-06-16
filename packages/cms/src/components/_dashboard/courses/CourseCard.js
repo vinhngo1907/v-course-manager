@@ -1,7 +1,11 @@
-import PropTypes, { Card, CardContent, CardMedia, Typography } from "@material-ui/core";
-
+import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 // material
-import { makeStyles } from "@material-ui/styles"
+import { Card, Link, Typography, CardContent, CardMedia } from '@material-ui/core';
+// utils
+import { makeStyles } from '@material-ui/styles';
+
+// ----------------------------------------------------------------------
 
 const useStyles = makeStyles({
     root: {
@@ -18,10 +22,10 @@ CourseCard.propTypes = {
     course: PropTypes.object
 };
 
-
 export default function CourseCard({ course }) {
     const classes = useStyles();
     const { id, title, description, thumbnailUrl, videoCount } = course;
+
     return (
         <Card className={classes.root}>
             <CardMedia image={thumbnailUrl} title={title} className={classes.media} />
@@ -44,5 +48,5 @@ export default function CourseCard({ course }) {
                 </Typography>
             </CardContent>
         </Card>
-    )
+    );
 }

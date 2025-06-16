@@ -7,7 +7,7 @@ import Layout from "@components/Layouts";
 const VideoPage = () => {
     const router = useRouter();
     const { id } = router.query;
-console.log({id});
+    console.log({ id });
     const [videoDetail, setVideoDetail] = useState(null);
 
     useEffect(() => {
@@ -22,11 +22,11 @@ console.log({id});
 
     return (
         <Layout>
-        <div className={style.videoDetail}>
-            <h1 className={style.videoTitle}>{videoDetail.username}</h1>
-            <video src={videoDetail.backgroundVideo} controls className={style.videoPlayer} />
-            <p className={style.videoDesc}>{videoDetail.desc}</p>
-        </div>
+            <div className={style.videoDetail}>
+                <h1 className={style.videoTitle}>{videoDetail.username}</h1>
+                <video src={videoDetail.backgroundVideo} controls className={style.videoPlayer} />
+                <p className={style.videoDesc}>{videoDetail.desc}</p>
+            </div>
         </Layout>
     );
 };

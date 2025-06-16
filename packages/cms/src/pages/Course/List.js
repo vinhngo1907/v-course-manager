@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import { useEffect, useState } from 'react';
 // material
-import { Button, CircularProgress, Typography, Container } from "@material-ui/core";
-
+import { Button, Container, Stack, Typography } from '@material-ui/core';
+// components
 import { Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { RequestQueryBuilder } from '@nestjsx/crud-request';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Page from '../../components/Page';
+import { CourseList } from '../../components/_dashboard/courses';
 //
 import * as apis from '../../apis';
 
@@ -27,10 +29,31 @@ export default function Courses() {
                 select: ['id']
             }
         });
-    }
+        const response = await apis.course.find(queryString.query());
+        console.log(response)
+        const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
+        if (count > 0) {
+            setCourses(
+                fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
+                    id,
+                    title,
+                    description,
+                    videoCount: videos.length,
+                    thumbnailUrl
+                }))
+            );
+        }
+        setCanReadMore(fetchedPage < pageCount);
+        setPage(fetchedPage);
+        setIsLoading(false);
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
     const fetchMoreCourses = async () => {
-
-    }
+        setPage(page + 1);
+        await fetchData();
+    };
     return (
         <Page title="Courses">
             <Container>
@@ -49,7 +72,7 @@ export default function Courses() {
                 </Stack>
 
                 <Stack direction="column" alignItems="center">
-                    {/* <CourseList courses={courses} /> */}
+                    <CourseList courses={courses} />
                     {isLoading && <CircularProgress />}
                     {canReadMore && !isLoading && (
                         <Button style={{ marginTop: '24px' }} variant="contained" onClick={fetchMoreCourses}>

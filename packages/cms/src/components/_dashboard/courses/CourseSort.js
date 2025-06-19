@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-// Material
-import { Icon } from "@material-ui/core";
-import { Button, Menu, MenuItem, Typography } from "@material-ui/core";
+import { useState } from "react";
+import chevronUpFill from '@iconify/icons-eva/chevron-up-fill';
 import chevronDownFill from '@iconify/icons-eva/chevron-down-fill';
+
+// Material
+import { Icon, Button, Menu, MenuItem, Typography } from "@material-ui/core";
 
 // ------------------------------------------------------------------------------
 

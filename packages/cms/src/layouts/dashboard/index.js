@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 // ----------------------------------------------------------------------
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
+import DashboardNavbar from "./DashboarNavbar";
+import DashboardSidebar from "./DashboardSidebar";
+import { setUpdateLoginState } from "../../apis/axios";
+import * as apis from "../../apis";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -26,8 +31,43 @@ const MainStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function DashboardLayout() {
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [profile, setProfile] = useState(null);
+
+    setUpdateLoginState((newProfile) => {
+        if (
+            profile === null ||
+            newProfile.fullname !== profile.fullname ||
+            newProfile.email !== profile.email
+        ) {
+            setProfile(newProfile);
+        }
+
+        // localStorage.setItem('email', newProfile?.email || '');
+        // localStorage.setItem('username', newProfile?.username || '');
+    });
+
+    useEffect(() => {
+        (async function fetchUserProfile() {
+            try {
+                if (!(await apis.auth.profile())) {
+                    navigate("/login", { replace: true })
+                }
+            } catch (error) {
+
+            }
+        })()
+    }, []);
+
     return (
         <RootStyle>
+            <DashboardNavbar profile={profile} onOpenSidebar={() => setOpen(true)} />
+            <DashboardSidebar
+                profile={profile}
+                isOpenSidebar={open}
+                onCloseSidebar={() => setOpen(false)}
+            />
             <MainStyle>
                 <Outlet />
             </MainStyle>

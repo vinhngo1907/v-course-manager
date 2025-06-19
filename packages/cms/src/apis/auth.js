@@ -12,7 +12,7 @@ export const profile = async () => {
 
 export const login = async (data) => {
     try {
-        const response = await axios.post('/auth/login', data);
+        const response = await axios.post('auth/login', data);
         return response.data;
     } catch (error) {
         console.error(error.message);

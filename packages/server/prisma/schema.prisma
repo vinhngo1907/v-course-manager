@@ -62,7 +62,7 @@ model Role {
     createdBy String   @default("system")
     updatedAt DateTime @updatedAt
     updatedBy String   @default("system")
-    isActive    Boolean  @default(true)
+    isActive  Boolean  @default(true)
 }
 
 model Subtitle {
@@ -101,6 +101,17 @@ model CommentReactions {
     @@map("Comment_Reaction")
 }
 
+model Course {
+    id                 String               @id @default(uuid())
+    title              String               @db.VarChar(300)
+    description        String               @db.VarChar(300)
+    thumbnail          String?              @db.VarChar(300)
+    videos             Video[]
+    CourseRegistration CourseRegistration[]
+
+    @@map("Course")
+}
+
 model Video {
     id          String     @id @default(uuid())
     title       String     @db.VarChar(300)
@@ -109,21 +120,23 @@ model Video {
     videoUrl    String?    @db.VarChar(300)
     order       Int        @db.SmallInt
     subtitles   Subtitle[]
-    Course      Course?    @relation(fields: [courseId], references: [id])
-    courseId    String?
+    course      Course     @relation(fields: [courseId], references: [id])
+    courseId    String
     publishAt   DateTime   @default(now())
 
     @@map("Video")
 }
 
-model Course {
-    id          String  @id @default(uuid())
-    title       String  @db.VarChar(300)
-    description String  @db.VarChar(300)
-    thumbnail   String? @db.VarChar(300)
-    videos      Video[]
+model CourseRegistration {
+    id           String   @id @default(uuid())
+    userId       String
+    courseId     String
+    registeredAt DateTime @default(now())
 
-    @@map("Course")
+    course Course @relation(fields: [courseId], references: [id])
+
+    @@unique([userId, courseId])
+    @@map("CourseRegistration")
 }
 
 // Define junction table for the many-to-many relationship

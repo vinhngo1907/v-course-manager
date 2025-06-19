@@ -19,3 +19,4 @@ export const LOGO = 'icons/logo.png';
 export const PROFILE = 'icons/profile.svg';
 export const SEARCH = 'icons/search.svg';
 export const DOTS = 'icons/dots.svg';
+export const UPLOAD = 'assets/upload.svg';

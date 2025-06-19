@@ -6,13 +6,14 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
-// import CourseList from './pages/Course/List';
-// import CourseCreate from './pages/Course/Create';
+import CourseList from './pages/Course/List';
+import CourseCreate from './pages/Course/Create';
 // import CourseEdit from './pages/Course/Edit';
 import Blog from './pages/Blog';
 // import UserList from './pages/User/List';
 // import UserCreate from './pages/User/Create';
 import NotFound from './pages/Page404';
+// import { CourseList } from './components/_dashboard/courses';
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +33,8 @@ export default function Router() {
                 //     path: 'user/create',
                 //     element: <UserCreate />
                 // },
-                // { path: 'courses', element: <CourseList /> },
-                // { path: 'courses/create', element: <CourseCreate /> },
+                { path: 'courses', element: <CourseList /> },
+                { path: 'courses/create', element: <CourseCreate /> },
                 // { path: 'courses/:id', element: <CourseEdit /> },
                 { path: 'blog', element: <Blog /> }
             ]

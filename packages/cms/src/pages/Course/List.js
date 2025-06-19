@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // material
 import { Button, Container, Stack, Typography } from '@material-ui/core';
 // components
@@ -19,7 +19,7 @@ export default function Courses() {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [canReadMore, setCanReadMore] = useState(true);
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setIsLoading(true);
         const queryString = RequestQueryBuilder.create({
             page,
@@ -29,27 +29,36 @@ export default function Courses() {
                 select: ['id']
             }
         });
-        const response = await apis.course.find(queryString.query());
-        console.log(response)
-        const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
-        if (count > 0) {
-            setCourses(
-                fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
-                    id,
-                    title,
-                    description,
-                    videoCount: videos.length,
-                    thumbnailUrl
-                }))
-            );
+
+        try {
+            const response = await apis.course.find(queryString.query());
+            const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
+
+            if (count > 0) {
+                setCourses(
+                    fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
+                        id,
+                        title,
+                        description,
+                        videoCount: videos.length,
+                        thumbnailUrl
+                    }))
+                );
+            }
+
+            setCanReadMore(fetchedPage < pageCount);
+            setPage(fetchedPage);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
         }
-        setCanReadMore(fetchedPage < pageCount);
-        setPage(fetchedPage);
-        setIsLoading(false);
-    };
+    }, [page]);
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
+
     const fetchMoreCourses = async () => {
         setPage(page + 1);
         await fetchData();

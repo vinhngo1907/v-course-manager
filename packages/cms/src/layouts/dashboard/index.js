@@ -52,13 +52,13 @@ export default function DashboardLayout() {
         (async function fetchUserProfile() {
             try {
                 if (!(await apis.auth.profile())) {
-                    navigate("/login", { replace: true })
+                    navigate('/login', { replace: true });
                 }
             } catch (error) {
-
+                // ignore
             }
-        })()
-    }, []);
+        })();
+    },[navigate]);
 
     return (
         <RootStyle>

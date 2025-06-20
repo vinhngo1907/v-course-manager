@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
@@ -8,6 +9,9 @@ import { Card, Stack, Container, Typography } from '@material-ui/core';
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from "../components/authentication/login";
+
+//
+import * as apis from '../apis';
 
 // -----------------------------------------------------------------------
 
@@ -38,6 +42,18 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // -----------------------------------------------------------------------
 
 function Login() {
+    const navigate = useNavigate();
+    useEffect(() => {
+            (async function fetchUserProfile() {
+                try {
+                    if ((await apis.auth.profile())) {
+                        navigate('/dashboard/app', { replace: true });
+                    }
+                } catch (error) {
+                    // ignore
+                }
+            })();
+        },[navigate]);
     return (
         <RootStyle>
             <MHidden width="mdDown">

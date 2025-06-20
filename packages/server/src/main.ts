@@ -82,7 +82,7 @@ async function bootstrap() {
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
 
 	app.enableCors({
-		origin: true,
+		origin: "http://localhost:3000",
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		credentials: true,
 	});

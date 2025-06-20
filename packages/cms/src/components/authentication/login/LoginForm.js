@@ -35,6 +35,7 @@ export default function LoginForm() {
 		validationSchema: LoginSchema,
 		onSubmit: async (values) => {
 			const user = await api.auth.login(values);
+			console.log({user})
 			if (user) navigate('/dashboard', { replace: true });
 		}
 	});

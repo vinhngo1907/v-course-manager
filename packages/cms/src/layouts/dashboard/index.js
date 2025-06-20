@@ -51,9 +51,11 @@ export default function DashboardLayout() {
     useEffect(() => {
         (async function fetchUserProfile() {
             try {
-                if (!(await apis.auth.profile())) {
-                    navigate('/login', { replace: true });
-                }
+                // if (!(await apis.auth.profile())) {
+                //     navigate('/login', { replace: true });
+                // }
+                const res = await apis.auth.profile();
+                if(res?.data) setProfile(res?.data)
             } catch (error) {
                 // ignore
             }

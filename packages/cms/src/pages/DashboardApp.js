@@ -1,15 +1,24 @@
-import React from 'react';
 // material
 import { Box, Grid, Container, Typography } from '@material-ui/core';
 
 // components
 import Page from '../components/Page';
-import { 
-	AppNewUsers, AppTasks, AppWeeklySales, 
-	AppWebsiteVisits, AppBugReports, AppConversionRates,
-	AppCurrentSubject, AppCurrentVisits ,
-	AppItemOrders, AppNewsUpdate, AppOrderTimeline, AppTrafficBySite
+import {
+	AppTasks,
+	AppNewUsers,
+	AppBugReports,
+	AppItemOrders,
+	AppNewsUpdate,
+	AppWeeklySales,
+	AppOrderTimeline,
+	AppCurrentVisits,
+	AppWebsiteVisits,
+	AppTrafficBySite,
+	AppCurrentSubject,
+	AppConversionRates
 } from '../components/_dashboard/app';
+
+// ----------------------------------------------------------------------
 
 export default function DashboardApp() {
 	return (

@@ -31,7 +31,7 @@ NewsItem.propTypes = {
 
 function NewsItem({ news }) {
     const { image, title, description, postedAt } = news;
-    console.log({news})
+    // console.log({news})
 
     return (
         <Stack direction="row" alignItems="center" spacing={2}>

@@ -50,7 +50,7 @@ export default function Searchbar() {
                         <Icon icon={searchFill} width={20} height={20} />
                     </IconButton>
                 )}
-                <Slide>
+                <Slide direction='down' in={isOpen} mountOnEnter unmountOnExit>
                     <SearchbarStyle>
                         <Input autoFocus fullWidth disableUnderline
                             placeholder='Search...'
@@ -64,10 +64,10 @@ export default function Searchbar() {
                                 </InputAdornment>
                             }
                         />
+                        <Button variant="contained" onClick={handleClose}>
+                            Search
+                        </Button>
                     </SearchbarStyle>
-                    <Button variant="contained" onClick={handleClose}>
-                        Search
-                    </Button>
                 </Slide>
             </div>
         </ClickAwayListener>

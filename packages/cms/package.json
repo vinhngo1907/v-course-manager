@@ -1,5 +1,6 @@
 {
-	"name": "@minimal/material-kit-react",
+	"name": "@vcourse-manager/material-kit-cms",
+	"proxy": "http://localhost:3001",
 	"author": "henrydepchai",
 	"licence": "MIT",
 	"version": "1.0.0",

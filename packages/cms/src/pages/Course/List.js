@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // material
 import { Button, Container, Stack, Typography } from '@material-ui/core';
 // components
 import { Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
-import { RequestQueryBuilder } from '@nestjsx/crud-request';
+// import { RequestQueryBuilder } from '@nestjsx/crud-request';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Page from '../../components/Page';
 import { CourseList } from '../../components/_dashboard/courses';
@@ -19,19 +19,48 @@ export default function Courses() {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [canReadMore, setCanReadMore] = useState(true);
-    const fetchData = useCallback(async () => {
+    // const fetchData = useCallback(, [page]);
+    // const fetchData = async () => {
+    //     setIsLoading(true);
+    //     const queryString = RequestQueryBuilder.create({
+    //         page,
+    //         limit: 20,
+    //         join: {
+    //             field: 'videos',
+    //             select: ['id']
+    //         }
+    //     });
+
+    //     try {
+    //         const response = await apis.course.find(queryString.query());
+    //         const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
+
+    //         if (count > 0) {
+    //             setCourses(
+    //                 fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
+    //                     id,
+    //                     title,
+    //                     description,
+    //                     videoCount: videos.length,
+    //                     thumbnailUrl
+    //                 }))
+    //             );
+    //         }
+
+    //         setCanReadMore(fetchedPage < pageCount);
+    //         setPage(fetchedPage);
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // }
+    const fetchData = async () => {
         setIsLoading(true);
-        const queryString = RequestQueryBuilder.create({
-            page,
-            limit: 20,
-            join: {
-                field: 'videos',
-                select: ['id']
-            }
-        });
 
         try {
-            const response = await apis.course.find(queryString.query());
+            const queryPath = ''; // Thay đổi nếu cần thiết
+            const response = await apis.course.find(queryPath);
             const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
 
             if (count > 0) {
@@ -53,11 +82,10 @@ export default function Courses() {
         } finally {
             setIsLoading(false);
         }
-    }, [page]);
-
+    }
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+    }, []);
 
     const fetchMoreCourses = async () => {
         setPage(page + 1);

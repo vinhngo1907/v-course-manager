@@ -17,7 +17,9 @@ instance.interceptors.response.use(
 		// Any status code that lie within the range of 2xx cause this function to trigger
 		// Do something with response data
 		const PATHS_THAT_GET_IDENTITY = ['/auth/login', '/auth/profile'];
+		// console.log({response})
 		const hasIdentity = response?.data?.username && response?.config?.url && PATHS_THAT_GET_IDENTITY.includes(response.config.url);
+		// console.log({hasIdentity})
 		if (hasIdentity) {
 			updateLoginState({
 				id: response.data.id,

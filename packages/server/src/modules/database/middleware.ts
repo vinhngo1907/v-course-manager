@@ -29,9 +29,9 @@ export function updateUserIdInAccountMiddleware(): Prisma.Middleware {
 // Example Middleware to log all queries
 export function logQueriesMiddleware(): Prisma.Middleware {
     return async (params, next) => {
-        console.log(`Query: ${params.model}.${params.action}`);
+        // console.log(`Query: ${params.model}.${params.action}`);
         const result = await next(params);
-        console.log(`Result: ${JSON.stringify(result)}`);
+        // console.log(`Result: ${JSON.stringify(result)}`);
         return result;
     };
 }

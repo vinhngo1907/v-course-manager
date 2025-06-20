@@ -48,7 +48,7 @@ export class AuthService {
     async validateUser(username: string, pass: string): Promise<any> {
         try {
             const account = await this.accountsService.findOne(username);
-            this.logger.log(account);
+            // this.logger.log(account);
             if (account && (await isMatch(pass, account.password))) {
                 const { id, email, fullName } = account.user;
                 return {
@@ -116,7 +116,7 @@ export class AuthService {
             } = this.appConfigService.getJwtConfig();
             const token = this.jwtService.sign(payload);
 
-            return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn};SameSite=None; Secure`;
+            return `Authentication=${token}; HttpOnly; Path=/auth/profile; Max-Age=${expiresIn};SameSite=None; Secure`;
         } catch (error) {
             // this.logger.error(error);
             console.log(error);
@@ -130,15 +130,23 @@ export class AuthService {
 
     async validateJwtUser({ userId, username }): Promise<any> {
         try {
-            const user = await this.databaseService.user.findUnique({
-                where: {
-                    id: userId
+            // const user = await this.databaseService.user.findUnique({
+            //     where: {
+            //         id: userId
+            //     }
+            // });
+            const account = await this.databaseService.account.findUnique({
+                where: {username},
+                include:{
+                    user: {
+                        select: {id: true, email: true, fullName: true}
+                    }
                 }
-            });
-            if (!user) {
+            })
+            if (!account) {
                 return null;
             }
-            const { id, email, fullName } = user;
+            const { id, email, fullName } = account.user;
             return {
                 username,
                 id,

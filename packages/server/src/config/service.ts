@@ -43,7 +43,7 @@ export class AppConfigService {
 	public getJwtConfig(): JWT_CONFIG {
 		const secret = this.getValue(configKeys.JWT_SECRET);
         const expiresIn = this.getValue(configKeys.JWT_EXPIRATION_TIME, false) || '60s';
-        console.log(`JWT Config - Secret: ${secret}, Expires In: ${expiresIn}`);
+        // console.log(`JWT Config - Secret: ${secret}, Expires In: ${expiresIn}`);
         return {
             secret: `${secret}`,
             signOptions: {

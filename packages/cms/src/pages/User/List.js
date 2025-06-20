@@ -20,7 +20,7 @@ import {
     TablePagination
 } from '@material-ui/core';
 // components
-import { RequestQueryBuilder } from '@nestjsx/crud-request';
+// import { RequestQueryBuilder } from '@nestjsx/crud-request';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
@@ -50,7 +50,57 @@ function descendingComparator(a, b, orderBy) {
     return 0;
 }
 
+function getComparator(order, orderBy) {
+    return order === 'desc'
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function applySortFilter(array, comparator, query) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    if (query) {
+        return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    }
+    return stabilizedThis.map((el) => el[0]);
+}
+
+
 export default function List() {
+    const [page, setPage] = useState(0);
+    const [filterName, setFilterName] = useState('');
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [orderBy, setOrderBy] = useState('fullName');
+    const [selected, setSelected] = useState([]);
+    const [order, setOrder] = useState('asc');
+    const [users, setUsers] = useState([]);
+    const [total, setTotal] = useState(0);
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+     }
+
+    const handleFilterByName = (event) => { setFilterName(event.taget.value) }
+
+    const handleRequestSort = (event, property) => { }
+
+    const handleSelectAllClick = (event) => { }
+
+    const handleClick = (event, name) => { }
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const emptyRows = page > 0 ? Math.max(0, (1+ page) * rowsPerPage - users.length) : 0;
+    const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+    const isUserNotFound = filteredUsers.length === 0;
+
     return (
         <Page title="Users">
             <Container>

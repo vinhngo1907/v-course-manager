@@ -10,10 +10,9 @@ import CourseList from './pages/Course/List';
 import CourseCreate from './pages/Course/Create';
 // import CourseEdit from './pages/Course/Edit';
 import Blog from './pages/Blog';
-// import UserList from './pages/User/List';
-// import UserCreate from './pages/User/Create';
+import UserList from './pages/User/List';
+import UserCreate from './pages/User/Create';
 import NotFound from './pages/Page404';
-// import { CourseList } from './components/_dashboard/courses';
 
 // ----------------------------------------------------------------------
 
@@ -25,14 +24,14 @@ export default function Router() {
             children: [
                 // { path: '/', element: <Navigate to="/dashboard/app" replace /> },
                 { path: 'app', element: <DashboardApp /> },
-                // {
-                //     path: 'user',
-                //     element: <UserList />
-                // },
-                // {
-                //     path: 'user/create',
-                //     element: <UserCreate />
-                // },
+                {
+                    path: 'user',
+                    element: <UserList />
+                },
+                {
+                    path: 'user/create',
+                    element: <UserCreate />
+                },
                 { path: 'courses', element: <CourseList /> },
                 { path: 'courses/create', element: <CourseCreate /> },
                 // { path: 'courses/:id', element: <CourseEdit /> },

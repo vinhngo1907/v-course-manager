@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // material
 import { Button, Container, Stack, Typography } from '@material-ui/core';
 // components
 import { Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
-// import { RequestQueryBuilder } from '@nestjsx/crud-request';
+import { RequestQueryBuilder } from '@nestjsx/crud-request';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Page from '../../components/Page';
 import { CourseList } from '../../components/_dashboard/courses';
@@ -55,37 +55,37 @@ export default function Courses() {
     //         setIsLoading(false);
     //     }
     // }
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setIsLoading(true);
-
-        try {
-            const queryPath = ''; // Thay đổi nếu cần thiết
-            const response = await apis.course.find(queryPath);
-            const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
-
-            if (count > 0) {
-                setCourses(
-                    fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
-                        id,
-                        title,
-                        description,
-                        videoCount: videos.length,
-                        thumbnailUrl
-                    }))
-                );
+        const queryString = RequestQueryBuilder.create({
+            page,
+            limit: 20,
+            join: {
+                field: 'videos',
+                select: ['id']
             }
-
-            setCanReadMore(fetchedPage < pageCount);
-            setPage(fetchedPage);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setIsLoading(false);
+        });
+        const response = await apis.course.find(queryString.query());
+        const { data: fetchedCourses, count, page: fetchedPage, pageCount } = response;
+        if (count > 0) {
+            setCourses(
+                fetchedCourses.map(({ id, title, description, thumbnailUrl, videos }) => ({
+                    id,
+                    title,
+                    description,
+                    videoCount: videos.length,
+                    thumbnailUrl
+                }))
+            );
         }
-    }
+        setCanReadMore(fetchedPage < pageCount);
+        setPage(fetchedPage);
+        setIsLoading(false);
+    },[page]);
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const fetchMoreCourses = async () => {
         setPage(page + 1);

@@ -49,16 +49,25 @@ export default function DashboardLayout() {
     });
 
     useEffect(() => {
-        (async function fetchUserProfile() {
+        async function fetchUserProfile() {
             try {
-                if (!(await apis.auth.profile())) {
+                // if (!(await apis.auth.profile())) {
+                //     navigate('/login', { replace: true });
+                // }
+                const res = await apis.auth.profile();
+                if (res) {
+                    setProfile(res)
+                }
+                else {
                     navigate('/login', { replace: true });
                 }
             } catch (error) {
                 // ignore
+
             }
-        })();
-    },[navigate]);
+        }
+        return () => fetchUserProfile()
+    }, [navigate]);
 
     return (
         <RootStyle>

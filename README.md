@@ -87,11 +87,11 @@ App should be running at `http://localhost:8000` (client) and other ports for CM
 ## 🧱 Project Structure
 
 ```bash
-📁 client/        # Web client (React)
-📁 cms/           # Admin CMS (Next.js)
-📁 server/        # API service (NestJS)
-📁 prisma/        # Prisma schema & migrations
-📁 scripts/       # Setup and helper scripts
+📁 packages/client/             # Web client (React)
+📁 packages/cms/                # Admin CMS (Next.js)
+📁 packages/server/             # API service (NestJS)
+📁 packages/server/prisma/      # Prisma schema & migrations
+📁 packages/server/scripts/     # Setup and helper scripts
 📄 docker-compose.yml
 ```
 

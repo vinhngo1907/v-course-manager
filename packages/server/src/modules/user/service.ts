@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common
 import { DatabaseService } from "../database/service";
 import { UserBadRequestException } from "./exception";
 import { Role, User, Account } from "@prisma/client";
-import { EntityManager } from 'typeorm';
+
 @Injectable()
 export class UsersService {
     private readonly logger: Logger = new Logger(UsersService.name);

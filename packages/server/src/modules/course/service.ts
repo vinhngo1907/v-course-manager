@@ -2,6 +2,7 @@ import { DatabaseService } from '@modules/database/service';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from "./dto/create-course.dto";
+import { CrudRequest } from '@nestjsx/crud';
 
 @Injectable()
 export class CourseService {
@@ -10,10 +11,27 @@ export class CourseService {
         private readonly logger: Logger,
     ) { }
 
-    async findAll(): Promise<CourseDTO[]> {
+    async findAll(req: CrudRequest): Promise<{
+        data: CourseDTO[],
+        total: number,
+        page: number,
+        pageCount: number,
+        limit: number
+    }> {
         try {
+            const page = req.parsed.page || 1;
+            const limit = req.parsed.limit || 20;
+
+            // const [data, total] = await this.getManyAndCountCourses(req);
             const courses = await this.databaseService.course.findMany({});
-            return courses;
+            console.log({courses})
+            return {
+                data: courses,
+                page,
+                limit,
+                total: courses.length,
+                pageCount: Math.ceil(courses.length / limit),
+            };
         } catch (error) {
             this.logger.error(error.message);
             throw new InternalServerErrorException(error);
@@ -67,7 +85,7 @@ export class CourseService {
             where: {
                 id: courseId
             },
-            include:{
+            include: {
                 videos: true
             }
         })

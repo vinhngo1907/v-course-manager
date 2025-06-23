@@ -2,15 +2,15 @@
 
 ## 📘 Introduction
 
-**V Courses Manager** is a full-stack educational platform built on the **MERN stack**, with robust admin capabilities and a modular codebase.
+**V Courses Manager** is a full-stack educational platform built on the **PERN stack**, with robust admin capabilities and a modular codebase.
 
 ### 🧱 Stack
 
 - **PostgreSQL** – Relational database
 - **Prisma ORM** – Type-safe database queries
 - **NestJS** – Backend API
-- **Next.js** – Admin CMS
-- **React** – Frontend Web UI
+- **Next.js** – Frontend Web UI
+- **React** – Admin CMS
 - **Node.js** – Runtime environment
 - **Material UI** – UI components (https://mui.com)
 - **Redux** – Application state management
@@ -18,7 +18,7 @@
 
 ### 🎨 UI/UX Design
 
-- Figma Design: [V Course Storage](https://www.figma.com/community/file/978217394826446327/v-course-storage)
+- Figma Design: [V Course Storage](https://www.figma.com/community/file/978217394826446327/v-courses-storage)
 
 ---
 

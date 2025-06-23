@@ -33,7 +33,9 @@ function Layout({ children, isWide, title }: Layout) {
     useEffect(() => {
         (async function () {
             try {
-                await axios.get('/auth/profile');
+                const res = await axios.get('/auth/profile');
+                if (res?.data) setProfile(res?.data)
+
             } catch (error) {
                 // ignore
                 console.log("Loi ne >>>>", { error });

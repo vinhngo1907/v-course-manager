@@ -1,17 +1,45 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { CourseService } from './service';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Crud, CrudRequest, CrudRequestInterceptor, ParsedRequest } from '@nestjsx/crud';
+import { CourseEntity } from './model';
 
-@Controller('course')
+@ApiTags('Courses')
+@Crud({
+    model: {
+        type: CourseEntity,
+    },
+    dto: {
+        create: CourseCreationDTO,
+    },
+    params: {
+        id: {
+            type: 'uuid',
+            primary: true,
+            field: 'id',
+        },
+    },
+    query: {
+        join: {
+            videos: {
+                allow: ['id'],
+                eager: false,
+            },
+        },
+    },
+})
+
+@Controller('courses')
 export class CourseController {
     constructor(
         public readonly courseService: CourseService
     ) { }
     @Get()
-    async getAll(): Promise<CourseDTO[]> {
-        return await this.courseService.findAll();
+    @UseInterceptors(CrudRequestInterceptor)
+    async getAll(@ParsedRequest() req: CrudRequest): Promise<any> {
+        return await this.courseService.findAll(req);
     }
 
     @Post()

@@ -1,62 +1,186 @@
 # V Courses Manager
 
-## Introduction
+## 📘 Introduction
 
-The "MERN stack" consists of:
+**V Courses Manager** is a full-stack educational platform built on the **MERN stack**, with robust admin capabilities and a modular codebase.
 
-- **Postgres** as the database
-- **Prisma** as the type orm
-- **Nestjs** to build the backend API
-- **Nextjs** to build the Admin CMS
-- **React** to build the web browser UI
-- **Node.js** to run the web server in general
-- **UI/UX** https://www.figma.com/community/file/978217394826446327/v-course-storage
+### 🧱 Stack
 
-In addition to the above tools, this project also uses
+- **PostgreSQL** – Relational database
+- **Prisma ORM** – Type-safe database queries
+- **NestJS** – Backend API
+- **Next.js** – Admin CMS
+- **React** – Frontend Web UI
+- **Node.js** – Runtime environment
+- **Material UI** – UI components (https://mui.com)
+- **Redux** – Application state management
+- **JWT** – Authentication mechanism
 
-- [Material UI](www.mui.com "Visit MUI.com") React component library to obtain
-  reasonable looking extensible visual components
-- JSON Web Tokens for auth session handling
-- React-Redux to manage application state
+### 🎨 UI/UX Design
 
-## Requirements
+- Figma Design: [V Course Storage](https://www.figma.com/community/file/978217394826446327/v-course-storage)
 
-Node.js, Docker and Yarn should be installed.
+---
 
-## Quick start
+## ⚙️ Requirements
 
-The service can be locally set up with GNU Make
+- Node.js (v16+)
+- Yarn
+- Docker & Docker Compose
 
-  - `make install` 
-  - `make up -j2`: Sets up the application at `http:localhost:8000`. Note that
-    we start two processes, one for the server and the client, respectively.
-  - `make db-reset`: Clean up database. Useful when making changes.
-  - `make clean`: Clean up development environment
+---
 
-## Installation step-by-step
+## 🚀 Quick Start
 
-### JavaScript packages
+```bash
+# Step 1: Install dependencies
+make install
 
-Install client and server JS packages (separately in the respective
-`node_modules` folders) by running `yarn install` in `server/` vs `client/` and `cms/`,
-respectively.
+# Step 2: Start the whole app (client + server)
+make up -j2
 
-### Install Postgres in Docker
+# App should be running at:
+# Web Client: http://localhost:8000
+# Admin CMS: http://localhost:3000 (or per your config)
 
-Install and run Postgresql in a Docker container:
+# Step 3: Reset database (optional)
+make db-reset
 
-``` shell
+# Step 4: Clean environment
+make clean
+```
+
+---
+
+## 🧪 Manual Setup
+
+### 📦 Install JavaScript Packages
+
+Run inside each folder:
+
+```bash
+cd server && yarn install
+cd client && yarn install
+cd cms && yarn install
+```
+
+### 🐘 Run PostgreSQL with Docker
+
+```bash
 docker run -d --name postgres -p 54321:54321 postgres
 ```
 
-Data will be stored in the container. Postgres image will be downloaded, and the
-service will be running at `http://localhost:54321`. Start both servers with
+> Accessible via: `localhost:54321`
 
-``` shell
-cd server && yarn server
-cd client && yarn dev
-cd cms && yarn start
+### 🔧 Run Each Module
+
+```bash
+cd server && yarn dev         # NestJS backend API
+cd client && yarn dev         # React frontend
+cd cms && yarn dev            # Next.js Admin CMS
 ```
 
-Afterwards, the application should be accessible at `http://localhost:8000`. When
-development is finished, you can remove the Postgres docker.
+App should be running at `http://localhost:8000` (client) and other ports for CMS and API.
+
+---
+
+## 🧱 Project Structure
+
+```bash
+📁 packages/client/             # Web client (React)
+📁 packages/cms/                # Admin CMS (Next.js)
+📁 packages/server/             # API service (NestJS)
+📁 packages/server/prisma/      # Prisma schema & migrations
+📁 packages/server/scripts/     # Setup and helper scripts
+📄 docker-compose.yml
+```
+
+---
+
+## 📤 Deployment
+
+### Frontend
+
+```bash
+# Build & deploy to Google Cloud Storage or Netlify
+yarn deploy
+```
+
+### Backend
+
+1. Create `.env.production` inside `/server` with:
+```env
+DB_HOST=...
+DB_PORT=...
+DB_USER=...
+DB_PASSWORD=...
+DB_DATABASE_NAME=...
+GOOGLE_STORE_BUCKET=...
+JWT_SECRET=...
+```
+
+2. Deploy to Google App Engine:
+```bash
+yarn deploy
+```
+
+### CI/CD
+
+CI configured with **GitHub Actions**
+
+- Backend pipeline: `.github/workflows/backend.yml` (if applicable)
+- Frontend pipeline: `.github/workflows/frontend.yml` (if applicable)
+
+---
+
+## ✅ Functionalities
+
+- User & Role Management (JWT + OAuth2)
+- Courses & Lessons CRUD
+- Category, Tag filtering
+- Admin CMS for content moderation
+- Secure API routes with NestJS guards
+- Public course viewing & protected dashboard
+
+---
+
+## 📌 Dev Notes
+
+### What’s Done
+
+- [x] Auth system with JWT
+- [x] User dashboards
+- [x] Admin controls (CMS)
+- [x] Course publishing workflow
+- [x] User Authentication
+- [x] Video Upload
+- [x] Video Management
+- [x] Livestreaming
+- [x] Video Discovery
+- [x] Social Integration
+- [x] Dockerized local setup
+
+### Improvements
+
+- [ ] Add unit & e2e tests
+- [ ] Enhance mobile responsiveness
+- [ ] Realtime features via socket.io
+- [ ] Social Interactions
+- [ ] Subscription System
+- [ ] User Notifications
+- [ ] Search Functionality
+- [ ] User Privacy Settings
+- [ ] User Analytics
+- [ ] Deployment auto pipelines (CI/CD)
+
+---
+
+## 👨‍💻 Contributing
+
+Contributions welcome! Please open an issue or submit a PR for improvements.
+
+---
+
+## 📄 License
+
+Licensed under MIT. See `LICENSE` for more info.

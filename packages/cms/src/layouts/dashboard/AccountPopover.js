@@ -10,8 +10,11 @@ import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '
 // components
 import PropTypes from 'prop-types';
 import MenuPopover from '../../components/MenuPopover';
+//
 import account from '../../_mocks_/account';
 import * as apis from '../../apis';
+
+// ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
     {
@@ -31,23 +34,25 @@ const MENU_OPTIONS = [
     }
 ];
 
+// ----------------------------------------------------------------------
+
 AccountPopover.propTypes = {
     profile: PropTypes.object
-}
+};
 
 export default function AccountPopover({ profile }) {
     const navigate = useNavigate();
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
+
     const handleLogout = async () => {
         await apis.auth.logout();
-        navigate("/login", { replace: true })
-    }
+        navigate('/login', { replace: true });
+    };
 
     const handleOpen = () => {
         setOpen(true);
-    }
-
+    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -76,7 +81,13 @@ export default function AccountPopover({ profile }) {
             >
                 <Avatar src={account.photoURL} alt="photoURL" />
             </IconButton>
-            <MenuPopover>
+
+            <MenuPopover
+                open={open}
+                onClose={handleClose}
+                anchorEl={anchorRef.current}
+                sx={{ width: 220 }}
+            >
                 <Box sx={{ my: 1.5, px: 2.5 }}>
                     <Typography variant="subtitle1" noWrap>
                         {profile.fullName}
@@ -85,7 +96,9 @@ export default function AccountPopover({ profile }) {
                         {profile.email}
                     </Typography>
                 </Box>
+
                 <Divider sx={{ my: 1 }} />
+
                 {MENU_OPTIONS.map((option) => (
                     <MenuItem
                         key={option.label}
@@ -107,6 +120,7 @@ export default function AccountPopover({ profile }) {
                         {option.label}
                     </MenuItem>
                 ))}
+
                 <Box sx={{ p: 2, pt: 1.5 }}>
                     <Button fullWidth color="inherit" onClick={handleLogout} variant="outlined">
                         Logout
@@ -114,5 +128,5 @@ export default function AccountPopover({ profile }) {
                 </Box>
             </MenuPopover>
         </>
-    )
+    );
 }

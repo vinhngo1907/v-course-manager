@@ -66,7 +66,10 @@ export class AuthController {
     @Get('logout')
     logout(@Res() res: Response) {
         const emptyCookie = this.authService.getEmptyCookie();
-        res.setHeader('Set-cookie', emptyCookie);
+        // res.setHeader('Set-cookie', emptyCookie);
+        res.clearCookie('Authorization', {
+            path:'/auth/profile'
+        })
         return res.send();
     }
 

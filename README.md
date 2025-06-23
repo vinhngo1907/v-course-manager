@@ -126,8 +126,10 @@ yarn deploy
 
 ### CI/CD
 
-- CI configured with TravisCI
-- Backend pipeline in `/server/.travis.yml`
+CI configured with **GitHub Actions**
+
+- Backend pipeline: `.github/workflows/backend.yml` (if applicable)
+- Frontend pipeline: `.github/workflows/frontend.yml` (if applicable)
 
 ---
 
@@ -150,6 +152,12 @@ yarn deploy
 - [x] User dashboards
 - [x] Admin controls (CMS)
 - [x] Course publishing workflow
+- [x] User Authentication
+- [x] Video Upload
+- [x] Video Management
+- [x] Livestreaming
+- [x] Video Discovery
+- [x] Social Integration
 - [x] Dockerized local setup
 
 ### Improvements
@@ -157,6 +165,12 @@ yarn deploy
 - [ ] Add unit & e2e tests
 - [ ] Enhance mobile responsiveness
 - [ ] Realtime features via socket.io
+- [ ] Social Interactions
+- [ ] Subscription System
+- [ ] User Notifications
+- [ ] Search Functionality
+- [ ] User Privacy Settings
+- [ ] User Analytics
 - [ ] Deployment auto pipelines (CI/CD)
 
 ---

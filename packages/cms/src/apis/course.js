@@ -3,7 +3,7 @@ import { axios } from './axios';
 export const find = async (queryPath = '') => {
     try {
         const response = await axios.get(`/courses${queryPath ? `?${queryPath}` : ''}`);
-        console.log({response})
+        // console.log({response})
         return response.data;
     } catch (e) {
         console.error(e.message);

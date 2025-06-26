@@ -45,3 +45,16 @@ Content-Type: application/json
    "username":"vinhngo1",
    "password": "123456"
 }
+
+###
+
+GET {{serverUrl}}/courses/list
+###
+POST {{serverUrl}}/courses/
+Content-Type: application/json
+
+{
+    "title" :"title",
+    "description": "Just a test",
+    "thumbnailUrl": "http://localhost:9000/v-dev/course-manager-dev/course-thumb/1750932839570.PNG"
+}

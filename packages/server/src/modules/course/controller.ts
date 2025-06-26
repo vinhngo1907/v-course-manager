@@ -30,7 +30,6 @@ import { CourseEntity } from './model';
         },
     },
 })
-
 @Controller('courses')
 export class CourseController {
     constructor(
@@ -42,11 +41,17 @@ export class CourseController {
         return await this.courseService.findAll(req);
     }
 
+    @Get("/list")
+    async findAll(@ParsedRequest() req: CrudRequest): Promise<any> {
+        return await this.courseService.listCourse();
+    }
+
     @Post()
     @ApiOperation({ summary: 'Create new course' })
     @ApiResponse({ status: 201, description: 'Course is created in successfully' })
     @ApiResponse({ status: 400, description: 'Data input is not correct!' })
     async createCourse(@Body() dto: CourseCreationDTO) {
+        console.log({dto})
         return await this.courseService.addCourse(dto);
     }
 

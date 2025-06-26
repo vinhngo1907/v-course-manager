@@ -25,10 +25,11 @@ CourseCard.propTypes = {
 export default function CourseCard({ course }) {
     const classes = useStyles();
     const { id, title, description, thumbnailUrl, videoCount } = course;
+    console.log({course})
 
     return (
         <Card className={classes.root}>
-            <CardMedia image={thumbnailUrl} title={title} className={classes.media} />
+            <CardMedia image={thumbnailUrl || '/static/mock-images/placeholder-course.jpg'} title={title} className={classes.media} />
             <CardContent style={{ padding: '12px' }}>
                 <Link
                     to={`/dashboard/courses/${id}`}

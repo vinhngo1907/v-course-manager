@@ -37,7 +37,11 @@ export class CourseService {
             throw new InternalServerErrorException(error);
         }
     }
-
+    async listCourse() {
+        return await this.databaseService.course.findMany({
+            
+        })
+    }
     async registerCourse(dto: RegisterCourseDTO) {
         return await this.databaseService.courseRegistration.create({
             data: {

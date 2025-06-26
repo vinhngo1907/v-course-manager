@@ -39,7 +39,7 @@ async function bootstrap() {
 				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
 			],
 		}),
-		cors: true
+		cors: false
 	});
 	// if(!configSer)
 
@@ -82,8 +82,9 @@ async function bootstrap() {
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
 
 	app.enableCors({
-		origin: true,
-		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+		origin: 'http://localhost:3002',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		allowedHeaders: 'Content-Type, Accept',
 		credentials: true,
 	});
 

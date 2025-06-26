@@ -1,20 +1,23 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Material
+// material
 import { Card, Stack, Container, Typography, TextField } from '@material-ui/core';
-
-// Components
+// components
 import { Form, FormikProvider, useFormik } from 'formik';
 import { LoadingButton } from '@material-ui/lab';
-import * as apis from '../../apis';
 import Page from '../../components/Page';
 import { FileUploader } from '../../components/FileUploader';
 import { COURSE_THUMBNAIL_TYPE } from '../../constants/fileTypes';
+// apis
+import * as apis from '../../apis';
+
+// ----------------------------------------------------------------------
 
 export default function Create() {
-    const navigate = useNavigate();
     const [thumbnailUrl, setThumbnailUrl] = useState('');
+    const navigate = useNavigate();
+
     const CourseSchema = Yup.object().shape({
         title: Yup.string().required('Full name is required'),
         description: Yup.string().required('Username is required')
@@ -22,7 +25,8 @@ export default function Create() {
 
     const formik = useFormik({
         initialValues: {
-            title: '', description: ''
+            title: '',
+            description: ''
         },
         validationSchema: CourseSchema,
         onSubmit: async (values) => {
@@ -31,18 +35,17 @@ export default function Create() {
                 thumbnailUrl
             };
             const newCourse = await apis.course.create(data);
-            if (!newCourse) return;
-
-            navigate("/dashboard/courses", { replace: true })
+            if (!newCourse) {
+                return;
+            }
+            navigate('/dashboard/courses', { replace: true });
         }
     });
-    const { isSubmitting, getFieldProps, errors, touched } = formik;
-    const handleSubmit = (e) => {
-        e.prevetDefault();
-    }
+
+    const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = formik;
 
     return (
-        <Page title="Create | Course-CMS">
+        <Page title="List | Minimal-UI">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
@@ -52,8 +55,13 @@ export default function Create() {
                 <FormikProvider value={formik}>
                     <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
                         <Stack spacing={3}>
-                            <TextField fullWidth autoComplete="title" type="text" label="Title"
-                                {...getFieldProps('title')} error={Boolean(touched.title && errors.title)}
+                            <TextField
+                                fullWidth
+                                autoComplete="title"
+                                type="text"
+                                label="Title"
+                                {...getFieldProps('title')}
+                                error={Boolean(touched.title && errors.title)}
                                 helperText={touched.title && errors.title}
                             />
                             <TextField
@@ -88,4 +96,4 @@ export default function Create() {
             </Container>
         </Page>
     );
-};
+}

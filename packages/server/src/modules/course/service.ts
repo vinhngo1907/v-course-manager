@@ -24,9 +24,13 @@ export class CourseService {
 
             // const [data, total] = await this.getManyAndCountCourses(req);
             const courses = await this.databaseService.course.findMany({});
-            console.log({courses})
+            const mappedCourses = courses.map(course => ({
+                ...course,
+                thumbnailUrl: course.thumbnail,
+            }));
+
             return {
-                data: courses,
+                data: mappedCourses,
                 page,
                 limit,
                 total: courses.length,
@@ -38,9 +42,7 @@ export class CourseService {
         }
     }
     async listCourse() {
-        return await this.databaseService.course.findMany({
-            
-        })
+        return await this.databaseService.course.findMany({})
     }
     async registerCourse(dto: RegisterCourseDTO) {
         return await this.databaseService.courseRegistration.create({

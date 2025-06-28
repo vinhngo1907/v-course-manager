@@ -45,7 +45,7 @@ export class VideoService {
         }
     }
 
-    async create(createVideoDto: VideoCreationDTO): Promise<VideoCreationDTO> {
+    async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
         try {
             const { courseId, ...videoData } = createVideoDto;
 
@@ -58,7 +58,12 @@ export class VideoService {
                 if (!course) {
                     throw new VideoBadRequestException("Course does not exist");
                 }
-                data['course'] = {connect:{ id: course.id }};
+
+                if (course.createdById !== userId) {
+                    throw new VideoBadRequestException("You don not own this course");
+                }
+
+                data['course'] = { connect: { id: course.id } };
             }
 
             const newVideo = await this.databaseService.video.create({

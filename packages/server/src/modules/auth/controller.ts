@@ -92,6 +92,7 @@ export class AuthController {
     @Get("profile")
     async getProfile(@Req() req: RequestWithAccount, @Res() res: Response) {
         const user = req.user;
+        console.log({user})
         return res.send(user)
     }
 }

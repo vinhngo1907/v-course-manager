@@ -42,6 +42,12 @@
 			],
 			"@Services/*" : [
 				"services"
+			],
+			"@Redux/*" :[
+				"redux"
+			],
+			"@/*" : [
+				"./*"
 			]
 		},
 		"incremental": true

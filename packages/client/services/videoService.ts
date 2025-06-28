@@ -5,17 +5,9 @@ import axios, { AxiosResponse } from "axios";
 // } from "./notifications";
 import { AuthorizationHeader } from "./request.extras";
 import { VideoDetailsType } from "@context/VideoLoadContext";
+import { Video } from "@/types";
 
 const API_BASE_URL = "http://localhost:8080/api/";
-
-export interface Video {
-    id: string;
-    title: string;
-    userId: string;
-    likes: number;
-    dislikes: number;
-    viewsCount: number;
-}
 
 export interface User {
     id: string;

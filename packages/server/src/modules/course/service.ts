@@ -23,7 +23,7 @@ export class CourseService {
             const limit = req.parsed.limit || 20;
 
             // const [data, total] = await this.getManyAndCountCourses(req);
-            const courses = await this.databaseService.course.findMany({});
+            const courses = await this.databaseService.course.findMany();
             const mappedCourses = courses.map(course => ({
                 ...course,
                 thumbnailUrl: course.thumbnail,
@@ -42,7 +42,13 @@ export class CourseService {
         }
     }
     async listCourse() {
-        return await this.databaseService.course.findMany({})
+        const courses = await this.databaseService.course.findMany({});
+        const mappedCourses = courses.map(course => ({
+            ...course,
+            thumbnailUrl: course.thumbnail,
+        }));
+
+        return { data: mappedCourses }
     }
     async registerCourse(dto: RegisterCourseDTO) {
         return await this.databaseService.courseRegistration.create({
@@ -69,13 +75,28 @@ export class CourseService {
         });
     }
 
-    async addCourse(dto: CourseCreationDTO): Promise<CourseCreationDTO> {
+    async deleteCourse(courseId: string) {
+        try {
+            console.log({ courseId })
+            return await this.databaseService.course.delete({
+                where: {
+                    id: `${courseId}`
+                }
+            })
+        } catch (e) {
+            console.error('[DELETE COURSE ERROR]', e);
+            throw new InternalServerErrorException(e.message);
+        }
+    }
+
+    async addCourse(dto: CourseCreationDTO, userId: string): Promise<CourseCreationDTO> {
         try {
             const newCourse = await this.databaseService.course.create({
                 data: {
                     title: dto.title,
                     description: dto.description,
-                    thumbnail: dto.thumbnailUrl
+                    thumbnail: dto.thumbnailUrl,
+                    createdById: userId,
                 }
             });
 

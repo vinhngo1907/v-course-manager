@@ -33,6 +33,18 @@ Content-Type: application/json
    "password": "123456"
 }
 ###
+
+POST {{serverUrl}}/auth/register
+Content-Type: application/json
+
+{
+   "email": "vinhngotrung1999@gmail.com",
+   "username":"kookuu",
+   "fullName": "Imma Kuu Koo",
+   "password": "123456"
+}
+
+###
 GET {{serverUrl}}/auth/logout
 Content-Type: application/json
 
@@ -49,6 +61,7 @@ Content-Type: application/json
 ###
 
 GET {{serverUrl}}/courses/list
+
 ###
 POST {{serverUrl}}/courses/
 Content-Type: application/json
@@ -57,4 +70,14 @@ Content-Type: application/json
     "title" :"title",
     "description": "Just a test",
     "thumbnailUrl": "http://localhost:9000/v-dev/course-manager-dev/course-thumb/1750932839570.PNG"
+}
+
+###
+
+DELETE {{serverUrl}}/courses/79b4a40f-3ea9-499b-ba2e-2a8d0203f9c0
+Content-Type: application/json
+
+{
+    "courseId": "79b4a40f-3ea9-499b-ba2e-2a8d0203f9c0",
+    "userId": "79b4a40f-3ea9-499b-ba2e-2a8d0203f9c1"
 }

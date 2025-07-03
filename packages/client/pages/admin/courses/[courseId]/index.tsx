@@ -1,14 +1,13 @@
 import type { NextPage, GetServerSideProps } from 'next'
-// import type { Course, Lesson, Video } from '@prisma/client'
 import Link from 'next/link'
 import Image from 'next/image'
+// import type { Course, Lesson, Video } from '@prisma/client'
+import { Course, Video, Lesson } from '@/types';
 import CourseForm, { Inputs } from '@components/Course/CourseForm'
 import { SubmitHandler } from 'react-hook-form'
-import Heading from '@components/Layouts/Header'
 import Button from '@components/Layouts/Button'
 import toast from 'react-hot-toast'
 import { useMutation } from '@tanstack/react-query'
-import { Course, Video, Lesson } from '@/types'
 
 type Session = {
     id: number

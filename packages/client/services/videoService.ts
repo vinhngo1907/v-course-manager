@@ -1,31 +1,19 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 // import {
 //   sendNotification,
 //   sendVideoUploadedNotification,
 // } from "./notifications";
 import { AuthorizationHeader } from "./request.extras";
 import { VideoDetailsType } from "@context/VideoLoadContext";
-import { Video } from "@/types";
-
-const API_BASE_URL = "http://localhost:8080/api/";
-
-export interface User {
-    id: string;
-    likedVideos?: string[];
-    dislikedVideos?: string[];
-}
-
-export interface VideoDetails {
-    title: string;
-    userId: string;
-    [key: string]: any;
-}
+import { apiUrl } from "@constants/configs";
+import { axios } from "@/utils/axios";
+import { IUser, IVideo } from "@interfaces/index";
 
 export const getAllVideos = async (idUser?: string): Promise<AxiosResponse<any>> => {
     try {
         const url = idUser
-            ? `${API_BASE_URL}videosRecommend?idUser=${idUser}`
-            : `${API_BASE_URL}videos`;
+            ? `${apiUrl}videosRecommend?idUser=${idUser}`
+            : `${apiUrl}videos`;
 
         return await axios.get(url);
     } catch (err) {
@@ -35,7 +23,7 @@ export const getAllVideos = async (idUser?: string): Promise<AxiosResponse<any>>
 
 export const getVideo = async (id: string): Promise<AxiosResponse<any>> => {
     try {
-        return await axios.get(`${API_BASE_URL}videos/${id}`);
+        return await axios.get(`${apiUrl}videos/${id}`);
     } catch (err) {
         throw new Error("Failed to fetch video");
     }
@@ -48,13 +36,13 @@ export const ViewVideo = async (
 ): Promise<any> => {
     try {
         await axios.put(
-            `${API_BASE_URL}videos/${idVideo}`,
+            `${apiUrl}videos/${idVideo}`,
             { viewsCount },
             { headers: AuthorizationHeader() }
         );
 
         await axios.put(
-            `${API_BASE_URL}users/${idUser}`,
+            `${apiUrl}users/${idUser}`,
             { videoHistory: [idVideo] },
             { headers: AuthorizationHeader() }
         );
@@ -68,7 +56,7 @@ export const createVideo = async (
 ): Promise<AxiosResponse<any>> => {
     try {
         const res = await axios.post(
-            `${API_BASE_URL}videos`,
+            `${apiUrl}videos`,
             videoDetails,
             { headers: AuthorizationHeader() }
         );
@@ -87,7 +75,7 @@ export const createVideo = async (
 export const deleteVideo = async (id: string): Promise<AxiosResponse<any>> => {
     try {
         return await axios.delete(
-            `${API_BASE_URL}videos/${id}`,
+            `${apiUrl}videos/${id}`,
             { headers: AuthorizationHeader() }
         );
     } catch (err) {
@@ -96,28 +84,28 @@ export const deleteVideo = async (id: string): Promise<AxiosResponse<any>> => {
 };
 
 export const likeVideo = async (
-    video: Video,
-    user: User
+    video: IVideo,
+    user: IUser
 ): Promise<{ userAfterLike: any; videoAfterLike: any }> => {
     try {
         const isDisliked = user?.dislikedVideos?.includes(video.id);
 
         if (isDisliked) {
             await axios.put(
-                `${API_BASE_URL}videos/${video.id}`,
+                `${apiUrl}videos/${video.id}`,
                 { dislikes: video.dislikes - 1 },
                 { headers: AuthorizationHeader() }
             );
         }
 
         const resUser = await axios.put(
-            `${API_BASE_URL}users/${user.id}`,
+            `${apiUrl}users/${user.id}`,
             { likedVideos: [video.id] },
             { headers: AuthorizationHeader() }
         );
 
         const resVideo = await axios.put(
-            `${API_BASE_URL}videos/${video.id}`,
+            `${apiUrl}videos/${video.id}`,
             { likes: video.likes + 1 },
             { headers: AuthorizationHeader() }
         );
@@ -131,7 +119,7 @@ export const likeVideo = async (
         return { userAfterLike: resUser.data, videoAfterLike: resVideo.data };
     } catch {
         const resUser = await axios.delete(
-            `${API_BASE_URL}users/likedVideos/${user.id}`,
+            `${apiUrl}users/likedVideos/${user.id}`,
             {
                 data: { idVideo: video.id },
                 headers: AuthorizationHeader(),
@@ -139,7 +127,7 @@ export const likeVideo = async (
         );
 
         const resVideo = await axios.put(
-            `${API_BASE_URL}videos/${video.id}`,
+            `${apiUrl}videos/${video.id}`,
             { likes: video.likes - 1 },
             { headers: AuthorizationHeader() }
         );

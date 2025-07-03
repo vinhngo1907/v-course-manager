@@ -6,11 +6,6 @@ export default [
 		label: 'Home',
 		path: "/"
 	},
-	// {
-	// 	icon: icons.PROGRESS,
-	// 	label: 'Progress',
-	// 	path: "/progress"
-	// },
 	{
 		icon: icons.MESSAGE,
 		label: 'Message',
@@ -23,13 +18,8 @@ export default [
 	},
 	{
 		icon: icons.SETTING,
-		label: 'Settings',
-		path: "settings"
-	},
-	{
-		icon: icons.UPLOAD,
-		label: 'Upload',
-		path: "upload-video"
+		label: 'Admin',
+		path: "admin"
 	},
 	{
 		icon: icons.UPLOAD,

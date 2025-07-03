@@ -1,4 +1,3 @@
-import { IVideo } from '@interfaces/video';
 import React from 'react';
 import style from '@styles/Video.module.css';
 

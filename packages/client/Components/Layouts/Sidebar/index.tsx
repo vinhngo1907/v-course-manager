@@ -27,7 +27,7 @@ function Sidebar({ isWide }) {
 					>
 						<a href={`${sidebar.path || '#'}`}>
 							<div className={styles.itemIcon}>
-								<img src={`/${sidebar.icon}`} alt="icon" />
+								<img src={`${sidebar.icon}`} alt="icon" />
 							</div>
 							<div className={styles.itemLabel}>{sidebar.label}</div>
 						</a>

@@ -75,7 +75,7 @@ export default function RegisterModal({ toggleModal }: Props) {
                     register={register('username', {
                         required: 'Username is required',
                         minLength: {
-                            value: 8,
+                            value: 6,
                             message: 'Username must be at least'
                         }
                     })}

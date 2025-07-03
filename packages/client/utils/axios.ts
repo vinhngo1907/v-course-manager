@@ -1,7 +1,7 @@
 import axios from 'axios';
 import statusCodes from 'http-status-codes';
-import config from '../config';
 import { Profile } from '../types';
+import { apiUrl } from '@constants/configs';
 
 type UpdateLoginState = null | ((newProfile: null | Profile) => void);
 let updateLoginState: UpdateLoginState = null;
@@ -12,7 +12,7 @@ const setUpdateLoginState = (updateLoginStateFunction: UpdateLoginState) => {
 const instance = axios.create({
     withCredentials: true,
     // baseURL: `${config.ServerUrl}`
-    baseURL: "http://localhost:3001"
+    baseURL: apiUrl
 });
 
 instance.interceptors.response.use(

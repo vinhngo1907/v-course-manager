@@ -10,9 +10,16 @@ export type Course = {
     title: string;
     thumbnail: string;
     description: string;
+    published: boolean;
 }
 
-export interface Video {
+
+export type Lesson = {
+    id: string;
+    name: string;
+}
+
+export type Video = {
     id: string;
     title: string;
     userId: string;
@@ -20,9 +27,4 @@ export interface Video {
     dislikes: number;
     viewsCount: number;
     publicPlaybackId?: boolean
-}
-
-export interface Lesson {
-    id: string;
-    name: string;
 }

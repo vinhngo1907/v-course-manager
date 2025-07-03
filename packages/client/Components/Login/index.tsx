@@ -1,11 +1,12 @@
 import { useForm } from 'react-hook-form';
 import FormItem from '@components/FormItem';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { axios } from '../../utils/axios';
 import styles from './index.module.css';
 import { ModalTypeEnum } from '@components/Layouts';
+import { AuthContext } from '@context/AuthContext';
 
 export interface LoginFormData {
 	username: string;
@@ -17,6 +18,8 @@ type Props = {
 }
 
 export default function LoginModal({ toggleModal }: Props) {
+	const {authState: {authLoading, isAuthenticated, user}} = useContext(AuthContext);
+
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const {
@@ -73,7 +76,7 @@ export default function LoginModal({ toggleModal }: Props) {
 					register={register('username', {
 						required: 'Username is required',
 						minLength: {
-							value: 8,
+							value: 6,
 							message: 'Username must be at least'
 						}
 					})}

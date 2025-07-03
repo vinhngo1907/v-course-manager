@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import MeetingFooter from '@components/MeetingFooter';
-import Participants from '@components/Participants';
+import MeetingFooter from '@/Components/MeetingFooter';
+import Participants from '@/Components/Participants';
 import './index.module.css';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '@/redux/store';

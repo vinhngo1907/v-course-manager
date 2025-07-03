@@ -1,4 +1,4 @@
-import { SORT } from '@constants/icons';
+import { SORT } from '@/constants/icons';
 import React from 'react';
 import CourseCommentItem from '../CourseCommentItem';
 import style from '../index.module.css';

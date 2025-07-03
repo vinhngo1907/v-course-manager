@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 //   sendVideoUploadedNotification,
 // } from "./notifications";
 import { AuthorizationHeader } from "./request.extras";
-import { VideoDetailsType } from "@context/VideoLoadContext";
+import { VideoDetailsType } from "@/context/VideoLoadContext";
 import { apiUrl } from "@constants/configs";
 import { axios } from "@/utils/axios";
 import { IUser, IVideo } from "@interfaces/index";

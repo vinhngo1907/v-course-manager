@@ -1,9 +1,8 @@
 import React from 'react';
-import { PROFILE as ProfileIcon, SEARCH as SearchIcon } from '@constants/icons';
-import { Profile } from '../../../types';
+import { PROFILE as ProfileIcon, SEARCH as SearchIcon } from '@/constants/icons';
 import styles from './index.module.css';
 import { ModalTypeEnum } from '..';
-import { IUser } from '@interfaces/index';
+import { IUser } from '@/interfaces';
 
 type Props = {
     user: null | IUser;

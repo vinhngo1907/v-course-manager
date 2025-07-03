@@ -1,7 +1,8 @@
 import React from 'react';
-import Layout from '@components/Layouts';
-import CourseList from '@components/Video/VideoList';
-// import Register from '@components/Register';
+// import Layout from '@/Components/Layouts';
+import CourseList from '@/Components/Video/VideoList';
+import Layout from '@/Components/Layouts';
+// import Register from '@/Components/Register';
 
 export default function Home() {
 	return (

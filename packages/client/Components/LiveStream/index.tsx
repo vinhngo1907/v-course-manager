@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import MainScreen from "@components/MainScreen";
+import MainScreen from "@/Components/MainScreen";
 import { db, ServerValue } from "@/streamingServer/firebase";
 import {
     setMainStream,
@@ -13,8 +13,8 @@ import {
     Participant,
 } from "../../redux/features/liveVideoStreamingSlice";
 import { useDispatch } from "react-redux";
-import { getAllVideos, createVideo } from "../../services/videoService";
-import { AppDispatch, useAppSelector } from '../../redux/store';
+import { getAllVideos, createVideo } from "@/services/videoService";
+import { AppDispatch, useAppSelector } from '@/redux/store';
 
 const LiveStream: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -61,7 +61,7 @@ const LiveStream: React.FC = () => {
             localStream.getVideoTracks()[0].enabled = false;
             dispatch(setMainStream(localStream));
 
-            connectedRef.on("value", (snap) => {
+            connectedRef.on("value", (snap: any) => {
                 if (snap.val()) {
                     const defaultPreference = {
                         audio: true,
@@ -84,20 +84,20 @@ const LiveStream: React.FC = () => {
 
         // Listen participants
         if (stream && user) {
-            participantRef.on("child_added", (snap) => {
+            participantRef.on("child_added", (snap: any) => {
                 const { userName: name, preferences = {} } = snap.val();
 
                 participantRef
                     .orderByChild("timestamp")
                     .limitToFirst(1)
                     .once("value")
-                    .then((snapshot) => {
+                    .then((snapshot: any) => {
                         const firstElement = snapshot.val();
                         dispatch(setStreamer(firstElement));
                     });
 
                 const preferenceRef = participantRef.child(snap.key as string).child("preferences");
-                preferenceRef.on("child_changed", (prefSnap) => {
+                preferenceRef.on("child_changed", (prefSnap: any) => {
                     dispatch(updateParticipantField({
                         userId: snap.key as string,
                         field: prefSnap.key as keyof Participant,
@@ -108,7 +108,7 @@ const LiveStream: React.FC = () => {
                 dispatch(addParticipant({ [snap.key as string]: { name, ...preferences } }));
             });
 
-            participantRef.on("child_removed", (snap) => {
+            participantRef.on("child_removed", (snap: any) => {
                 dispatch(removeParticipant(snap.key as string));
             });
         }

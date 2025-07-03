@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import styles from "./index.module.css";
-import { ModalTypeEnum } from "@components/Layouts";
-import FormItem from "@components/FormItem";
+import { ModalTypeEnum } from "@/Components/Layouts";
+import FormItem from "@/Components/FormItem";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

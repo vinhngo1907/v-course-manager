@@ -1,4 +1,4 @@
-import { DISLIKE, FLAG, LIKE } from '@constants/icons';
+import { DISLIKE, FLAG, LIKE } from '@/constants/icons';
 import React from 'react';
 import style from '../index.module.css';
 

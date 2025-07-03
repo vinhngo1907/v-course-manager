@@ -153,11 +153,11 @@ CI configured with **GitHub Actions**
 - [x] Admin controls (CMS)
 - [x] Course publishing workflow
 - [x] User Authentication
-- [x] Video Upload
+- [ ] Video Upload
 - [x] Video Management
-- [x] Livestreaming
-- [x] Video Discovery
-- [x] Social Integration
+- [ ] Livestreaming
+- [ ] Video Discovery
+- [ ] Social Integration
 - [x] Dockerized local setup
 
 ### Improvements

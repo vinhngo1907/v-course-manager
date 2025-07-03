@@ -1,7 +1,7 @@
 import axios from 'axios';
 import statusCodes from 'http-status-codes';
-import { Profile } from '../types';
-import { apiUrl } from '@constants/configs';
+import { Profile } from '@/types';
+import { apiUrl } from '@/constants/configs';
 
 type UpdateLoginState = null | ((newProfile: null | Profile) => void);
 let updateLoginState: UpdateLoginState = null;
@@ -24,22 +24,22 @@ instance.interceptors.response.use(
             response?.data?.username &&
             response?.config?.url &&
             PATHS_THAT_GET_IDENTITY.includes(response.config.url);
-        if (hasIdentity) {
-            updateLoginState({
-                id: response.data.id,
-                email: response.data.email,
-                username: response.data.username,
-                fullName: response.data.fullName
-            });
-        }
-        if (response.config.url === '/logout') {
-            updateLoginState(null);
-        }
+        // if (hasIdentity) {
+        //     updateLoginState({
+        //         id: response.data.id,
+        //         email: response.data.email,
+        //         username: response.data.username,
+        //         fullName: response.data.fullName
+        //     });
+        // }
+        // if (response.config.url === '/logout') {
+        //     updateLoginState(null);
+        // }
         return response;
     },
     function errorHandler(error) {
         if (error?.response?.status === statusCodes.UNAUTHORIZED) {
-            updateLoginState(null);
+            // updateLoginState(null);
         }
         return Promise.reject(error);
     }

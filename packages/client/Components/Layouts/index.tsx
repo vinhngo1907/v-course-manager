@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { JSX, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import HeaderComponent from './Header';
 import SidebarComponent from './Sidebar';
 import styles from './index.module.css';
-import { DOTS as DotsIcon } from '@constants/icons';
-import LoginModal from '@components/Login';
+import { DOTS as DotsIcon } from '@/constants/icons';
+import LoginModal from '@/Components/Login';
 // import { Profile } from 'types';
 // import { axios, setUpdateLoginState } from 'utils/axios';
-import RegisterModal from '@components/Register';
-import { AuthContext, AuthContextProvider } from '@context/AuthContext';
+import RegisterModal from '@/Components/Register';
+import { AuthContext, AuthContextProvider } from '@/context/AuthContext';
+import { ModalContext } from '@/context/ModalContext';
 
 interface Layout {
     isWide: boolean
@@ -16,7 +17,7 @@ interface Layout {
     title?: string
 }
 
-type ModalType = 'login' | 'register' | 'none';
+// type ModalType = 'login' | 'register' | 'none';
 export enum ModalTypeEnum {
     Login = 'login',
     Register = 'register',
@@ -24,33 +25,14 @@ export enum ModalTypeEnum {
 };
 
 function Layout({ children, isWide, title }: Layout) {
-    const [modalType, setModalType] = useState<ModalType>(ModalTypeEnum.None);
-    const { authState: { user } } = useContext(AuthContext);
-
-    // const [profile, setProfile] = useState<null | Profile>(null);
-    // setUpdateLoginState((newProfile: null | Profile) => {
-    //     setProfile(newProfile);
-    //     localStorage.setItem('email', newProfile?.email || '');
-    //     localStorage.setItem('username', newProfile?.username || '');
-    // });
-
-    // useEffect(() => {
-    //     (async function () {
-    //         try {
-    //             const res = await axios.get('/auth/profile');
-    //             if (res?.data) setProfile(res?.data)
-
-    //         } catch (error) {
-    //             // ignore
-    //             console.log("Loi ne >>>>", { error });
-    //         }
-    //     })();
-    // }, []);
-
-    const toggleModal = (type: ModalType) => {
-        // console.log("Toggle Ne")
-        setModalType(type);
-    }
+    // const [modalType, setModalType] = useState<ModalType>(ModalTypeEnum.None);
+    const { modalType, toggleModal } = useContext(ModalContext);
+    const { authState: {user} } = useContext(AuthContext)!;
+    
+    // const toggleModal = (type: ModalType) => {
+    //     // console.log("Toggle Ne")
+    //     setModalType(type);
+    // }
 
     return (
         <>

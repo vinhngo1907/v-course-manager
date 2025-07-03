@@ -16,16 +16,32 @@ export class VideoService {
 
     async findVideosByCourse(courseId: string): Promise<VideoDTO[]> {
         try {
-            const videos = this.databaseService.course.findMany({
-                where: {
-                    id: courseId
-                },
-                include: {
-                    videos: true
+            const courses = await this.databaseService.course.findMany({
+                where: { id: courseId },
+                select: {
+                    lessons: {
+                        include: { video: true }
+                    },
                 }
             });
 
-            return videos;
+            const videoDTOs: VideoDTO[] = courses.flatMap(course =>
+                course.lessons
+                    .filter(lesson => lesson.video != null)
+                    .map(lesson => ({
+                        title: lesson.video.title,
+                        description: lesson.video.description,
+                        thumbnail: lesson.video.thumbnail ?? "",
+                        vieoUrl: lesson.video.videoUrl,
+                        subtitles: [],
+                        lessonId: lesson.video.lessonId!,
+                        ownerId: lesson.video.ownerId,
+                        duration: lesson.video.duration
+                    }))
+            );
+
+            return videoDTOs;
+
         } catch (error: any) {
             this.logger.error(error.message);
             throw new InternalServerErrorException(error);
@@ -68,7 +84,7 @@ export class VideoService {
 
             const newVideo = await this.databaseService.video.create({
                 data,
-                include: { course: true },
+                include: { lesson: true },
             });
 
             return newVideo;

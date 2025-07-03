@@ -1,5 +1,5 @@
 import { Course, Lesson, Video } from '@/types';
-import CourseCard from '@components/Course/CourseCard'
+import CourseCard from '@/Components/Course/CourseCard'
 
 type Props = {
     isAdmin?: boolean;

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './index.module.css';
-import LogoComponent from '@components/Globals/Logo';
+import LogoComponent from '@/Components/Globals/Logo';
 import sidebars from './sidebars';
 
-function Sidebar({ isWide }) {
+type SidebarProps = {
+	isWide?: boolean;
+};
+
+function Sidebar({ isWide }: SidebarProps) {
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	return (
@@ -27,7 +31,7 @@ function Sidebar({ isWide }) {
 					>
 						<a href={`${sidebar.path || '#'}`}>
 							<div className={styles.itemIcon}>
-								<img src={`${sidebar.icon}`} alt="icon" />
+								<img src={`${sidebar.icon}`} alt="icon" className="w-6 h-6 text-[#FFB347]"/>
 							</div>
 							<div className={styles.itemLabel}>{sidebar.label}</div>
 						</a>

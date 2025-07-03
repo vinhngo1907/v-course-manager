@@ -76,7 +76,6 @@ export class AuthService {
     }: RegisterPayload): Promise<any> {
         try {
             const hashedPassword = await hashPassword(rawPass);
-            console.log({ hashedPassword })
             const userRole = await this.databaseService.role.findFirstOrThrow({
                 where: {
                     name: "USER"

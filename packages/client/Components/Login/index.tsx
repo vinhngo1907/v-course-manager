@@ -1,16 +1,17 @@
 import { useForm } from 'react-hook-form';
-import FormItem from '@components/FormItem';
+import FormItem from '@/Components/FormItem';
 import { useContext, useRef, useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { axios } from '../../utils/axios';
+import { axios } from '@/utils/axios';
 import styles from './index.module.css';
-import { ModalTypeEnum } from '@components/Layouts';
-import { AuthContext } from '@context/AuthContext';
+import { ModalTypeEnum } from '@/Components/Layouts';
+import { AuthContext } from '@/context/AuthContext';
 
 export interface LoginFormData {
 	username: string;
 	password: string;
+	email: string
 }
 
 type Props = {
@@ -18,8 +19,7 @@ type Props = {
 }
 
 export default function LoginModal({ toggleModal }: Props) {
-	const {authState: {authLoading, isAuthenticated, user}} = useContext(AuthContext);
-
+	const {authState: {authLoading, isAuthenticated }, loginUser} = useContext(AuthContext)!;
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const {
@@ -34,11 +34,13 @@ export default function LoginModal({ toggleModal }: Props) {
 	const submitForm = async (data: LoginFormData) => {
 		try {
 			setLoading(true);
-			const response = await axios.post("/auth/login", data, {
-				withCredentials: true,
-			});
-			console.log(response.data);
-		} catch (error) {
+			// const response = await axios.post("/auth/login", data, {
+			// 	withCredentials: true,
+			// });
+			// console.log(response.data);
+			await loginUser(data);
+			toggleModal(ModalTypeEnum.None);
+		} catch (error: any) {
 			console.log(error.message);
 			setErrorMessage('Failed to login, please try again!');
 		} finally {

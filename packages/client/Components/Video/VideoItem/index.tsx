@@ -1,10 +1,11 @@
 import React from 'react';
-import style from '@styles/Video.module.css';
+import style from '@/styles/Video.module.css';
+import { VideoItemProps } from '@/interfaces';
 
 const VideoItem = ({
     username, subname, avatar, backgroundVideo,
     time, desc, onWatchDetail
-}) => {
+}: VideoItemProps) => {
     return (
 
         <div className={style.video}

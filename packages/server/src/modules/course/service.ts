@@ -113,7 +113,7 @@ export class CourseService {
                 id: courseId
             },
             include: {
-                videos: true
+                lessons: true
             }
         })
     }

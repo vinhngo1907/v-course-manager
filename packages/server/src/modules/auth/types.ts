@@ -1,17 +1,23 @@
-import { ApiProperty } from "@nestjsx/crud/lib/crud";
+// import { ApiProperty } from "@nestjsx/crud/lib/crud";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsString } from 'class-validator';
 
 export class RegisterPayload {
     @ApiProperty()
+    @IsEmail()
     email: string;
 
     @ApiProperty()
+    @IsString()
     username: string;
 
     @ApiProperty()
+    @IsString()
     fullName: string;
 
     @ApiProperty()
-    password: string;    
+    @IsString()
+    password: string;
 }
 
 export class LoginPayload {

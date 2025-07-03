@@ -2,13 +2,11 @@ import { SubmitHandler } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-
-import Heading from '@components/Course/Heading'
-import CourseForm, { Inputs } from '@components/Course/CourseForm'
+import Heading from '@/Components/Course/Heading'
+import CourseForm, { Inputs } from '@/Components/Course/CourseForm'
 import { axios } from '@/utils/axios'
-import { useProfile } from '@context/ProfileContext';
 import { useContext } from 'react'
-import { AuthContext } from '@context/AuthContext'
+import { AuthContext } from '@/context/AuthContext'
 
 type CourseCreateResult = {
     id: number
@@ -17,7 +15,7 @@ type CourseCreateResult = {
 export default function AdminNewCoursePage() {
     const router = useRouter()
     // const profile = useProfile()
-    const { authState: { authLoading, isAuthenticated, user } } = useContext(AuthContext);
+    const { authState: { authLoading, isAuthenticated, user } } = useContext(AuthContext)!;
     if (authLoading) {
         return (
             <div className="flex h-screen items-center justify-center">
@@ -70,7 +68,7 @@ export default function AdminNewCoursePage() {
 
     return (
         <div>
-            <Heading>New course</Heading>
+            {/* <Heading>New course</Heading> */}
             <CourseForm onSubmit={onSubmit} isLoading={mutation.isPending} />
         </div>
     )

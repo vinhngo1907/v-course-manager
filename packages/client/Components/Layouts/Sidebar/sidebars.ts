@@ -1,4 +1,4 @@
-import * as icons from '@constants/icons'
+import * as icons from '@/constants/icons'
 
 export default [
 	{
@@ -23,7 +23,12 @@ export default [
 	},
 	{
 		icon: icons.UPLOAD,
-		label: 'Live Streaming',
-		path: "liveStreaming"
+		label: 'Create Course',
+		path: "admin/courses"
 	}
+	// {
+	// 	icon: icons.UPLOAD,
+	// 	label: 'Live Streaming',
+	// 	path: "liveStreaming"
+	// }
 ]

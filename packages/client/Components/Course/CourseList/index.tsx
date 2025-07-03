@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from '../index.module.css';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import { Course } from '@/types';
 
 interface Props {

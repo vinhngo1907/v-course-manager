@@ -5,7 +5,7 @@ export interface IVideo {
     backgroundVideo: string;
     time: string;
     desc: string;
-    onWatchDetail: Function;
+    onWatchDetail:  React.MouseEventHandler<HTMLDivElement>;
 }
 
 export interface IVideo {
@@ -33,3 +33,12 @@ export interface IVideoDetails {
     [key: string]: any;
 }
 
+export interface VideoItemProps {
+  username: string;
+  subname: string;
+  avatar: string;
+  backgroundVideo: string;
+  time: string;
+  desc: string;
+  onWatchDetail: () => void;
+}

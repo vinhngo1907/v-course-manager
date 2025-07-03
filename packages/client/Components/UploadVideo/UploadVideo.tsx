@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useVideoUpload, VideoUploadProvider } from '@context/VideoLoadContext';
+import { useVideoUpload, VideoUploadProvider } from '@/context/VideoLoadContext';
 
 const DragDrop = dynamic(() => import('Components/UploadVideo/DragDrop'), {
     ssr: false,

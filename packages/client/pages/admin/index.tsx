@@ -1,5 +1,5 @@
-import AdminPage from "@components/Admin/AdminPage"
-import Layout from "@components/Layouts"
+import AdminPage from "@/Components/Admin/AdminPage"
+import Layout from "@/Components/Layouts"
 import { NextPage } from "next";
 
 type Session = {

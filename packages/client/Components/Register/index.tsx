@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import styles from "./index.module.css";
-import { ModalTypeEnum } from "@components/Layouts";
-import FormItem from "@components/FormItem";
+import { ModalTypeEnum } from "@/Components/Layouts";
+import FormItem from "@/Components/FormItem";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+// import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "@/context/AuthContext";
 
 type Props = {
     toggleModal: Function;
@@ -20,17 +21,20 @@ export interface RegisterFormData {
 
 export default function RegisterModal({ toggleModal }: Props) {
     const [loading, setLoading] = useState(false);
+    const { registerUser } = useContext(AuthContext)!;
     const [errorMessage, setErrorMessage] = useState('');
     const submitForm = async (data: RegisterFormData) => {
         try {
             setLoading(true);
-            const { retypedPassword, ...body } = data;
-            const response = await axios.post("/auth/register", data, {
-                withCredentials: true
-            });
+            const { retypedPassword, } = data;
+            // const response = await axios.post("/auth/register", data, {
+            //     withCredentials: true
+            // });
 
-            console.log(response.data);
-        } catch (error) {
+            // console.log(response.data);
+            await registerUser(data);
+            toggleModal(ModalTypeEnum.None);
+        } catch (error: any) {
             console.log(error.message);
             setErrorMessage('Failed to login, please try again!');
         } finally {
@@ -75,7 +79,7 @@ export default function RegisterModal({ toggleModal }: Props) {
                     register={register('username', {
                         required: 'Username is required',
                         minLength: {
-                            value: 8,
+                            value: 6,
                             message: 'Username must be at least'
                         }
                     })}

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import database from "config/firebaseConfig";
-import { useVideoUpload } from "@context/VideoLoadContext";
+import { useVideoUpload } from "@/context/VideoLoadContext";
 
 export default function InputImage() {
     const { setVideoDetails, videoDetails } = useVideoUpload();

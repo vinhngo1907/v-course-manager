@@ -1,7 +1,7 @@
 import axios from 'axios';
 import statusCodes from 'http-status-codes';
-import config from '../config';
-import { Profile } from '../types';
+import { Profile } from '@/types';
+import { apiUrl } from '@/constants/configs';
 
 type UpdateLoginState = null | ((newProfile: null | Profile) => void);
 let updateLoginState: UpdateLoginState = null;
@@ -12,7 +12,7 @@ const setUpdateLoginState = (updateLoginStateFunction: UpdateLoginState) => {
 const instance = axios.create({
     withCredentials: true,
     // baseURL: `${config.ServerUrl}`
-    baseURL: "http://localhost:3001"
+    baseURL: apiUrl
 });
 
 instance.interceptors.response.use(
@@ -24,22 +24,22 @@ instance.interceptors.response.use(
             response?.data?.username &&
             response?.config?.url &&
             PATHS_THAT_GET_IDENTITY.includes(response.config.url);
-        if (hasIdentity) {
-            updateLoginState({
-                id: response.data.id,
-                email: response.data.email,
-                username: response.data.username,
-                fullName: response.data.fullName
-            });
-        }
-        if (response.config.url === '/logout') {
-            updateLoginState(null);
-        }
+        // if (hasIdentity) {
+        //     updateLoginState({
+        //         id: response.data.id,
+        //         email: response.data.email,
+        //         username: response.data.username,
+        //         fullName: response.data.fullName
+        //     });
+        // }
+        // if (response.config.url === '/logout') {
+        //     updateLoginState(null);
+        // }
         return response;
     },
     function errorHandler(error) {
         if (error?.response?.status === statusCodes.UNAUTHORIZED) {
-            updateLoginState(null);
+            // updateLoginState(null);
         }
         return Promise.reject(error);
     }

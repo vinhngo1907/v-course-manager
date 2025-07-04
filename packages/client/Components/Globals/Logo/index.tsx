@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.module.css';
-import * as icons from '@constants/icons';
+import * as icons from '@/constants/icons';
 
 export default function logo(){
     return (

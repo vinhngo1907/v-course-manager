@@ -53,7 +53,7 @@ export class AuthController {
             path,
         });
 
-        return res.send(paredUser);
+        return res.send({...paredUser, accessToken: token});
     }
 
 
@@ -80,9 +80,10 @@ export class AuthController {
     @Public()
     @Post("register")
     async register(
-        @Body() registerPayload: RegisterPayload,
+        @Body() registerPayload:  RegisterPayload,
         @Res() res: Response
     ): Promise<any> {
+        console.log(registerPayload)
         const { cookie, user } = await this.authService.register(registerPayload);
         res.setHeader('Set-header', cookie);
         return res.send(user);
@@ -92,6 +93,7 @@ export class AuthController {
     @Get("profile")
     async getProfile(@Req() req: RequestWithAccount, @Res() res: Response) {
         const user = req.user;
+        // console.log({user})
         return res.send(user)
     }
 }

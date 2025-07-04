@@ -1,8 +1,12 @@
+import { Lesson } from "@prisma/client";
+
 export class VideoDTO {
     title: string;
     description: string;
     thumbnail: string;
     vieoUrl?: string;
     subtitles?: [];
-    courseId?: string;
+    lessonId: string;
+    ownerId: string;
+    duration: number
 }

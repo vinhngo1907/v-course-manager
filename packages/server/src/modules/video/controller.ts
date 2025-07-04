@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { VideoService } from './service';
 import { VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt';
+import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 
 @Controller('video')
 export class VideoController {
@@ -21,8 +23,17 @@ export class VideoController {
         return await this.videoService.findOne(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
-    async create(@Body() createVideoDTO: VideoCreationDTO): Promise<VideoCreationDTO> {
-        return await this.videoService.create(createVideoDTO);
+    async create(
+        @Body() createVideoDTO: VideoCreationDTO,
+        @Req() req: RequestWithAccount
+    ): Promise<VideoCreationDTO> {
+        const account = req.user;
+        if (!account || !account.userId) {
+            throw new BadRequestException('Account not found or not authenticated.');
+        }
+
+        return await this.videoService.create(createVideoDTO, account.userId);
     }
 }

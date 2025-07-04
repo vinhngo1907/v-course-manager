@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException } from '@nestjs/common';
 import { CourseService } from './service';
+import { Request } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudRequest, CrudRequestInterceptor, ParsedRequest } from '@nestjsx/crud';
 import { CourseEntity } from './model';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt';
+import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 
 @ApiTags('Courses')
 @Crud({
@@ -46,13 +49,20 @@ export class CourseController {
         return await this.courseService.listCourse();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     @ApiOperation({ summary: 'Create new course' })
     @ApiResponse({ status: 201, description: 'Course is created in successfully' })
     @ApiResponse({ status: 400, description: 'Data input is not correct!' })
-    async createCourse(@Body() dto: CourseCreationDTO) {
-        console.log({dto})
-        return await this.courseService.addCourse(dto);
+    async createCourse(
+        @Body() dto: CourseCreationDTO,
+        @Req() req: RequestWithAccount) {
+        const account = req.user;
+        console.log({ account });
+        if (!account || !account.userId) {
+            throw new BadRequestException('Account not found or not authenticated.');
+        }
+        return await this.courseService.addCourse(dto, account.userId);
     }
 
     @Post("/registration")
@@ -65,8 +75,14 @@ export class CourseController {
         return this.courseService.getUserRegistrations(userId);
     }
 
-    @Delete()
+    @Post()
     async unregister(@Body() dto: RegisterCourseDTO) {
         return this.courseService.unregisterCourse(dto);
+    }
+
+    @Delete(":id")
+    async removeCourseById(@Param() id: string) {
+        console.log({ id })
+        return await this.courseService.deleteCourse(id);
     }
 }

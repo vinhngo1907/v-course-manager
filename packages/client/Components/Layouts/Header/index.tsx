@@ -1,15 +1,15 @@
 import React from 'react';
-import { PROFILE as ProfileIcon, SEARCH as SearchIcon } from '@constants/icons';
-import { Profile } from '../../../types';
+import { PROFILE as ProfileIcon, SEARCH as SearchIcon } from '@/constants/icons';
 import styles from './index.module.css';
 import { ModalTypeEnum } from '..';
+import { IUser } from '@/interfaces';
 
 type Props = {
-    profile: null | Profile;
+    user: null | IUser;
     toggleModal: Function;
 };
 
-export default function Header({ profile, toggleModal }: Props) {
+export default function Header({ user, toggleModal }: Props) {
     return (
         <header className={styles.header}>
             <div className={styles.wrapperHeader}>
@@ -30,7 +30,7 @@ export default function Header({ profile, toggleModal }: Props) {
                         <li>
                             <a href="#" onClick={() => toggleModal(ModalTypeEnum.Login)}>
                                 <img src={`/${ProfileIcon}`} alt="icon" />
-                                {profile && profile.fullName}
+                                {user && user.fullName}
                             </a>
                         </li>
                     </ul>

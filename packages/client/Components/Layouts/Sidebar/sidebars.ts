@@ -1,4 +1,4 @@
-import * as icons from '@constants/icons'
+import * as icons from '@/constants/icons'
 
 export default [
 	{
@@ -7,23 +7,28 @@ export default [
 		path: "/"
 	},
 	{
-		icon: icons.PROGRESS,
-		label: 'Progress',
-		path: "/progress"
-	},
-	{
 		icon: icons.MESSAGE,
 		label: 'Message',
 		path: "message"
 	},
 	{
+		icon: icons.CONTENT,
+		label: 'Courses',
+		path: "courses"
+	},
+	{
 		icon: icons.SETTING,
-		label: 'Settings',
-		path: "settings"
+		label: 'Admin',
+		path: "admin"
 	},
 	{
 		icon: icons.UPLOAD,
-		label: 'Upload',
-		path: "upload-video"
+		label: 'Create Course',
+		path: "admin/courses"
 	}
+	// {
+	// 	icon: icons.UPLOAD,
+	// 	label: 'Live Streaming',
+	// 	path: "liveStreaming"
+	// }
 ]

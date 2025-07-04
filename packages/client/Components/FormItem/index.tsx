@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react';
 import styles from './index.module.css';
+import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
+
+interface FormItemProps {
+    error?: FieldError;
+    placeholder?: string;
+    inputId: string;
+    name: string;
+    labelName: string;
+    type: string;
+    isFirstVisit?: boolean;
+    register: UseFormRegisterReturn;
+}
 
 export default function FormItem({
     error,
@@ -10,7 +22,7 @@ export default function FormItem({
     type,
     isFirstVisit,
     register
-}) {
+}: FormItemProps) {
     const [data, setData] = useState('');
     const [computedClassName, setComputedClassName] = useState('');
 

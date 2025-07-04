@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsUUID } from 'class-validator';
 
 export interface CourseDTO {
     title: string;

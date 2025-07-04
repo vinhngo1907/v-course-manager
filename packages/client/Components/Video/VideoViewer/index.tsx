@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
-import style from '@styles/Video.module.css';
-import { START, STOP, HD, VOLUME, MUTED_VOLUME, ZOOM } from '@constants/icons';
+import style from '@/styles/Video.module.css';
+import { START, STOP, HD, VOLUME, MUTED_VOLUME, ZOOM } from '@/constants/icons';
 import VideoDuration from '../VideoDuration';
 
 const SpeedOptions = ['0.5', '1.0', '1.5'];

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { TEST_VIDEO } from '@constants/videos';
 import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@constants/icons';
-import VideoViewer from '@components/Video/VideoViewer';
+import VideoViewer from '@/Components/Video/VideoViewer';
 import style from '@styles/Course.module.css';
-import CourseLesson from '@components/Course/CourseLesson';
-import CourseComment from '@components/Course/CourseComment';
-import CourseAuthor from '@components/Course/CourseAuthor';
-import CourseSubtitle from '@components/Course/CourseSubTitle';
-import Layout from '@components/Layouts';
+import CourseLesson from '@/Components/Course/CourseLesson';
+import CourseComment from '@/Components/Course/CourseComment';
+import CourseAuthor from '@/Components/Course/CourseAuthor';
+import CourseSubtitle from '@/Components/Course/CourseSubTitle';
+import Layout from '@/Components/Layouts';
 
 const TabTitle: any[] = [CONTENT, COMMENT, AUTHOR];
 const CoursePage = () => {

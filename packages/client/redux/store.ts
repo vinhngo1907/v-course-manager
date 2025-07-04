@@ -1,0 +1,19 @@
+import { configureStore } from "@reduxjs/toolkit";
+import videoReducer from "./features/videoSlice";
+import liveVideoStreamingReducer from './features/liveVideoStreamingSlice';
+import authReducer from './features/authSlice';
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+
+export const store = configureStore({
+    reducer: {
+        auth: authReducer,
+        video: videoReducer,
+        liveVideoStreaming: liveVideoStreamingReducer,
+    },
+});
+
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

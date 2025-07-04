@@ -9,6 +9,7 @@ import { AccountsService } from "@modules/account/service";
 import { Prisma, } from '@prisma/client';
 import { AppConfigService } from "src/config/service";
 import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -136,10 +137,10 @@ export class AuthService {
             //     }
             // });
             const account = await this.databaseService.account.findUnique({
-                where: {username},
-                include:{
+                where: { username },
+                include: {
                     user: {
-                        select: {id: true, email: true, fullName: true}
+                        select: { id: true, email: true, fullName: true }
                     }
                 }
             })

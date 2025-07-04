@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import style from '@styles/Video.module.css';
+import style from '@/styles/Video.module.css';
 import VideoItem from '../VideoItem';
 import courses from './courses'
 
 const VideoList = () => {
     const [videos] = useState(courses);
     const router = useRouter();
-    const handleWatchDetail = (id) => {
+    const handleWatchDetail = (id: string) => {
         router.push(`course/${id}`);
     }
 

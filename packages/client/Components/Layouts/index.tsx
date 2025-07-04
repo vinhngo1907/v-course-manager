@@ -25,15 +25,9 @@ export enum ModalTypeEnum {
 };
 
 function Layout({ children, isWide, title }: Layout) {
-    // const [modalType, setModalType] = useState<ModalType>(ModalTypeEnum.None);
     const { modalType, toggleModal } = useContext(ModalContext);
     const { authState: {user} } = useContext(AuthContext)!;
     
-    // const toggleModal = (type: ModalType) => {
-    //     // console.log("Toggle Ne")
-    //     setModalType(type);
-    // }
-
     return (
         <>
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}
@@ -44,7 +38,7 @@ function Layout({ children, isWide, title }: Layout) {
                     <HeaderComponent user={user} toggleModal={toggleModal}></HeaderComponent>
                     <div className={styles.content}>
                         <div className={styles.pageHeader}>
-                            <h2 className={styles.pageTitle}>{title}</h2>
+                            <h2 className={`${styles.pageTitle} text-[#FFF1DC]`}>{title}</h2>
                             <div className="action">
                                 <div className="icon">
                                     <img src={`/${DotsIcon}`} alt="icon" />

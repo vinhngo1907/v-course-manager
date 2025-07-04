@@ -9,7 +9,8 @@ import { axios } from '@/utils/axios';
 interface AuthContextType {
     authState: RootState['auth'],
     loginUser: (userForm: { username: string, password: string }) => Promise<any>,
-    loadUser: () => Promise<void>
+    registerUser: (userForm: { username: string, password: string, email: string }) => Promise<any>,
+    loadUser: () => Promise<void>,
 
 }
 
@@ -21,6 +22,24 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     const loginUser = async (userForm: { username: string, password: string }) => {
         try {
             const res = await axios.post(`${apiUrl}/auth/login`, userForm);
+            if (res.data) {
+                localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.accessToken);
+            }
+            await loadUser();
+            return res.data;
+        } catch (error) {
+            dispatch(setAuth({
+                authLoading: true,
+                isAuthenticated: true,
+                user: null
+            }));
+        }
+
+    };
+
+    const registerUser = async (userForm: { username: string, password: string }) => {
+        try {
+            const res = await axios.post(`${apiUrl}/auth/register`, userForm);
             if (res.data) {
                 localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.accessToken);
             }
@@ -64,7 +83,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     }, []);
 
     return (
-        <AuthContext.Provider value={{ authState, loginUser, loadUser }}>
+        <AuthContext.Provider value={{ authState, loginUser, loadUser, registerUser }}>
             {children}
         </AuthContext.Provider>
     );

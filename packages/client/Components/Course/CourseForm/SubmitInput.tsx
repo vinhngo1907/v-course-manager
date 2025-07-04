@@ -7,7 +7,7 @@ type Props = {
 
 const SubmitInput = ({ value, isLoading }: Props) => {
     const classes = clsx(
-        'inline-block text-white rounded px-4 py-3 w-fit',
+        'inline-block text-white rounded px-4 py-3 w-fit bg-[#FFB347]',
         !isLoading && 'bg-slate-700 hover:bg-slate-800 cursor-pointer',
         isLoading && 'bg-slate-400',
     );
@@ -15,7 +15,7 @@ const SubmitInput = ({ value, isLoading }: Props) => {
     const label = isLoading ? 'Loading...' : value;
 
     return (
-        <input className={classes} type="submit" value={label} disabled={isLoading} />
+        <input className={classes} type="submit" value={label} disabled={isLoading} style={{width:'100%'}}/>
     )
 }
 

@@ -8,7 +8,7 @@ import {
     FaRegStopCircle,
 } from "react-icons/fa";
 import firepadRef from "streamingServer/firebase";
-import { deleteVideo } from "@/services/videoService";
+import { deleteVideo } from "@/services/video";
 import { useAppSelector } from "@/redux/store";
 
 const Participant = (props) => {

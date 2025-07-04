@@ -13,7 +13,7 @@ import {
     Participant,
 } from "../../redux/features/liveVideoStreamingSlice";
 import { useDispatch } from "react-redux";
-import { getAllVideos, createVideo } from "@/services/videoService";
+import { getAllVideos, createVideo } from "@/services/video";
 import { AppDispatch, useAppSelector } from '@/redux/store';
 
 const LiveStream: React.FC = () => {

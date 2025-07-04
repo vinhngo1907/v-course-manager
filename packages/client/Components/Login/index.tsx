@@ -19,7 +19,7 @@ type Props = {
 }
 
 export default function LoginModal({ toggleModal }: Props) {
-	const {authState: {authLoading, isAuthenticated }, loginUser} = useContext(AuthContext)!;
+	const { loginUser } = useContext(AuthContext)!;
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const {

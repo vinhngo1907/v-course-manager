@@ -15,7 +15,8 @@ export interface IVideo {
     likes: number;
     dislikes: number;
     viewsCount: number;
-    publicPlaybackId?: boolean
+    publicPlaybackId?: boolean;
+    role?: string;
 }
 
 export interface IUser {

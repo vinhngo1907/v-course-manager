@@ -100,7 +100,10 @@ export class CourseService {
                 }
             });
 
-            return newCourse;
+            return {
+                ...newCourse,
+                authorId: newCourse.createdById
+            };
         } catch (error) {
             this.logger.error(error.message);
             throw new InternalServerErrorException(error);

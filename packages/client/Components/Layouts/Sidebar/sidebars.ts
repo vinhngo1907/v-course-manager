@@ -1,6 +1,13 @@
 import * as icons from '@/constants/icons'
 
-export default [
+export interface SidebarItem {
+	icon: string,
+	label: string,
+	path: string,
+	isAdmin?: boolean
+}
+
+const sidebars: SidebarItem[] = [
 	{
 		icon: icons.HOME,
 		label: 'Home',
@@ -16,19 +23,13 @@ export default [
 		label: 'Courses',
 		path: "courses"
 	},
-	{
-		icon: icons.SETTING,
-		label: 'Admin',
-		path: "admin"
-	},
-	{
-		icon: icons.UPLOAD,
-		label: 'Create Course',
-		path: "admin/courses"
-	}
+	{ icon: icons.SETTING, label: 'Admin', path: '/admin', isAdmin: true },
+	// { icon: icons.UPLOAD, label: 'Create Course', path: '/admin/courses', isAdmin: true },
 	// {
 	// 	icon: icons.UPLOAD,
 	// 	label: 'Live Streaming',
 	// 	path: "liveStreaming"
 	// }
 ]
+
+export default sidebars;

@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode } from 'react';
 
-export type ModalType = 'login' | 'register' | 'none';
+export type ModalType = 'login' | 'register' | 'none' | 'forgotPass';
 
 export const ModalContext = createContext<{
     modalType: ModalType;

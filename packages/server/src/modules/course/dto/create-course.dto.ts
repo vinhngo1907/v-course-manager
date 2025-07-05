@@ -1,16 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsOptional  } from "class-validator";
 
 export class CourseCreationDTO {
-    @IsNotEmpty()
-    @ApiProperty()
+    @IsOptional()
+    // @ApiProperty()
     title: string
 
     @IsNotEmpty()
-    @ApiProperty()
+    // @ApiProperty()
     description: string
 
-    @IsNotEmpty()
-    @ApiProperty()
+    @IsOptional ()
+    // @ApiProperty()
     thumbnailUrl?: string
+
+    @IsNotEmpty()
+    authorId: string
 }

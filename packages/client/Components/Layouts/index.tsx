@@ -10,6 +10,7 @@ import LoginModal from '@/Components/Login';
 import RegisterModal from '@/Components/Register';
 import { AuthContext, AuthContextProvider } from '@/context/AuthContext';
 import { ModalContext } from '@/context/ModalContext';
+import ForgotPasswordModal from '../ForgotPassword';
 
 interface Layout {
     isWide: boolean
@@ -21,6 +22,7 @@ interface Layout {
 export enum ModalTypeEnum {
     Login = 'login',
     Register = 'register',
+    ForgotPass = "forgotPass",
     None = 'none'
 };
 
@@ -32,6 +34,7 @@ function Layout({ children, isWide, title }: Layout) {
         <>
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}
             {modalType === ModalTypeEnum.Login && <LoginModal toggleModal={toggleModal} />}
+            {modalType === ModalTypeEnum.ForgotPass && <ForgotPasswordModal toggleModal={toggleModal} />}
             <div className={styles.container}>
                 <SidebarComponent isWide={isWide} />
                 <section className={styles.main}>
@@ -41,7 +44,7 @@ function Layout({ children, isWide, title }: Layout) {
                             <h2 className={`${styles.pageTitle} text-[#FFF1DC]`}>{title}</h2>
                             <div className="action">
                                 <div className="icon">
-                                    <img src={`/${DotsIcon}`} alt="icon" />
+                                    <img src={`${DotsIcon}`} alt="icon" />
                                 </div>
                             </div>
                         </div>

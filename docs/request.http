@@ -88,3 +88,7 @@ Content-Type: application/json
     "courseId": "79b4a40f-3ea9-499b-ba2e-2a8d0203f9c0",
     "userId": "79b4a40f-3ea9-499b-ba2e-2a8d0203f9c1"
 }
+
+###
+
+GET {{serverUrl}}/auth/profile

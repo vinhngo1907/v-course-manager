@@ -1,6 +1,8 @@
 import axios from 'axios';
 import statusCodes from 'http-status-codes';
 import { Profile } from '@/types';
+// import { apiUrl } from '@/constants/configs';
+import config from '../config';
 import { apiUrl } from '@/constants/configs';
 
 type UpdateLoginState = null | ((newProfile: null | Profile) => void);
@@ -12,7 +14,7 @@ const setUpdateLoginState = (updateLoginStateFunction: UpdateLoginState) => {
 const instance = axios.create({
     withCredentials: true,
     // baseURL: `${config.ServerUrl}`
-    baseURL: apiUrl
+    baseURL: `${apiUrl}`
 });
 
 instance.interceptors.response.use(

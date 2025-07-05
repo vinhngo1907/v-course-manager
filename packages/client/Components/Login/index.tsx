@@ -99,8 +99,8 @@ export default function LoginModal({ toggleModal }: Props) {
 					<span
 						tabIndex={0}
 						role="button"
-						onClick={() => toggleModal(ModalTypeEnum.Register)}
-						onKeyDown={() => toggleModal(ModalTypeEnum.Register)}
+						onClick={() => toggleModal(ModalTypeEnum.ForgotPass)}
+						onKeyDown={() => toggleModal(ModalTypeEnum.ForgotPass)}
 					>
 						Forgot password?
 					</span>

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable } from '@nestjs/common';
 import { CourseService } from './service';
 import { Request } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
@@ -8,7 +8,8 @@ import { Crud, CrudRequest, CrudRequestInterceptor, ParsedRequest } from '@nestj
 import { CourseEntity } from './model';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
-
+import { JwtStrategy } from '@modules/auth/strategies/jwt';
+@Injectable()
 @ApiTags('Courses')
 @Crud({
     model: {
@@ -38,6 +39,7 @@ export class CourseController {
     constructor(
         public readonly courseService: CourseService
     ) { }
+    // @UseGuards(JwtAuthGuard)
     @Get()
     @UseInterceptors(CrudRequestInterceptor)
     async getAll(@ParsedRequest() req: CrudRequest): Promise<any> {
@@ -49,7 +51,7 @@ export class CourseController {
         return await this.courseService.listCourse();
     }
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Post()
     @ApiOperation({ summary: 'Create new course' })
     @ApiResponse({ status: 201, description: 'Course is created in successfully' })
@@ -57,12 +59,12 @@ export class CourseController {
     async createCourse(
         @Body() dto: CourseCreationDTO,
         @Req() req: RequestWithAccount) {
-        const account = req.user;
-        console.log({ account });
-        if (!account || !account.userId) {
-            throw new BadRequestException('Account not found or not authenticated.');
-        }
-        return await this.courseService.addCourse(dto, account.userId);
+        // const account = req.user;
+        // console.log({dto, account });
+        // if (!account || !account.userId) {
+        //     throw new BadRequestException('Account not found or not authenticated.');
+        // }
+        return await this.courseService.addCourse(dto, dto.authorId);
     }
 
     @Post("/registration")

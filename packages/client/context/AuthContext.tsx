@@ -11,7 +11,8 @@ interface AuthContextType {
     loginUser: (userForm: { username: string, password: string }) => Promise<any>,
     registerUser: (userForm: { username: string, password: string, email: string }) => Promise<any>,
     loadUser: () => Promise<void>,
-
+    logoutUser: () => Promise<void>,
+    forgotPass: (userForm: { email: string }) => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,8 +30,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
             return res.data;
         } catch (error) {
             dispatch(setAuth({
-                authLoading: true,
-                isAuthenticated: true,
+                isAuthenticated: false,
                 user: null
             }));
         }
@@ -47,8 +47,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
             return res.data;
         } catch (error) {
             dispatch(setAuth({
-                authLoading: true,
-                isAuthenticated: true,
+                isAuthenticated: false,
                 user: null
             }));
         }
@@ -61,19 +60,32 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         }
 
         try {
-            const response = await axios.get(`${apiUrl}/auth/profile`);
+            const response = await axios.get(`/auth/profile`);
+            console.log({ response })
             if (response.data) {
                 dispatch(setAuth({
-                    isAuthenticated: true, user: response.data, authLoading: false
+                    isAuthenticated: true, user: response.data
                 }));
             }
         } catch (error) {
             localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
-            setAuthToken('')
+            setAuthToken(null)
             dispatch(setAuth({
-                isAuthenticated: false, user: null, authLoading: false
+                isAuthenticated: false, user: null
             }))
         }
+    }
+
+    const logoutUser = async () => {
+        localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+        dispatch(setAuth(
+            { isAuthenticated: false, user: null }
+        ))
+    }
+
+    const forgotPass = async (userForm: { email: string }) => {
+        const res = await axios.post("/auth/forgot_password", userForm);
+        return res.data
     }
 
     useEffect(() => {
@@ -83,7 +95,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     }, []);
 
     return (
-        <AuthContext.Provider value={{ authState, loginUser, loadUser, registerUser }}>
+        <AuthContext.Provider value={{ authState, loginUser, loadUser, registerUser, logoutUser, forgotPass }}>
             {children}
         </AuthContext.Provider>
     );

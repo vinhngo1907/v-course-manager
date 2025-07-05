@@ -2,11 +2,12 @@ import { SubmitHandler } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import Heading from '@/Components/Course/Heading'
+// import Heading from '@/Components/Course/Heading'
 import CourseForm, { Inputs } from '@/Components/Course/CourseForm'
 import { axios } from '@/utils/axios'
 import { useContext } from 'react'
 import { AuthContext } from '@/context/AuthContext'
+import { AuthorizationHeader } from '@/services/request.extras'
 
 type CourseCreateResult = {
     id: number
@@ -45,8 +46,12 @@ export default function AdminNewCoursePage() {
     }
 
     const handler = async (newCourse: Inputs) => {
-        const payload = { ...newCourse, authorId: user.id }
-        const { data } = await axios.post('/courses', payload)
+        const payload = { ...newCourse, authorId: user?.id }
+        console.log({payload})
+        const { data } = await axios.post('/courses', payload, {
+            withCredentials: true,
+            headers: AuthorizationHeader(), // nếu bạn xài Bearer
+        });
         return data
     }
 

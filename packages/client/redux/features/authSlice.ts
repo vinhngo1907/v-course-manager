@@ -1,14 +1,14 @@
-import { IUser } from '@interfaces/index';
+import { IUser } from '@/interfaces';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
-    authLoading: boolean;
+    authLoading?: boolean;
     isAuthenticated: boolean;
     user: IUser | null;
 }
 
 const initialState: AuthState = {
-    authLoading: true,
+    // authLoading: true,
     isAuthenticated: false,
     user: null,
 };
@@ -22,7 +22,7 @@ const authSlice = createSlice({
             action: PayloadAction<{
                 isAuthenticated: boolean;
                 user: IUser | null;
-                authLoading: boolean;
+                // authLoading: boolean;
             }>
         ) => {
             state.authLoading = false;

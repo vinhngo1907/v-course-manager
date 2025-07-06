@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable } from '@nestjs/common';
 import { CourseService } from './service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -86,5 +86,14 @@ export class CourseController {
     async removeCourseById(@Param() id: string) {
         console.log({ id })
         return await this.courseService.deleteCourse(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("/user/:id")
+    async getCourseByUser(@Param("id") id: string, @Req() req: RequestWithAccount, @Res() res: Response) {
+        const account = req.user;
+        console.log({account})
+        const course= await this.courseService.findCourseByUser({ courseId: id, userId: account.id });
+        return res.send(course);
     }
 }

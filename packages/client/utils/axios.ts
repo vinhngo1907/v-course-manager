@@ -13,8 +13,8 @@ const setUpdateLoginState = (updateLoginStateFunction: UpdateLoginState) => {
 
 const instance = axios.create({
     withCredentials: true,
-    // baseURL: `${config.ServerUrl}`
     baseURL: `${apiUrl}`
+    // baseURL: `${config.ServerUrl}`
 });
 
 instance.interceptors.response.use(

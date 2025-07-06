@@ -87,6 +87,16 @@
 .brand {
     display: flex;
     align-items: center;
+    text-decoration: none;
+}
+
+.brand:focus {
+  outline: none;
+}
+
+.brand:focus-visible {
+  outline: none;
+  /* box-shadow: 0 0 0 2px #ffb347; */
 }
 
 .collapsed .brand {

@@ -23,6 +23,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     const loginUser = async (userForm: { username: string, password: string }) => {
         try {
             const res = await axios.post(`${apiUrl}/auth/login`, userForm);
+            console.log("Login User",{res})
             if (res.data) {
                 localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.accessToken);
             }
@@ -60,8 +61,8 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         }
 
         try {
-            const response = await axios.get(`/auth/profile`);
-            console.log({ response })
+            const response = await axios.get(`${apiUrl}/auth/profile`);
+            console.log("Load User ",{ response })
             if (response.data) {
                 dispatch(setAuth({
                     isAuthenticated: true, user: response.data
@@ -78,6 +79,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
     const logoutUser = async () => {
         localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+        await axios.get("/auth/logout");
         dispatch(setAuth(
             { isAuthenticated: false, user: null }
         ))

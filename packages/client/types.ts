@@ -11,12 +11,15 @@ export type Course = {
     thumbnail: string;
     description: string;
     published: boolean;
+    lessons: Lesson[] | [];
 }
 
 
 export type Lesson = {
     id: string;
     name: string;
+    description: string;
+    video: Video | null;
 }
 
 export type Video = {
@@ -27,4 +30,5 @@ export type Video = {
     dislikes: number;
     viewsCount: number;
     publicPlaybackId?: boolean
+    thumbnail: string
 }

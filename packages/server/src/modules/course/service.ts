@@ -1,6 +1,6 @@
 import { DatabaseService } from '@modules/database/service';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { CourseDTO, RegisterCourseDTO } from './dto/course';
+import { CourseByUser, CourseDTO, CourseWithLessonsDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from "./dto/create-course.dto";
 import { CrudRequest } from '@nestjsx/crud';
 
@@ -12,7 +12,7 @@ export class CourseService {
     ) { }
 
     async findAll(req: CrudRequest): Promise<{
-        data: CourseDTO[],
+        data: CourseWithLessonsDTO[],
         total: number,
         page: number,
         pageCount: number,
@@ -21,9 +21,22 @@ export class CourseService {
         try {
             const page = req.parsed.page || 1;
             const limit = req.parsed.limit || 20;
-
+            const authorFilter = req.parsed.filter?.find(
+                (f) => f.field === 'authorId'
+            );
+            const authorId = authorFilter?.value;
+            const where = authorId ? { createdById: authorId } : {};
             // const [data, total] = await this.getManyAndCountCourses(req);
-            const courses = await this.databaseService.course.findMany();
+            const courses = await this.databaseService.course.findMany({
+                where,
+                include: {
+                    lessons: {
+                        include: {
+                            video: true
+                        }
+                    }
+                }
+            });
             const mappedCourses = courses.map(course => ({
                 ...course,
                 thumbnailUrl: course.thumbnail,
@@ -119,5 +132,23 @@ export class CourseService {
                 lessons: true
             }
         })
+    }
+    async findCourseByUser(dto: CourseByUser){
+        console.log({dto})
+        const course =  await this.databaseService.course.findFirst({
+            where:{
+                id: dto.courseId,
+                createdById: dto.userId
+            },
+            include: {
+                lessons: {
+                    include: {
+                        video: true
+                    }
+                }
+            }
+        });
+
+        return course;
     }
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { TEST_VIDEO } from '@constants/videos';
-import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@constants/icons';
+import { TEST_VIDEO } from '@/constants/videos';
+import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@/constants/icons';
 import VideoViewer from '@/Components/Video/VideoViewer';
-import style from '@styles/Course.module.css';
+import style from '@/styles/Course.module.css';
 import CourseLesson from '@/Components/Course/CourseLesson';
 import CourseComment from '@/Components/Course/CourseComment';
 import CourseAuthor from '@/Components/Course/CourseAuthor';

@@ -20,7 +20,7 @@ export default function AdminPage() {
         const loadCourses = async () => {
             try {
                 const { data } = await axios.get(`/courses?authorId=${user.id}`)
-                setCourses(data)
+                setCourses(data.data)
             } catch (e) {
                 console.log(e)
             }

@@ -7,6 +7,7 @@ import SubmitInput from "./SubmitInput";
 import { FileUploader } from "@/Components/FileUploader";
 import { useState } from "react";
 import { COURSE_THUMBNAIL_TYPE } from "@/constants/file";
+import Field from "./Field";
 
 export type Inputs = {
     title: string;
@@ -58,13 +59,15 @@ const CourseForm = ({ course, onSubmit, isLoading }: Props) => {
                 />
                 <Checkbox label="Publish" name="published" />
 
-                <FileUploader
-                    initUrl={thumbnailUrl}
-                    type={COURSE_THUMBNAIL_TYPE}
-                    setUrl={setThumbnailUrl}
-                    title="Upload thumbnail"
-                    name="create-course-thumb"
-                />
+                <Field>
+                    <FileUploader
+                        initUrl={thumbnailUrl}
+                        type={COURSE_THUMBNAIL_TYPE}
+                        setUrl={setThumbnailUrl}
+                        title="Upload thumbnail"
+                        name="create-course-thumb"
+                    />
+                </Field>
 
                 <SubmitInput
                     value={`${course ? "Update" : "Create"} course`}

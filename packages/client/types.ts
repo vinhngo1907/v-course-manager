@@ -31,4 +31,11 @@ export type Video = {
     viewsCount: number;
     publicPlaybackId?: boolean
     thumbnail: string
+    videoUrl: string
+}
+
+export type CourseViewerProps = {
+    course: Course, // Course đã bao lessons với Lesson đã bao video rồi!
+    lessonProgress: string[],
+    setLessonProgress: (ids: string[]) => void
 }

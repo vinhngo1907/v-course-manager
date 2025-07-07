@@ -2,15 +2,17 @@ import CourseForm, { Inputs } from "@/Components/Course/CourseForm";
 import Heading from "@/Components/Course/Heading";
 import { Course, Lesson, Video } from "@/types";
 import { MutationFunction, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { SubmitHandler } from "react-hook-form";
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from "@/Components/Layouts/Button";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { axios } from "@/utils/axios";
 
 type CourseUpdateResult = {
-    id: string; // ID là string nếu Prisma dùng UUID
+    id: string;
 };
 
 type AdminCourseEditPageProps = {
@@ -20,12 +22,15 @@ type AdminCourseEditPageProps = {
 };
 
 const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
+    const { authState: { user } } = useContext(AuthContext)!;
     const handler: MutationFunction<CourseUpdateResult, Inputs> = async (data) => {
         const res = await axios.put<CourseUpdateResult>(`/courses/${course.id}`, {
             title: data.title,
             description: data.description,
             thumbnail: data.thumbnailUrl,
+            authorId: user?.id
         });
+
         return res.data;
     };
 
@@ -57,13 +62,15 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                         {course.lessons.map(lesson => (
                             <Link key={lesson.id} href={`/admin/courses/${course.id}/lessons/${lesson.id}`}
                                 className='flex gap-4 border border-gray-200 rounded-lg mb-6 cursor-pointer'>
-                                {lesson.video?.publicPlaybackId && (
-                                    <Image
-                                        src={`${course.thumbnail}?width=640`}
-                                        alt={`Video thumbnail preview for ${lesson.name}`}
-                                        width={180}
-                                        height={100}
-                                    />
+                                {lesson.video?.thumbnail && (
+                                    <div className="relative w-[200px] h-[200px] overflow-hidden rounded">
+                                        <img
+                                            src={`${lesson.video.thumbnail}?width=640`}
+                                            alt={`Video thumbnail preview for ${lesson.name}`}
+                                            className="w-[200px] h-[200px] object-cover rounded"
+                                        />
+                                    </div>
+
                                 )}
 
                                 <div className='py-2'>
@@ -74,12 +81,12 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                     </>
                 ) : (
                     <div>
-                        <h2>None yet.</h2>
+                        <h2 className="text-white">None yet.</h2>
                     </div>
                 )}
 
                 <Link href={`/admin/courses/${course.id}/lessons/new`}>
-                    <Button intent='secondary'>Add a lesson</Button>
+                    <Button className='mt-4 inline-block rounded bg-[#FFB347] px-4 py-2 text-white hover:bg-[#F5A028] cursor-pointer'>Add a lesson</Button>
                 </Link>
             </div>
         </div>

@@ -1,23 +1,28 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import Heading from "../Heading";
 import { Course, Lesson, Video } from '@/types';
 
 type Props = {
     isAdmin: boolean;
+    forcePublic?: boolean;
     course: Course & {
         lessons: (Lesson & {
             video: Video | null;
         })[];
     }
 }
-const CourseCard = ({ course, isAdmin }: Props) => {
-    const href = isAdmin ? `/admin/courses/${course.id}` : `/courses/${course.id}`;
 
-    const videoThumbnail = course.lessons?.[0]?.video?.thumbnail;
-    const fallbackThumbnail = course.thumbnail;
+const CourseCard = ({ course, isAdmin, forcePublic }: Props) => {
+    // const href = isAdmin ? `/admin/courses/${course.id}` : `/courses/${course.id}`;
+    const href = forcePublic
+        ? `/courses/${course.id}`
+        : isAdmin
+            ? `/admin/courses/${course.id}`
+            : `/courses/${course.id}`;
 
-    const thumbnailUrl = videoThumbnail ?? fallbackThumbnail ?? '/default-thumbnail.jpg';
+
+    const fallbackThumbnail = course.lessons?.[0]?.video?.thumbnail;
+    const thumbnailUrl = course.thumbnail ?? fallbackThumbnail ?? '/default-thumbnail.jpg';
 
     return (
         <Link

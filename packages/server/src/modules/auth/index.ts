@@ -14,6 +14,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "./guards/role";
 import { LocalStrategy } from './strategies/local';
 import { JwtStrategy } from "./strategies/jwt";
+import { JwtAuthGuard } from "./guards/jwt";
 @Global()
 @Module({
     imports: [

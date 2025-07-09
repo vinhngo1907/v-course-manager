@@ -1,15 +1,24 @@
 import React from 'react';
 import style from '../index.module.css';
+import { Lesson } from '@/types';
 
-const CourseLessonItem = () => {
+interface Props {
+    lesson: Lesson;
+    onClick: () => void;
+    isCompleted: boolean;
+}
+
+const CourseLessonItem: React.FC<Props> = ({ lesson, onClick, isCompleted }) => {
     return (
-        <div className={style.courseLessionItem}>
-            <div className={style.courseLessionItemChecked} />
+        <div className={style.courseLessionItem} onClick={onClick}>
+            <div className={style.courseLessionItemChecked}>
+                {isCompleted ? '✓' : ''}
+            </div>
             <div className="infor">
-                <div className={style.courseLessionItemTitle}>Custom Control</div>
+                <div className={style.courseLessionItemTitle}>{lesson.name}</div>
                 <div className={style.courseLessionItemLecture}>
-                    <span>Lesson 1</span>
-                    <span className={style.Duration}>• 11 min</span>
+                    <span>{lesson.name}</span>
+                    <span className={style.Duration}>• {Math.round(lesson.video.duration / 60)} min</span>
                 </div>
             </div>
         </div>

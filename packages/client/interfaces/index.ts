@@ -26,6 +26,7 @@ export interface IUser {
     email: string;
     likedVideos?: string[];
     dislikedVideos?: string[];
+    role: string ;
 }
 
 export interface IVideoDetails {

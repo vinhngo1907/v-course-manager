@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import Image from 'next/image';
 // import UploadIcon from 'public/assets/upload.svg';
-import * as assets from '@constants/assets'
+import * as assets from '@/constants/assets'
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import database from 'config/firebaseConfig';
+import database from '@/config/firebaseConfig';
 
 interface Props {
     onUploadSuccess: (details: {

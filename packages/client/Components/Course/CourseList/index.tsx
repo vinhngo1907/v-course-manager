@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CourseList: React.FC<Props> = ({ courses }) => {
-    const { authState: { user } } = useContext(AuthContext)!
+    const { authState: { user, isAuthenticated } } = useContext(AuthContext)!
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const CourseList: React.FC<Props> = ({ courses }) => {
         <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${styles.courseList}`}>
             {courses.map((course) => (
 
-                <CourseCard key={course.id} course={course} isAdmin={isAdmin} forcePublic/>
+                <CourseCard key={course.id} course={course} isAdmin={isAdmin} forcePublic isAuthenticated={isAuthenticated}/>
             ))}
         </div>
     );

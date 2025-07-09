@@ -19,7 +19,7 @@ export type Lesson = {
     id: string;
     name: string;
     description: string;
-    video: Video | null;
+    video: Video;
 }
 
 export type Video = {
@@ -31,7 +31,8 @@ export type Video = {
     viewsCount: number;
     publicPlaybackId?: boolean
     thumbnail: string
-    videoUrl: string
+    videoUrl: string;
+    duration: number;
 }
 
 export type CourseViewerProps = {

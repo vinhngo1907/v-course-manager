@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Layout from '@/Components/Layouts';
 // import CourseList from '@/Components/Video/VideoList';
 import { axios } from '@/utils/axios';
 import { Course } from '@/types';
 import CourseList from '@/Components/Course/CourseList';
+import Loading from '@/Components/Loading';
 
 export default function Home() {
 	const [courses, setCourses] = useState<Course[]>([]);
@@ -27,9 +28,8 @@ export default function Home() {
 
 	return (
 		<Layout title="Courses">
-			{/* <CourseList /> */}
 			{loading ? (
-				<p>Loading...</p>
+				<Loading />
 			) : (
 				<CourseList courses={courses} />
 			)}

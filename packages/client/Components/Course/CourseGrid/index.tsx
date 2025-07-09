@@ -7,15 +7,16 @@ type Props = {
         lessons: (Lesson & {
             video: Video | null;
         })[];
-    })[]
+    })[],
+    isAuthenticated: boolean
 }
 
-const CourseGrid = ({ courses, isAdmin = false }: Props) => {
+const CourseGrid = ({ courses, isAdmin = false, isAuthenticated }: Props) => {
     return (
         <>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                 {courses.map(course => (
-                    <CourseCard key={course.id} course={course} isAdmin={isAdmin} />
+                    <CourseCard key={course.id} course={course} isAdmin={isAdmin} isAuthenticated={isAuthenticated}/>
                 ))}
             </div>
         </>

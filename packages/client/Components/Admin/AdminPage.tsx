@@ -62,7 +62,7 @@ export default function AdminPage() {
             {/* <h2>Your courses</h2> */}
 
             {courses.length > 0 ? (
-                <CourseGrid courses={courses} isAdmin />
+                <CourseGrid courses={courses} isAdmin isAuthenticated={isAuthenticated}/>
             ) : (
                 <div>
                     <h3 className="mt-2 text-gray-300">You don&apos;t have any courses yet.</h3>

@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Heading from "../Heading";
 import { Course, Lesson, Video } from '@/types';
+import { useContext } from 'react';
+import { ModalContext } from '@/context/ModalContext';
 
 type Props = {
     isAdmin: boolean;
@@ -9,11 +11,13 @@ type Props = {
         lessons: (Lesson & {
             video: Video | null;
         })[];
-    }
+    },
+    isAuthenticated: boolean
 }
 
-const CourseCard = ({ course, isAdmin, forcePublic }: Props) => {
+const CourseCard = ({ course, isAdmin, forcePublic, isAuthenticated }: Props) => {
     // const href = isAdmin ? `/admin/courses/${course.id}` : `/courses/${course.id}`;
+    const { toggleModal } = useContext(ModalContext)!;
     const href = forcePublic
         ? `/courses/${course.id}`
         : isAdmin
@@ -24,8 +28,15 @@ const CourseCard = ({ course, isAdmin, forcePublic }: Props) => {
     const fallbackThumbnail = course.lessons?.[0]?.video?.thumbnail;
     const thumbnailUrl = course.thumbnail ?? fallbackThumbnail ?? '/default-thumbnail.jpg';
 
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            toggleModal('login');
+        }
+    };
     return (
         <Link
+            onClick={handleClick}
             href={href}
             className="w-full border rounded-lg transition shadow-sm hover:shadow-md cursor-pointer"
         >

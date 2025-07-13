@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('subtiles')
-export class SubtilesController {}
+@Controller('subtitles')
+export class SubtitlesController {}

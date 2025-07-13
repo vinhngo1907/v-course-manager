@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable, Put, Patch } from '@nestjs/common';
 import { CourseService } from './service';
 import { Request, Response } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
@@ -9,6 +9,8 @@ import { CourseEntity } from './model';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 import { JwtStrategy } from '@modules/auth/strategies/jwt';
+import { CourseUpdateDTO } from './dto/update-course';
+import { OptionalJwtAuthGuard } from '@modules/auth/guards/OptionalJwtAuthGuard';
 @Injectable()
 @ApiTags('Courses')
 @Crud({
@@ -67,14 +69,39 @@ export class CourseController {
         return await this.courseService.addCourse(dto, dto.authorId);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Put(":id")
+    @ApiOperation({ summary: 'Update a course' })
+    @ApiResponse({ status: 201, description: 'Course is updated in successfully' })
+    @ApiResponse({ status: 400, description: 'Data input is not correct!' })
+    async updateCourse(
+        @Param("id") id: string,
+        @Body() dto: CourseUpdateDTO,
+        @Req() req: RequestWithAccount) {
+        const userId = req.user.id;
+        console.log("Hello world")
+        return await this.courseService.updateCourse(dto, id, userId);
+    }
+
     @Post("/registration")
     async register(@Body() dto: RegisterCourseDTO) {
         return this.courseService.registerCourse(dto);
     }
 
-    @Get(':id')
+    @Get('/registration/:id')
     async getUserRegistrations(@Param('id') userId: string) {
+        console.log({ userId })
         return this.courseService.getUserRegistrations(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    async getCourse(
+        @Param('id') courseId: string,
+        @Req() req: RequestWithAccount) {
+        const account = req.user;
+        // console.log({account})
+        return await this.courseService.getCourseById(courseId, account.id);
     }
 
     @Post()
@@ -92,8 +119,8 @@ export class CourseController {
     @Get("/user/:id")
     async getCourseByUser(@Param("id") id: string, @Req() req: RequestWithAccount, @Res() res: Response) {
         const account = req.user;
-        console.log({account})
-        const course= await this.courseService.findCourseByUser({ courseId: id, userId: account.id });
+        // console.log({ account })
+        const course = await this.courseService.findCourseByUser({ courseId: id, userId: account.id });
         return res.send(course);
     }
 }

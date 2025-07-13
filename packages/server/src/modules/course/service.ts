@@ -1,8 +1,10 @@
 import { DatabaseService } from '@modules/database/service';
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CourseByUser, CourseDTO, CourseWithLessonsDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from "./dto/create-course.dto";
 import { CrudRequest } from '@nestjsx/crud';
+import { CourseUpdateDTO } from './dto/update-course';
+import { CourseNotFoundException } from './exception';
 
 @Injectable()
 export class CourseService {
@@ -79,6 +81,30 @@ export class CourseService {
         });
     }
 
+    async getCourseById(courseId: string, userId?: string) {
+        const course = await this.databaseService.course.findFirst({
+            where: { id: courseId },
+            include: { lessons: { include: { video: true } } },
+        });
+
+        if (!course) throw new CourseNotFoundException('Not found');
+
+        let completedLessons: string[] = [];
+
+        if (userId) {
+            const progress = await this.databaseService.userLessonProgress.findMany({
+                where: {
+                    userId: userId,
+                    lessonId: { in: course.lessons.map(l => l.id) },
+                },
+                select: { lessonId: true },
+            });
+            completedLessons = progress.map(p => p.lessonId);
+        }
+
+        return { course, completedLessons };
+    }
+
     async unregisterCourse(dto: RegisterCourseDTO) {
         return await this.databaseService.courseRegistration.deleteMany({
             where: {
@@ -123,6 +149,34 @@ export class CourseService {
         }
     }
 
+    async updateCourse(dto: CourseUpdateDTO, id: string, userId: string): Promise<any> {
+        const { description, thumbnail, title } = dto;
+
+        // 👉 1. Get course
+        const course = await this.databaseService.course.findUnique({
+            where: { id },
+        });
+        if (!course) throw new CourseNotFoundException('Course not found');
+
+        // 👉 2. Check permission
+        if (course.createdById !== userId) {
+            throw new ForbiddenException('Not authorized');
+        }
+
+        // 👉 3. Update
+        const updatedCourse = await this.databaseService.course.update({
+            where: { id },
+            data: {
+                ...(title && { title }),
+                ...(description && { description }),
+                ...(thumbnail && { thumbnail }),
+            },
+        });
+
+        return updatedCourse;
+    }
+
+
     async findOne(courseId: string) {
         return await this.databaseService.course.findUnique({
             where: {
@@ -133,10 +187,10 @@ export class CourseService {
             }
         })
     }
-    async findCourseByUser(dto: CourseByUser){
-        console.log({dto})
-        const course =  await this.databaseService.course.findFirst({
-            where:{
+    async findCourseByUser(dto: CourseByUser) {
+        console.log({ dto })
+        const course = await this.databaseService.course.findFirst({
+            where: {
                 id: dto.courseId,
                 createdById: dto.userId
             },

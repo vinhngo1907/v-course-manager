@@ -40,7 +40,13 @@ const AdminNewLesson: NextPage = () => {
             return res.data;
         },
         onSuccess: (data) => {
-            router.push(`/admin/courses/${courseId}/lessons/${data.id}`);
+            // router.push(`/admin/courses/${courseId}/lessons/${data.id}`); 
+            const { lessonId } = data;
+            if (lessonId) {
+                router.push(`/admin/courses/${courseId}/lessons/${data.lessonId}`);
+            } else {
+                router.push(`/admin/courses/${courseId}`);
+            }
         },
         onError: () => {
             toast.error("Something went wrong");

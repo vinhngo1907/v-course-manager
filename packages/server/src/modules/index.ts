@@ -9,7 +9,7 @@ import { RoleModule } from 'src/modules/role';
 import { LoggerModule } from 'src/common/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from 'src/common/infras/http-exception.filter';
-import { SubtilesModule } from './subtiles';
+import { SubtitlesModule } from './subtiles';
 import { VideoModule } from './video';
 import { SubLinesModule } from './sub-lines';
 import { CourseModule } from './course';
@@ -28,7 +28,7 @@ import { FileUploadModule } from './file-upload';
 		RoleModule,
 		LoggerModule,
 		VideoModule,
-		SubtilesModule,
+		SubtitlesModule,
 		SubLinesModule,
 		CourseModule,
 		CommentsModule,

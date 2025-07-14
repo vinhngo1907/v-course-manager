@@ -16,12 +16,12 @@ const sidebars: SidebarItem[] = [
 	{
 		icon: icons.MESSAGE,
 		label: 'Message',
-		path: "message"
+		path: "/message"
 	},
 	{
 		icon: icons.CONTENT,
 		label: 'Courses',
-		path: "courses"
+		path: "/courses"
 	},
 	{ icon: icons.SETTING, label: 'Admin', path: '/admin', isAdmin: true },
 	// { icon: icons.UPLOAD, label: 'Create Course', path: '/admin/courses', isAdmin: true },

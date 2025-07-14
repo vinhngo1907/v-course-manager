@@ -117,7 +117,7 @@ export class AuthService {
             } = this.appConfigService.getJwtConfig();
             const token = this.jwtService.sign(payload);
 
-            return `Authentication=${token}; HttpOnly; Path=/auth/profile; Max-Age=${expiresIn};SameSite=None; Secure`;
+            return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn};SameSite=Lax;`;
         } catch (error) {
             // this.logger.error(error);
             console.log(error);
@@ -126,7 +126,8 @@ export class AuthService {
     }
 
     getEmptyCookie() {
-        return `Authentication=; HttpOnly; Path=/; Max-Age=0;SameSite=None; Secure`;
+        // return `Authentication=; HttpOnly; Path=/; Max-Age=0;SameSite=None; Secure`;
+        return `Authentication=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax;`;
     }
 
     async validateJwtUser({ userId, username }): Promise<any> {

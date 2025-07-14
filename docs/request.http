@@ -92,3 +92,16 @@ Content-Type: application/json
 ###
 
 GET {{serverUrl}}/auth/profile
+###
+
+GET {{serverUrl}}/courses?authorId=0674c1c3-3332-408f-a635-94baca3eaa4f
+###
+
+GET {{serverUrl}}/courses/9abd41b7-df0e-4b59-9804-5a575c110bf1
+###
+
+GET {{serverUrl}}/courses/user/9abd41b7-df0e-4b59-9804-5a575c110bf1
+Content-Type: application/json
+Cookie: "Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtvb2t1dSIsImlhdCI6MTc1MTc2NjM5OSwiZXhwIjoxNzUxODUyNzk5fQ.MWOWY9M4Tck3sKwddjNw-FJfkZ8UUqoZG5mo73Q26uU,httpOnly: true, secure: true, sameSite: 'lax', path: '/'"
+
+###

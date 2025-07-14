@@ -3,10 +3,10 @@
 import dynamic from 'next/dynamic';
 import { useVideoUpload, VideoUploadProvider } from '@/context/VideoLoadContext';
 
-const DragDrop = dynamic(() => import('Components/UploadVideo/DragDrop'), {
+const DragDrop = dynamic(() => import('@/Components/UploadVideo/DragDrop'), {
     ssr: false,
 });
-const VideoDetails = dynamic(() => import('Components/UploadVideo/VideoDetails'), {
+const VideoDetails = dynamic(() => import('@/Components/UploadVideo/VideoDetails'), {
     ssr: false,
 });
 

@@ -19,10 +19,10 @@ export default function AdminNewCoursePage() {
     const { authState: { authLoading, isAuthenticated, user } } = useContext(AuthContext)!;
     if (authLoading) {
         return (
-            <div className="flex h-screen items-center justify-center">
+            <div className="flex items-center justify-center">
                 <div className="flex items-center space-x-2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent border-blue-500"></div>
-                    <span className="text-gray-700">Loading...</span>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent border-[#F4A300]"></div>
+                    <span className="text-[#F4A300]">Loading...</span>
                 </div>
             </div>
         );
@@ -47,7 +47,7 @@ export default function AdminNewCoursePage() {
 
     const handler = async (newCourse: Inputs) => {
         const payload = { ...newCourse, authorId: user?.id }
-        console.log({payload})
+        console.log({ payload })
         const { data } = await axios.post('/courses', payload, {
             withCredentials: true,
             headers: AuthorizationHeader(), // nếu bạn xài Bearer

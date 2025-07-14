@@ -10,3 +10,11 @@ export class VideoDTO {
     ownerId: string;
     duration: number
 }
+
+export class LessonDTO {
+    id: string;
+    name: string;
+    description: string;
+    video: VideoDTO;
+    courseId: string
+}

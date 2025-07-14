@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, IsNumber } from "class-validator";
 import { Course } from "@prisma/client";
 
 export class VideoCreationDTO {
@@ -20,7 +20,7 @@ export class VideoCreationDTO {
     @IsString()
     @Type(() => String)
     @IsNotEmpty()
-    readonly thumbnail?: string
+    readonly thumbnailUrl?: string
 
     @ApiProperty({ default: 'this is videoUrl' })
     @IsString()
@@ -35,4 +35,8 @@ export class VideoCreationDTO {
     readonly courseId?: string
 
     course?: Course
+
+    @ApiProperty({ example: 60.5 })
+    @IsNumber()
+    readonly duration: number;
 }

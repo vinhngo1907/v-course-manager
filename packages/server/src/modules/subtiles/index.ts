@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { SubtilesController } from './controller';
-import { SubtilesService } from './service';
+import { SubtitlesController } from './controller';
+import { SubtitlesService } from './service';
 import { DatabaseService } from '@modules/database/service';
 
 @Module({
-  controllers: [SubtilesController],
-  providers: [SubtilesService, DatabaseService]
+  controllers: [SubtitlesController],
+  providers: [SubtitlesService, DatabaseService]
 })
-export class SubtilesModule { }
+export class SubtitlesModule { }

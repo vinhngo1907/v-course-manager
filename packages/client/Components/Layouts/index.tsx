@@ -8,7 +8,7 @@ import LoginModal from '@/Components/Login';
 // import { Profile } from 'types';
 // import { axios, setUpdateLoginState } from 'utils/axios';
 import RegisterModal from '@/Components/Register';
-import { AuthContext, AuthContextProvider } from '@/context/AuthContext';
+import { AuthContext } from '@/context/AuthContext';
 import { ModalContext } from '@/context/ModalContext';
 import ForgotPasswordModal from '../ForgotPassword';
 
@@ -28,8 +28,8 @@ export enum ModalTypeEnum {
 
 function Layout({ children, isWide, title }: Layout) {
     const { modalType, toggleModal } = useContext(ModalContext);
-    const { authState: {user} } = useContext(AuthContext)!;
-    
+    const { authState: { user } } = useContext(AuthContext)!;
+
     return (
         <>
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}

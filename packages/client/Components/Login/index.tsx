@@ -7,6 +7,7 @@ import { axios } from '@/utils/axios';
 import styles from './index.module.css';
 import { ModalTypeEnum } from '@/Components/Layouts';
 import { AuthContext } from '@/context/AuthContext';
+import * as icons from "@/constants/icons";
 
 export interface LoginFormData {
 	username: string;
@@ -118,8 +119,23 @@ export default function LoginModal({ toggleModal }: Props) {
 					{loading && <FontAwesomeIcon icon={faSpinner} spin />}
 					{!loading && <span>Login</span>}
 				</button>
-			</form>
+				<div className={styles.orContainer}>
+					<span className={styles.orLine}></span>
+					<span className={styles.orText}>or continue with</span>
+					<span className={styles.orLine}></span>
+				</div>
 
+				<div className={styles.socialButtons}>
+					<button type="button" className={styles.facebookButton}>
+						<img src={`${icons.FACEBOOK}`} alt="Facebook" />
+						Sign In/Up with Facebook
+					</button>
+					<button type="button" className={styles.googleButton}>
+						<img src={`${icons.GOOGLE}`} alt="Google" />
+						Sign In/Up with Google
+					</button>
+				</div>
+			</form>
 		</>
 	)
 }

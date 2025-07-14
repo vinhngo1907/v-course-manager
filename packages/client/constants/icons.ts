@@ -21,3 +21,5 @@ export const SEARCH = '/icons/search.svg';
 export const DOTS = '/icons/dots.svg';
 export const UPLOAD = '/icons/create_course.svg';
 export const LOGOUT = '/icons/logout.svg';
+export const FACEBOOK = '/icons/facebook.svg';
+export const GOOGLE = '/icons/google.svg';

@@ -20,6 +20,7 @@ export type Lesson = {
     name: string;
     description: string;
     video: Video;
+    courseId: string
 }
 
 export type Video = {
@@ -33,6 +34,7 @@ export type Video = {
     thumbnail: string
     videoUrl: string;
     duration: number;
+    status: string
 }
 
 export type CourseViewerProps = {
@@ -40,3 +42,17 @@ export type CourseViewerProps = {
     lessonProgress: string[],
     setLessonProgress: (ids: string[]) => void
 }
+
+export type Comment = {
+    id: string;
+    content: string;
+    userId: string;
+    // username: string;
+    // avatarUrl: string;
+    author: { fullName: string; avatar?: string };
+    createdAt: string;
+    likes: number;
+    dislikes: number;
+    replies?: Comment[];
+    tag?: string; // optional
+};

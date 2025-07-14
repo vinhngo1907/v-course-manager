@@ -1,6 +1,6 @@
 import { DatabaseService } from '@modules/database/service';
 import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { VideoDTO } from './dto/video';
+import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
 import { catchError } from 'rxjs';
 import { CourseService } from '@modules/course/service';
@@ -61,36 +61,101 @@ export class VideoService {
         }
     }
 
-    async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
+    async findVideoByLesson(lessonId: string): Promise<VideoDTO | null> {
         try {
-            const { courseId, ...videoData } = createVideoDto;
+            return await this.databaseService.video.findFirst({
+                where: {
+                    lessonId: lessonId,
+                },
+                include: { lesson: true },
+            });
+        } catch (error) {
+            this.logger.error(error.message);
+            throw new InternalServerErrorException(error);
+        }
+    }
 
-            let data: any = {
-                ...videoData,
-            };
+    async findOneWithVideo(lessonId: string): Promise<LessonDTO | null> {
+        try {
+            return await this.databaseService.lesson.findUnique({
+                where: { id: lessonId },
+                include: { video: true },
+            });
+        } catch (error) {
+            this.logger.error(error.message);
+            throw new InternalServerErrorException(error);
+        }
+    }
 
-            if (courseId) {
-                const course = await this.courseService.findOne(courseId);
-                if (!course) {
-                    throw new VideoBadRequestException("Course does not exist");
-                }
 
-                if (course.createdById !== userId) {
-                    throw new VideoBadRequestException("You don not own this course");
-                }
+    // async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
+    //     try {
+    //         const { courseId, ...videoData } = createVideoDto;
 
-                data['course'] = { connect: { id: course.id } };
-            }
+    //         let data: any = {
+    //             ...videoData,
+    //         };
+
+    //         if (courseId) {
+    //             const course = await this.courseService.findOne(courseId);
+    //             if (!course) {
+    //                 throw new VideoBadRequestException("Course does not exist");
+    //             }
+
+    //             if (course.createdById !== userId) {
+    //                 throw new VideoBadRequestException("You don not own this course");
+    //             }
+
+    //             data['course'] = { connect: { id: course.id } };
+    //         }
+
+    //         const newVideo = await this.databaseService.video.create({
+    //             data,
+    //             include: { lesson: true },
+    //         });
+
+    //         return newVideo;
+    //     } catch (error) {
+    //         this.logger.error(error);
+    //         catchError(error);
+    //     }
+    // }
+
+    async create(createVideoDto: VideoCreationDTO, userId: string) {
+        // console.log({createVideoDto})
+        try {
+            const { courseId, title, description, videoUrl, duration, thumbnailUrl } = createVideoDto;
+
+            const course = await this.courseService.findOne(courseId);
+            if (!course) throw new VideoBadRequestException("Course not found");
+            // console.log({ course, userId })
+            if (course.createdById !== userId) throw new VideoBadRequestException("Not owner");
+
+            const newLesson = await this.databaseService.lesson.create({
+                data: {
+                    name: title,
+                    description,
+                    course: { connect: { id: courseId } },
+                },
+            });
 
             const newVideo = await this.databaseService.video.create({
-                data,
-                include: { lesson: true },
+                data: {
+                    title: title,
+                    description,
+                    videoUrl,
+                    lesson: { connect: { id: newLesson.id } },
+                    owner: { connect: { id: userId } },
+                    duration,
+                    thumbnail: thumbnailUrl
+                }
             });
 
             return newVideo;
+
         } catch (error) {
-            this.logger.error(error);
-            catchError(error);
+            console.log(error)
+            throw new InternalServerErrorException(error)
         }
     }
 }

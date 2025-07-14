@@ -80,6 +80,7 @@ export default function CoursePage() {
     const [completedLessons, setCompletedLessons] = useState<string[]>([]);
     const [isCurrentTab, setIsCurrentTab] = useState(0);
     const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+    const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
 
     useEffect(() => {
         if (!id) return;
@@ -94,7 +95,7 @@ export default function CoursePage() {
             }
         };
 
-        // ✅ Chặn chưa login
+        // ✅ Not login
         if (!isAuthenticated) {
             toggleModal('login');
         } else {
@@ -150,12 +151,15 @@ export default function CoursePage() {
                             {isCurrentTab === 0 && (
                                 <CourseLesson
                                     lessons={course.lessons}
-                                    onSelectLesson={(videoUrl: string) => setCurrentVideoUrl(videoUrl)}
+                                    onSelectLesson={(videoUrl: string, videoId: string) => {
+                                        setCurrentVideoUrl(videoUrl);
+                                        setCurrentVideoId(videoId)
+                                    }}
                                     completedLessons={completedLessons}
                                 />
                             )}
-                            {isCurrentTab === 1 && <CourseComment />}
-                            {isCurrentTab === 2 && <CourseAuthor />}
+                            {isCurrentTab === 1 && <CourseComment videoId={currentVideoId}/>}
+                            {isCurrentTab === 2 && <CourseAuthor/>}
                         </div>
                     </div>
                 </div>

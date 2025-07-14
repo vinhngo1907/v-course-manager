@@ -2,8 +2,8 @@ import { useRef, useState, ChangeEvent, MouseEvent } from "react";
 // import { GrFormClose } from "react-icons/gr";
 // import Fade from "react-reveal/Fade";
 import InputImage from "./InputImage";
-import { useVideoUpload } from "context/VideoLoadContext";
-import { createVideo } from "services/videoService";
+import { useVideoUpload } from "@/context/VideoLoadContext";
+import { createVideo } from "@/services/video";
 
 export default function VideoDetails() {
     const {

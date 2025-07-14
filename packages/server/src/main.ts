@@ -38,8 +38,7 @@ async function bootstrap() {
 				new winston.transports.File({ filename: './src/common/logger/logs/error.log', level: 'error' }),
 				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
 			],
-		}),
-		cors: false
+		})
 	});
 	// if(!configSer)
 
@@ -60,6 +59,7 @@ async function bootstrap() {
 		'JWT_SECRET',
 		'JWT_EXPIRATION_TIME',
 		'MODE',
+		"CLIENT_URL"
 	];
 
 	appConfigService.ensureValues(requiredEnvVariables);
@@ -80,12 +80,15 @@ async function bootstrap() {
 	app.useGlobalFilters(new AllExceptionsFilter(appConfigService));
 	app.use(cookieParser());
 	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
+	// const clientURL = appConfigService.getClientUrl();
 
-	app.enableCors({
-		origin: true,
-		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-		credentials: true,
-	});
+	// app.enableCors({
+	// 	origin: [`${clientURL}`],
+	// 	methods: 'GET,POST,PUT,DELETE,PATCH',
+	// 	credentials: true
+	// });
+
+	app.enableCors(appConfigService.getCorsConfig())
 
 	await app.listen(port, () => {
 		logger.log(`Server is running on port ${port}`, 'Bootstrap');

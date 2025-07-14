@@ -63,7 +63,7 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                             <Link key={lesson.id} href={`/admin/courses/${course.id}/lessons/${lesson.id}`}
                                 className='flex gap-4 border border-gray-200 rounded-lg mb-6 cursor-pointer'>
                                 {lesson.video?.thumbnail && (
-                                    <div className="relative w-[200px] h-[200px] overflow-hidden rounded">
+                                    <div className="relative w-[200px] h-[150px] overflow-hidden rounded">
                                         <img
                                             src={`${lesson.video.thumbnail}?width=640`}
                                             alt={`Video thumbnail preview for ${lesson.name}`}

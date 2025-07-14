@@ -4,20 +4,23 @@ import { Lesson } from '@/types';
 
 interface Props {
     lessons: Lesson[];
-    onSelectLesson: (videoUrl: string) => void;
+    onSelectLesson: (videoUrl: string, videoId: string) => void;
     completedLessons: string[];
 }
 
 const CourseLesson: React.FC<Props> = ({ lessons, onSelectLesson, completedLessons }) => {
-    console.log({lessons})
     return (
         <div>
             {lessons.map(lesson => (
                 <CourseLessonItem
                     key={lesson.id}
                     lesson={lesson}
-                    onClick={() => onSelectLesson(lesson.video?.videoUrl || '')}
+                    onClick={() => onSelectLesson(
+                        lesson.video?.videoUrl || '',
+                        lesson.video?.id || ''
+                    )}
                     isCompleted={completedLessons.includes(lesson.id)}
+                    thumbnail={lesson.video?.thumbnail || ''}
                 />
             ))}
         </div>

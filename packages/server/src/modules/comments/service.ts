@@ -68,6 +68,18 @@ export class CommentsService {
 		}
 	}
 
+	async findAllByVideoId(videoId: string) {
+		return this.databaseService.comment.findMany({
+			where: { videoId },
+			include: {
+				author: true, 
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+		});
+	}
+
 	async addComment(dto: CommentCreationDTO, userId: string) {
 		const prisma = this.databaseService;
 

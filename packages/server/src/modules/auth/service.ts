@@ -141,19 +141,20 @@ export class AuthService {
                 where: { username },
                 include: {
                     user: {
-                        select: { id: true, email: true, fullName: true }
+                        select: { id: true, email: true, fullName: true, avatar: true }
                     }
                 }
             })
             if (!account) {
                 return null;
             }
-            const { id, email, fullName } = account.user;
+            const { id, email, fullName, avatar } = account.user;
             return {
                 username,
                 id,
                 email,
                 fullName,
+                avatar
             };
         } catch (error) {
             return null;

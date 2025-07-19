@@ -81,7 +81,7 @@ export default function CoursePage() {
     const [isCurrentTab, setIsCurrentTab] = useState(0);
     const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
     const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
-
+    const [isOpen, setIsOpen] = useState(true);
     useEffect(() => {
         if (!id) return;
 
@@ -128,10 +128,20 @@ export default function CoursePage() {
                                 <img src={DISLIKE} alt="" /> 6
                             </span>
                         </div>
-                        <div className={style.courseLanguage}>
-                            English <span />
-                        </div>
-                        <CourseSubtitle />
+                        {currentVideoId && (
+                            <>
+                                <div
+                                    className={style.courseLanguage}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                >
+                                    English
+                                    <span className={`${style.arrow} ${isOpen ? style.arrowOpen : ''}`} />
+                                </div>
+
+                                <CourseSubtitle isOpen={isOpen} />
+                            </>
+                        )}
+
                     </div>
 
                     <div className="tab">
@@ -158,8 +168,19 @@ export default function CoursePage() {
                                     completedLessons={completedLessons}
                                 />
                             )}
-                            {isCurrentTab === 1 && <CourseComment videoId={currentVideoId}/>}
-                            {isCurrentTab === 2 && <CourseAuthor/>}
+                            {/* {isCurrentTab === 1 && <CourseComment videoId={currentVideoId}/>} */}
+                            {isCurrentTab === 1 && (
+                                currentVideoId ? (
+                                    <CourseComment videoId={currentVideoId} />
+                                ) : (
+                                    <div className="w-full py-6 flex justify-center">
+                                        <p className="text-sm text-gray-400 italic">
+                                            📺 Please select a lesson to view comments.
+                                        </p>
+                                    </div>
+                                )
+                            )}
+                            {isCurrentTab === 2 && <CourseAuthor />}
                         </div>
                     </div>
                 </div>

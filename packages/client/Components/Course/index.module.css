@@ -218,3 +218,32 @@
 .courseSubtitle p {
     margin: 0;
 }
+
+.courseCommentHeaderSort {
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    /* ➜ Chắc chắn icon + text/ select nằm hàng ngang */
+    align-items: center;
+    cursor: pointer;
+    /* ➜ Cho user biết có thể click */
+}
+
+.courseCommentHeaderSort img {
+    margin-right: 7px;
+    width: 16px;
+    /* ➜ Fix size icon nếu cần */
+}
+
+.courseCommentHeaderSort select {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.courseCommentHeaderSort select option {
+    color: #000;
+    /* dropdown native sẽ dùng màu đen để dễ nhìn */
+}

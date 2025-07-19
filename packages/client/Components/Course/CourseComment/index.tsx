@@ -6,6 +6,9 @@ import { axios } from '@/utils/axios';
 import { AuthContext } from '@/context/AuthContext';
 import { Comment } from '@/types';
 import Button from '@/Components/Layouts/Button';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { addComment, setComments } from '@/redux/features/commentSlice';
 
 type Props = {
     videoId: string | null;
@@ -13,14 +16,19 @@ type Props = {
 
 const CourseComment = ({ videoId }: Props) => {
     const { authState: { user } } = useContext(AuthContext)!;
-    const [comments, setComments] = useState<Comment[]>([]);
+    // const [comments, setComments] = useState<Comment[]>([]);
+    const comments = useAppSelector((state) => state.comment.comments);
+    const [sortOption, setSortOption] = useState<'newest' | 'oldest' | 'top'>('newest');
+
+    const dispatch = useDispatch<AppDispatch>();
     const [newComment, setNewComment] = useState('');
     const fetchComments = async () => {
         console.log({ videoId })
         if (!videoId) return;
         const res = await axios.get(`/comments?videoId=${videoId}`);
-        console.log(res.data)
-        setComments(res.data);
+        // console.log(res.data)
+        // setComments(res.data);
+        dispatch(setComments(res.data))
     }
 
     useEffect(() => {
@@ -29,21 +37,30 @@ const CourseComment = ({ videoId }: Props) => {
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
-        await axios.post(`/comments`, {
+        const res = await axios.post(`/comments`, {
             content: newComment,
             videoId: videoId
         });
 
+        dispatch(addComment(res.data));
         setNewComment('');
-        fetchComments();
+        // fetchComments();
     }
     return (
         <div>
             <div className={style.courseCommentHeader}>
-                <div className={style.courseCommentHeaderComments}>25 Comments</div>
-                <div className={style.courseCommentHeaderSort}>
-                    <img src={SORT} alt="sort" />
-                    Sort by
+                <div className={style.courseCommentHeaderComments}>{comments.length || 0} Comments</div>
+                <div className='flex items-center gap-2 text-gray-400'>
+                    <img src={SORT} alt="sort" className='w-4 h-4' />
+                    <select
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value as any)}
+                        className="bg-transparent border border-gray-600 rounded px-2 py-1 text-sm text-white focus:outline-none appearance-none"
+                    >
+                        <option value="newest" className="text-black">Newest</option>
+                        <option value="oldest" className="text-black">Oldest</option>
+                        <option value="top" className="text-black">Top liked</option>
+                    </select>
                 </div>
             </div>
 
@@ -51,7 +68,7 @@ const CourseComment = ({ videoId }: Props) => {
                 <div className={style.courseCommentSearch}>
                     <img
                         className={style.courseCommentAvatar}
-                        src="https://yeu16.com/wp-content/uploads/2021/03/top-10-dien-vien-jav-nhat-ban.jpg"
+                        src={user?.avatar || "https://yeu16.com/wp-content/uploads/2021/03/top-10-dien-vien-jav-nhat-ban.jpg"}
                         alt="user"
                     />
                     <input

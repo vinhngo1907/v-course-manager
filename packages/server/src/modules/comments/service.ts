@@ -15,6 +15,17 @@ export class CommentsService {
 		this.logger = new Logger(DatabaseService.name);
 	}
 
+
+	private getOrderBy(sort: string): Prisma.CommentOrderByWithRelationInput {
+		if (sort === 'oldest') {
+			return { createdAt: 'asc' };
+		}
+		if (sort === 'top') {
+			return { likes: 'desc' };
+		}
+		return { createdAt: 'desc' }; // newest (default)
+	}
+
 	async findAll(req: CrudRequest): Promise<{
 		data: Comment[],
 		total: number,
@@ -30,12 +41,15 @@ export class CommentsService {
 			const skip = (page - 1) * limit;
 
 			const filter = req.parsed.filter || [];
-
+			
 			// Ex: ?filter=lessonId||$eq||abc hoặc ?filter=videoId||$eq||xyz
 			const where: Prisma.CommentWhereInput = {};
+			let sort = 'newest'; // Default sort
+
 			filter.forEach((f) => {
 				// if (f.field === "lessonId") where.lessonId = f.value;
 				if (f.field === "videoId") where.videoId = f.value;
+				if (f.field === "sort") sort = f.value;
 			});
 
 			const [total, data] = await prisma.$transaction([
@@ -49,9 +63,10 @@ export class CommentsService {
 					},
 					skip,
 					take: limit,
-					orderBy: {
-						createdAt: "desc",
-					},
+					// orderBy: {
+					// 	createdAt: "desc",
+					// },
+					orderBy: this.getOrderBy(sort)
 				}),
 			]);
 
@@ -68,21 +83,18 @@ export class CommentsService {
 		}
 	}
 
-	async findAllByVideoId(videoId: string) {
+	async findAllByVideoId(videoId: string, sort = 'newest') {
 		return this.databaseService.comment.findMany({
 			where: { videoId },
 			include: {
-				author: true, 
+				author: true,
 			},
-			orderBy: {
-				createdAt: 'desc',
-			},
+			orderBy: this.getOrderBy(sort),
 		});
 	}
 
 	async addComment(dto: CommentCreationDTO, userId: string) {
 		const prisma = this.databaseService;
-
 		try {
 			const { parentId, videoId, tags } = dto;
 			if (parentId) {
@@ -144,6 +156,7 @@ export class CommentsService {
 
 			return comment;
 		} catch (error) {
+			console.log("Error: ", error)
 			this.logger.error(error.message);
 			throw new InternalServerErrorException(error);
 		}

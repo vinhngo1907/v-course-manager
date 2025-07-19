@@ -5,7 +5,7 @@ export interface IVideo {
     backgroundVideo: string;
     time: string;
     desc: string;
-    onWatchDetail:  React.MouseEventHandler<HTMLDivElement>;
+    onWatchDetail: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export interface IVideo {
@@ -26,7 +26,8 @@ export interface IUser {
     email: string;
     likedVideos?: string[];
     dislikedVideos?: string[];
-    role: string ;
+    role: string;
+    avatar?: string;
 }
 
 export interface IVideoDetails {
@@ -36,11 +37,26 @@ export interface IVideoDetails {
 }
 
 export interface VideoItemProps {
-  username: string;
-  subname: string;
-  avatar: string;
-  backgroundVideo: string;
-  time: string;
-  desc: string;
-  onWatchDetail: () => void;
+    username: string;
+    subname: string;
+    avatar: string;
+    backgroundVideo: string;
+    time: string;
+    desc: string;
+    onWatchDetail: () => void;
+}
+
+export interface IComment {
+    id: string;
+    content: string;
+    videoId?: string;
+    authorId: string;
+    author: IUser;
+    parentId?: string | null;
+    parent?: IComment | null;
+    replies?: IComment[];
+    likes: number;
+    dislikes: number;
+    createdAt: string;
+    updatedAt: string;
 }

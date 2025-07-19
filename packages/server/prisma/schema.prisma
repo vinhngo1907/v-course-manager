@@ -42,6 +42,8 @@ model User {
     id          String     @id @default(uuid())
     email       String     @unique @db.VarChar(255)
     fullName    String     @db.VarChar(255)
+    avatar      String      @default("https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png")
+
     roles       Role[]
     modId       String?
     mod         Mod?
@@ -111,7 +113,7 @@ model Lesson {
     name           String               @db.VarChar(300)
     description    String               @db.VarChar(300)
     course         Course               @relation(fields: [courseId], references: [id])
-    courseId       String               
+    courseId       String
     video          Video?
     usersCompleted UserLessonProgress[]
 
@@ -136,7 +138,7 @@ model Video {
     aspectRatio String?
     status      String    @default("preparing")
     posterTime  Float?
-    comments     Comment[]
+    comments    Comment[]
 
     @@map("Video")
 }

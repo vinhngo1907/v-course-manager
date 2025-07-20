@@ -9,15 +9,17 @@
 .courseLessionItem {
     display: flex;
     align-items: flex-start;
-    /* hoặc center nếu thích */
     gap: 12px;
-    /* Khoảng cách giữa ảnh và text */
-    padding: 20px 0;
+    padding: 20px 10px;
     border-bottom: 1px solid #fff;
     color: #fff;
     cursor: pointer;
 }
 
+.courseLessionItemActive {
+  background: rgba(255, 255, 255, 0.1); /* Hoặc màu gì bạn thích */
+  border-radius: 6px;
+}
 
 .courseLessionItemChecked {
     width: 22px;

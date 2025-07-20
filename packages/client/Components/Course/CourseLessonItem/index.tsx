@@ -1,4 +1,7 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { axios } from "@/utils/axios";
 import style from '../index.module.css';
 import { Lesson } from '@/types';
 
@@ -7,32 +10,36 @@ interface Props {
     onClick: () => void;
     isCompleted: boolean;
     thumbnail?: string;
+    isActive?: boolean;
 }
 
-const CourseLessonItem: React.FC<Props> = ({ lesson, onClick, isCompleted, thumbnail }) => {
-    const handleCheckClick = (e: React.MouseEvent) => {
+const CourseLessonItem: React.FC<Props> = ({
+    lesson, onClick,
+    isCompleted, thumbnail, isActive
+}) => {
+    const [completed, setCompleted] = useState(isCompleted);
+
+    const handleCheckClick = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log(`Toggle lesson ${lesson.id}`);
+
+        try {
+            console.log({ completed })
+            if (completed) {
+                await axios.delete(`/video/lesson/${lesson.id}/progress`);
+            } else {
+                await axios.post(`/video/lesson/${lesson.id}/progress`);
+            }
+            setCompleted(!completed);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
-        <div className={style.courseLessionItem} onClick={onClick}>
-            {/* {thumbnail && (
-                <img
-                    src={thumbnail}
-                    alt={lesson.name}
-                    className={style.courseLessionItemThumbnail}
-                    width={106}
-                    height={60}
-                />
-            )} */}
-            {/* <button
-                className={style.courseLessionItemChecked}
-                onClick={handleCheckClick}
-            >
-                {isCompleted ? '✓' : ''}
-            </button> */}
-
+        <div
+            // className={style.courseLessionItem}
+            className={`${style.courseLessionItem} ${isActive ? style.courseLessionItemActive : ''}`}
+            onClick={onClick}>
             {thumbnail && (
                 <div className={style.thumbnailWrap}>
                     <img
@@ -46,7 +53,7 @@ const CourseLessonItem: React.FC<Props> = ({ lesson, onClick, isCompleted, thumb
                         className={style.courseLessionItemChecked}
                         onClick={handleCheckClick}
                     >
-                        {isCompleted ? '✓' : ''}
+                        {completed ? '✓' : ''}
                     </button>
                 </div>
             )}

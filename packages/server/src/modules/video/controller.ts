@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { VideoService } from './service';
 import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
@@ -44,5 +44,25 @@ export class VideoController {
         // }
         // console.log({ account })
         return await this.videoService.create(createVideoDTO, account.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('/lesson/:lessonId/progress')
+    async markLessonCompleted(
+        @Param('lessonId') lessonId: string,
+        @Req() req: RequestWithAccount,
+    ) {
+        const userId = req.user.id;
+        return await this.videoService.createProgress(lessonId, userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete('/lesson/:lessonId/progress')
+    async unmarkLessonCompleted(
+        @Param('lessonId') lessonId: string,
+        @Req() req: RequestWithAccount,
+    ) {
+        const userId = req.user.id;
+        return await this.videoService.removeProgress(lessonId, userId);
     }
 }

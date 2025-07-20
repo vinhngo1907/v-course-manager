@@ -87,6 +87,24 @@ export class VideoService {
         }
     }
 
+    async createProgress(lessonId: string, userId: string) {
+        return this.databaseService.userLessonProgress.create({
+            data: {
+                userId,
+                lessonId,
+            },
+        });
+    }
+
+    async removeProgress(lessonId: string, userId: string) {
+        return this.databaseService.userLessonProgress.deleteMany({
+            where: {
+                lessonId,
+                userId,
+            },
+        });
+    }
+
 
     // async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
     //     try {

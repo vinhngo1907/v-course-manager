@@ -21,7 +21,7 @@ const CourseAuthor: React.FC<Props> = ({ author }) => {
                     src={author.avatar || 'https://via.placeholder.com/100x100?text=Avatar'}
                     alt={author.username}
                 />
-                {author.username}
+                {author.username || author.fullName}
             </div>
 
             <div className={style.courseAuthorTitle}>Description</div>

@@ -13,6 +13,7 @@ import { axios } from '@/utils/axios';
 import style from '@/styles/Course.module.css';
 import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@/constants/icons';
 import { Course } from '@/types';
+import Button from '@/Components/Layouts/Button';
 
 const TabTitle: any[] = [CONTENT, COMMENT, AUTHOR];
 
@@ -68,16 +69,37 @@ export default function CoursePage() {
                             />
                         )}
 
-                        <div className={style.courseActions}>
-                            <span>
-                                <img src={LIKE} alt="" /> 145
-                            </span>
-                            <span className="text-white">
-                                <img src={DISLIKE} alt="" /> 6
-                            </span>
-                        </div>
+                        {course && course.createdBy.id == authState.user?.id && (
+                            <Button
+                                onClick={async () => {
+                                    try {
+                                        await axios.post(`/courses/registration`, {
+                                            userId: authState.user?.id,
+                                            courseId: course.id,
+                                        });
+                                        alert('Đăng ký thành công!');
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Lỗi đăng ký.');
+                                    }
+                                }}
+                                className="mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded  cursor-pointer"
+                            >
+                                Register for the course
+                            </Button>
+                        )}
+
+
                         {currentVideoId && (
                             <>
+                                <div className={style.courseActions}>
+                                    <span>
+                                        <img src={LIKE} alt="" /> 145
+                                    </span>
+                                    <span className="text-white">
+                                        <img src={DISLIKE} alt="" /> 6
+                                    </span>
+                                </div>
                                 <div
                                     className={style.courseLanguage}
                                     onClick={() => setIsOpen(!isOpen)}
@@ -114,6 +136,7 @@ export default function CoursePage() {
                                         setCurrentVideoId(videoId)
                                     }}
                                     completedLessons={completedLessons}
+                                    currentVideoId={currentVideoId} 
                                 />
                             )}
                             {/* {isCurrentTab === 1 && <CourseComment videoId={currentVideoId}/>} */}

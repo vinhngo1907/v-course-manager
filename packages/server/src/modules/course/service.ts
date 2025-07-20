@@ -84,10 +84,10 @@ export class CourseService {
     async getCourseById(courseId: string, userId?: string) {
         const course = await this.databaseService.course.findFirst({
             where: { id: courseId },
-            include: { 
+            include: {
                 lessons: { include: { video: true } },
                 createdBy: true
-             },
+            },
         });
 
         if (!course) throw new CourseNotFoundException('Not found');

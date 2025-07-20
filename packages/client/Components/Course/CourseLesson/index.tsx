@@ -6,9 +6,10 @@ interface Props {
     lessons: Lesson[];
     onSelectLesson: (videoUrl: string, videoId: string) => void;
     completedLessons: string[];
+    currentVideoId: string | null
 }
 
-const CourseLesson: React.FC<Props> = ({ lessons, onSelectLesson, completedLessons }) => {
+const CourseLesson: React.FC<Props> = ({ lessons, onSelectLesson, completedLessons, currentVideoId }) => {
     return (
         <div>
             {lessons.map(lesson => (
@@ -21,6 +22,7 @@ const CourseLesson: React.FC<Props> = ({ lessons, onSelectLesson, completedLesso
                     )}
                     isCompleted={completedLessons.includes(lesson.id)}
                     thumbnail={lesson.video?.thumbnail || ''}
+                    isActive={currentVideoId === lesson.video?.id}
                 />
             ))}
         </div>

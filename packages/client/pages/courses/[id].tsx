@@ -1,55 +1,3 @@
-// import { useRouter } from 'next/router'
-// import { useEffect, useState, useContext } from 'react'
-// import CourseViewer from '@/Components/Course/CourseViewer'
-// import { AuthContext } from '@/context/AuthContext'
-// import Layout from '@/Components/Layouts'
-// import { axios } from '@/utils/axios'
-// import Loading from '@/Components/Loading'
-
-// const CoursePage = () => {
-//     const router = useRouter()
-//     const { id } = router.query
-
-//     const { authState } = useContext(AuthContext)!
-//     const { isAuthenticated, user } = authState
-
-//     const [course, setCourse] = useState(null)
-//     const [completedLessons, setCompletedLessons] = useState<string[]>([])
-
-//     useEffect(() => {
-//         if (!id) return
-
-//         const fetchCourse = async () => {
-//             try {
-//                 const res = await axios.get(`/courses/${id}`)
-
-//                 setCourse(res.data.course)
-//                 setCompletedLessons(res.data.completedLessons)
-//             } catch (err) {
-//                 console.error(err)
-//             }
-//         }
-
-//         fetchCourse()
-//     }, [id])
-
-//     return (
-//         <Layout title='Detail Course'  isWide>
-//             {course ? (
-//                 <CourseViewer
-//                     course={course}
-//                     lessonProgress={completedLessons}
-//                     setLessonProgress={setCompletedLessons}
-//                 />
-//             ) : (
-//                 <Loading />
-//             )}
-//         </Layout>
-//     )
-// }
-
-// export default CoursePage
-
 import { useRouter } from 'next/router';
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
@@ -124,7 +72,7 @@ export default function CoursePage() {
                             <span>
                                 <img src={LIKE} alt="" /> 145
                             </span>
-                            <span>
+                            <span className="text-white">
                                 <img src={DISLIKE} alt="" /> 6
                             </span>
                         </div>
@@ -180,7 +128,10 @@ export default function CoursePage() {
                                     </div>
                                 )
                             )}
-                            {isCurrentTab === 2 && <CourseAuthor />}
+                            {isCurrentTab === 2 && <CourseAuthor author={{
+                                ...course.createdBy,
+                                bio: course.description
+                            }} />}
                         </div>
                     </div>
                 </div>

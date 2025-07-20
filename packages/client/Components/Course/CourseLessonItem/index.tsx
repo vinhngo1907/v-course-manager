@@ -10,9 +10,14 @@ interface Props {
 }
 
 const CourseLessonItem: React.FC<Props> = ({ lesson, onClick, isCompleted, thumbnail }) => {
+    const handleCheckClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        console.log(`Toggle lesson ${lesson.id}`);
+    };
+
     return (
         <div className={style.courseLessionItem} onClick={onClick}>
-            {thumbnail && (
+            {/* {thumbnail && (
                 <img
                     src={thumbnail}
                     alt={lesson.name}
@@ -20,10 +25,31 @@ const CourseLessonItem: React.FC<Props> = ({ lesson, onClick, isCompleted, thumb
                     width={106}
                     height={60}
                 />
-            )}
-            <div className={style.courseLessionItemChecked}>
+            )} */}
+            {/* <button
+                className={style.courseLessionItemChecked}
+                onClick={handleCheckClick}
+            >
                 {isCompleted ? '✓' : ''}
-            </div>
+            </button> */}
+
+            {thumbnail && (
+                <div className={style.thumbnailWrap}>
+                    <img
+                        src={thumbnail}
+                        alt={lesson.name}
+                        className={style.courseLessionItemThumbnail}
+                        width={106}
+                        height={60}
+                    />
+                    <button
+                        className={style.courseLessionItemChecked}
+                        onClick={handleCheckClick}
+                    >
+                        {isCompleted ? '✓' : ''}
+                    </button>
+                </div>
+            )}
             <div className="infor">
                 <div className={style.courseLessionItemTitle}>{lesson.name}</div>
                 <div className={style.courseLessionItemLecture}>

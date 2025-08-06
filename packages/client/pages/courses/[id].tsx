@@ -1,55 +1,3 @@
-// import { useRouter } from 'next/router'
-// import { useEffect, useState, useContext } from 'react'
-// import CourseViewer from '@/Components/Course/CourseViewer'
-// import { AuthContext } from '@/context/AuthContext'
-// import Layout from '@/Components/Layouts'
-// import { axios } from '@/utils/axios'
-// import Loading from '@/Components/Loading'
-
-// const CoursePage = () => {
-//     const router = useRouter()
-//     const { id } = router.query
-
-//     const { authState } = useContext(AuthContext)!
-//     const { isAuthenticated, user } = authState
-
-//     const [course, setCourse] = useState(null)
-//     const [completedLessons, setCompletedLessons] = useState<string[]>([])
-
-//     useEffect(() => {
-//         if (!id) return
-
-//         const fetchCourse = async () => {
-//             try {
-//                 const res = await axios.get(`/courses/${id}`)
-
-//                 setCourse(res.data.course)
-//                 setCompletedLessons(res.data.completedLessons)
-//             } catch (err) {
-//                 console.error(err)
-//             }
-//         }
-
-//         fetchCourse()
-//     }, [id])
-
-//     return (
-//         <Layout title='Detail Course'  isWide>
-//             {course ? (
-//                 <CourseViewer
-//                     course={course}
-//                     lessonProgress={completedLessons}
-//                     setLessonProgress={setCompletedLessons}
-//                 />
-//             ) : (
-//                 <Loading />
-//             )}
-//         </Layout>
-//     )
-// }
-
-// export default CoursePage
-
 import { useRouter } from 'next/router';
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
@@ -65,6 +13,7 @@ import { axios } from '@/utils/axios';
 import style from '@/styles/Course.module.css';
 import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@/constants/icons';
 import { Course } from '@/types';
+import Button from '@/Components/Layouts/Button';
 
 const TabTitle: any[] = [CONTENT, COMMENT, AUTHOR];
 
@@ -120,16 +69,37 @@ export default function CoursePage() {
                             />
                         )}
 
-                        <div className={style.courseActions}>
-                            <span>
-                                <img src={LIKE} alt="" /> 145
-                            </span>
-                            <span>
-                                <img src={DISLIKE} alt="" /> 6
-                            </span>
-                        </div>
+                        {course && course.createdBy.id == authState.user?.id && (
+                            <Button
+                                onClick={async () => {
+                                    try {
+                                        await axios.post(`/courses/registration`, {
+                                            userId: authState.user?.id,
+                                            courseId: course.id,
+                                        });
+                                        alert('Đăng ký thành công!');
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Lỗi đăng ký.');
+                                    }
+                                }}
+                                className="mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded  cursor-pointer"
+                            >
+                                Register for the course
+                            </Button>
+                        )}
+
+
                         {currentVideoId && (
                             <>
+                                <div className={style.courseActions}>
+                                    <span>
+                                        <img src={LIKE} alt="" /> 145
+                                    </span>
+                                    <span className="text-white">
+                                        <img src={DISLIKE} alt="" /> 6
+                                    </span>
+                                </div>
                                 <div
                                     className={style.courseLanguage}
                                     onClick={() => setIsOpen(!isOpen)}
@@ -166,6 +136,7 @@ export default function CoursePage() {
                                         setCurrentVideoId(videoId)
                                     }}
                                     completedLessons={completedLessons}
+                                    currentVideoId={currentVideoId} 
                                 />
                             )}
                             {/* {isCurrentTab === 1 && <CourseComment videoId={currentVideoId}/>} */}
@@ -180,7 +151,10 @@ export default function CoursePage() {
                                     </div>
                                 )
                             )}
-                            {isCurrentTab === 2 && <CourseAuthor />}
+                            {isCurrentTab === 2 && <CourseAuthor author={{
+                                ...course.createdBy,
+                                bio: course.description
+                            }} />}
                         </div>
                     </div>
                 </div>

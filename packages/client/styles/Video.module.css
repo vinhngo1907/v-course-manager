@@ -167,6 +167,10 @@
     cursor: pointer;
 }
 
+.Control span img {
+  filter: brightness(0) saturate(100%) invert(69%) sepia(54%) saturate(478%) hue-rotate(359deg) brightness(103%) contrast(97%);
+}
+
 .Duration {
     -webkit-box-flex: 1;
     -ms-flex: 1;

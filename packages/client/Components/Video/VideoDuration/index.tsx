@@ -7,57 +7,66 @@ interface IProps {
 }
 
 const VideoDuration: React.FC<IProps> = ({ videoRef, endVideo }) => {
-    const [percent, setPercent] = useState<string>('0%');
-
+    const [percent, setPercent] = useState("0%");
     const [currentSeconds, setCurrentSeconds] = useState(0);
-
     const [durationSeconds, setDurationSeconds] = useState(0);
-    const barRef = useRef<any>(null);
+    const barRef = useRef<HTMLDivElement | null>(null);
+
     const convertSecondsToTime = (seconds: number) => {
-        let time = '00:00:00';
-        if (seconds) {
-            time = new Date(seconds * 1000).toISOString().substring(11, 8);
-        }
-        
-        return time;
-    }
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        return `${hrs > 0 ? `${hrs}:` : ""}${mins.toString().padStart(2, "0")}:${secs
+            .toString()
+            .padStart(2, "0")}`;
+    };
 
     useEffect(() => {
         const video = videoRef.current;
-        if (video) {
-            video.addEventListener('timeupdate', () => {
-                setCurrentSeconds(Math.floor(video.currentTime));
-                setPercent(`${(video.currentTime / video.duration) * 100}% `);
+        if (!video) return;
 
-                if (video.currentTime == video.duration) {
-                    endVideo();
-                }
-            });
+        const handleTimeUpdate = () => {
+            setCurrentSeconds(Math.floor(video.currentTime));
+            setPercent(`${(video.currentTime / video.duration) * 100}%`);
 
+            if (video.currentTime === video.duration) {
+                endVideo();
+            }
+        };
+
+        const handleLoadedMetadata = () => {
             setDurationSeconds(Math.floor(video.duration));
-        }
+        };
 
-        return video?.removeEventListener('timeupdate', () => { });
-    }, [endVideo, videoRef]);
+        video.addEventListener("timeupdate", handleTimeUpdate);
+        video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+        return () => {
+            video.removeEventListener("timeupdate", handleTimeUpdate);
+            video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        };
+    }, [videoRef, endVideo]);
 
     const selectTime = (event: React.MouseEvent<HTMLDivElement>) => {
         const bar = barRef.current;
         const video = videoRef.current;
         if (bar && video) {
-            const progressTime = (event.nativeEvent.offsetX / bar.offsetWidth) * video.duration;
-            video.currentTime = progressTime;
+            const clickPosition = event.nativeEvent.offsetX;
+            const newTime = (clickPosition / bar.offsetWidth) * video.duration;
+            video.currentTime = newTime;
         }
-    }
+    };
+
     return (
         <div className={style.Duration} onClick={selectTime} ref={barRef}>
             <div className={style.Time} style={{ width: percent }}>
                 <span>
-                    {convertSecondsToTime(currentSeconds)} /{' '}
-                    {convertSecondsToTime(durationSeconds)}
+                    {convertSecondsToTime(currentSeconds)} / {convertSecondsToTime(durationSeconds)}
                 </span>
             </div>
         </div>
     );
-}
+};
 
 export default React.memo(VideoDuration);

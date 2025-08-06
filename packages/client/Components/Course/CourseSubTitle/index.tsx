@@ -5,7 +5,6 @@ type Props = {
 	isOpen: boolean
 }
 const CourseSubtitle = ({ isOpen }: Props) => {
-	console.log({isOpen})
 	if (!isOpen) return null;
 	return (
 		<div className="bg-[#484848] rounded-[15px] p-4 mt-4 text-white">

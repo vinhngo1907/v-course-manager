@@ -3,6 +3,7 @@ export type Profile = {
     email: string;
     fullName: string;
     username: string;
+    avatar?: string;
 };
 
 export type Course = {
@@ -12,6 +13,7 @@ export type Course = {
     description: string;
     published: boolean;
     lessons: Lesson[] | [];
+    createdBy: Profile
 }
 
 

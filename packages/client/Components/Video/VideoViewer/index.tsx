@@ -35,15 +35,15 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
             setIsVolumeMuted(!isVolumeMuted);
         }
     }
-    
+
     const openFullScreen = () => {
         const video = videoRef.current;
-        if(video){
-            if(video.requestFullscreen){
+        if (video) {
+            if (video.requestFullscreen) {
                 video.requestFullscreen();
-            } else if(video.webkitRequestFullscreen){
+            } else if (video.webkitRequestFullscreen) {
                 video.webkitRequestFullscreen();
-            } else if(video.msRequestFullscreen){
+            } else if (video.msRequestFullscreen) {
                 video.msRequestFullscreen();
             }
         }
@@ -59,7 +59,16 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
 
     return (
         <div className={style.VideoDetailWrapper}>
-            <video className={style.VideoDetail} src={urlVideo} ref={videoRef} />
+            <video
+                className={style.VideoDetail} src={urlVideo} ref={videoRef}
+                onTimeUpdate={() => {
+                    const currentTime = videoRef.current?.currentTime || 0;
+                    const duration = videoRef.current?.duration || 0;
+                    setProgress(currentTime);
+                    // Bạn cũng có thể set thêm % để làm thanh progress nếu cần
+                }}
+                onEnded={videoEnd}
+            />
             <div className={style.Control}>
                 <span onClick={startVideo}>
                     <img src={isVideoStarted ? STOP : START} alt="stop" />
@@ -78,13 +87,13 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
                 </span>
                 <VideoDuration videoRef={videoRef} endVideo={videoEnd} />
                 <span className={style.Volume} onClick={toggleVolume}>
-                    <img src={isVolumeMuted ? MUTED_VOLUME :VOLUME}/>
+                    <img src={isVolumeMuted ? MUTED_VOLUME : VOLUME} />
                 </span>
                 <span>
-                    <img src={HD} alt="hd"/>
+                    <img src={HD} alt="hd" />
                 </span>
                 <span>
-                    <img src={ZOOM} alt="zoom" onClick={openFullScreen}/>
+                    <img src={ZOOM} alt="zoom" onClick={openFullScreen} />
                 </span>
             </div>
         </div>

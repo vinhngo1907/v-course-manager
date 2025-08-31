@@ -23,7 +23,8 @@ const sidebars: SidebarItem[] = [
 		label: 'Courses',
 		path: "/courses"
 	},
-	{ icon: icons.SETTING, label: 'Admin', path: '/admin', isAdmin: true },
+	{ icon: icons.ADMIN, label: 'Admin', path: '/admin', isAdmin: true },
+	{ icon: icons.SETTING, label: 'Settings', path: '/settings' },
 	// { icon: icons.UPLOAD, label: 'Create Course', path: '/admin/courses', isAdmin: true },
 	// {
 	// 	icon: icons.UPLOAD,

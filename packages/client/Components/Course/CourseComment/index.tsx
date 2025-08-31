@@ -23,7 +23,7 @@ const CourseComment = ({ videoId }: Props) => {
     const dispatch = useDispatch<AppDispatch>();
     const [newComment, setNewComment] = useState('');
     const fetchComments = async () => {
-        console.log({ videoId })
+        // console.log({ videoId });
         if (!videoId) return;
         const res = await axios.get(`/comments?videoId=${videoId}`);
         // console.log(res.data)
@@ -104,9 +104,29 @@ const CourseComment = ({ videoId }: Props) => {
                     </div>
 
                 )}
-                {comments.map((c) => (
+                {/* {comments.map((c) => (
                     <CourseCommentItem key={c.id} comment={c} />
-                ))}
+                ))} */}
+
+                {comments
+                    .filter((c) => c.parentId === null)
+                    .sort((a, b) => {
+                        if (sortOption === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                        if (sortOption === 'oldest') return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                        if (sortOption === 'top') return b.likes - a.likes;
+                        return 0;
+                    })
+                    .map((parentComment) => {
+                        const replies = comments.filter((reply) => reply.parentId === parentComment.id);
+                        return (
+                            <CourseCommentItem
+                                key={parentComment.id}
+                                comment={parentComment}
+                                replies={replies}
+                            />
+                        );
+                    })}
+                f
             </div>
         </div>
     );

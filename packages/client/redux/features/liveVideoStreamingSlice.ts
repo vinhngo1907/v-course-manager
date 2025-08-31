@@ -80,7 +80,7 @@ const liveVideoStreamingSlice = createSlice({
                 ...action.payload[newUserId],
             };
         },
-         updateParticipantField(
+        updateParticipantField(
             state,
             action: PayloadAction<{
                 userId: string;

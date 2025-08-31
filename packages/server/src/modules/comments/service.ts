@@ -125,6 +125,7 @@ export class CommentsService {
 				},
 				include: {
 					author: true,
+					replies: true
 				},
 			});
 

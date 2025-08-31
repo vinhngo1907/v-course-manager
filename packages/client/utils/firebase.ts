@@ -27,8 +27,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_LIVE_STREAMING_KEY,
-  databaseURL: "https://live-video-streaming-b0312-default-rtdb.europe-west1.firebasedatabase.app/",
+  apiKey: "AIzaSyC_kE7gXa4ysoZT5BpGeS5bJwkFl1KTgCc",
+  databaseURL: "https://video-sharing-35ce0-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
 
 if (!firebase.apps.length) {

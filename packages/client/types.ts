@@ -32,11 +32,12 @@ export type Video = {
     likes: number;
     dislikes: number;
     viewsCount: number;
-    publicPlaybackId?: boolean
+    // publicPlaybackId?: boolean
     thumbnail: string
     videoUrl: string;
     duration: number;
-    status: string
+    status: string;
+    // description? : string;
 }
 
 export type CourseViewerProps = {
@@ -57,4 +58,6 @@ export type Comment = {
     dislikes: number;
     replies?: Comment[];
     tag?: string; // optional
+    parent?: Comment | null;
+
 };

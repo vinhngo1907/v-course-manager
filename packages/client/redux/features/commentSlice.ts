@@ -17,24 +17,34 @@ const commentSlice = createSlice({
         setComments: (state, action: PayloadAction<IComment[]>) => {
             state.comments = action.payload;
         },
-        // Thêm 1 comment mới
+        // Add a  new comment
         addComment: (state, action: PayloadAction<IComment>) => {
             state.comments.unshift(action.payload);
         },
-        // Xoá comment nếu cần
+        // Delete comment if need
         removeComment: (state, action: PayloadAction<string>) => {
             state.comments = state.comments.filter(c => c.id !== action.payload);
         },
-        // Hoặc update comment, ví dụ like/dislike
+        // update comment: content/like/dislike
         updateComment: (state, action: PayloadAction<IComment>) => {
             const index = state.comments.findIndex(c => c.id === action.payload.id);
             if (index !== -1) {
                 state.comments[index] = action.payload;
             }
         },
+        addReply: (state, action: PayloadAction<IComment>) => {
+            const reply = action.payload;
+            const parentIdx = state.comments.findIndex(c => c.id === reply.parentId);
+            if (parentIdx !== -1) {
+                if (!state.comments[parentIdx].replies) {
+                    state.comments[parentIdx].replies = [];
+                }
+                state.comments[parentIdx].replies.unshift(reply);
+            }
+        }
     },
 });
 
-export const { setComments, addComment, removeComment, updateComment } = commentSlice.actions;
+export const { setComments, addComment, removeComment, updateComment, addReply } = commentSlice.actions;
 
 export default commentSlice.reducer;

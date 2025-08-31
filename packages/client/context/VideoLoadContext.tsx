@@ -8,7 +8,14 @@ export type VideoDetailsType = {
     videoURL?: string;
     thumbnailUrl?: string;
     tags?: string[];
-    userId?: string
+    userId: string | undefined;
+    likes: number | undefined;
+    dislikes: number;
+    viewsCount: number;
+    videoUrl: string;
+    status: string;
+    thumbnail: string;
+    duration: number;
 };
 
 interface VideoUploadContextType {
@@ -27,7 +34,16 @@ const VideoUploadContext = createContext<VideoUploadContextType | undefined>(
 export const VideoUploadProvider = ({ children }: { children: ReactNode }) => {
     const [uploaded, setUploaded] = useState(false);
     const [uploadingProgress, setUploadingProgress] = useState(0);
-    const [videoDetails, _setVideoDetails] = useState<VideoDetailsType>({});
+    const [videoDetails, _setVideoDetails] = useState<VideoDetailsType>({
+        userId: undefined,
+        likes: 0,
+        dislikes: 0,
+        viewsCount: 0,
+        videoUrl: "",
+        status: "",
+        thumbnail: "",
+        duration: 0,
+    });
 
     const setVideoDetails = (newDetails: Partial<VideoDetailsType>) => {
         _setVideoDetails((prev) => ({ ...prev, ...newDetails }));

@@ -10,7 +10,14 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import styles from './index.module.css';
 import { useAppSelector } from "@/redux/store";
 
-const MeetingFooter = (props) => {
+interface MeetingFooterProps {
+  onMicClick: (micState: boolean) => void;
+  onVideoClick: (videoState: boolean) => void;
+  onScreenClick: (setScreen: (enabled: boolean) => void) => void;
+}
+
+
+const MeetingFooter = (props: MeetingFooterProps) => {
     // const isStreamer = useSelector((state) => state.isStreamer);
     const isStreamer = useAppSelector((state) => state.liveVideoStreaming.isStreamer)
 
@@ -41,7 +48,7 @@ const MeetingFooter = (props) => {
         props.onScreenClick(setScreenState);
     };
 
-    const setScreenState = (isEnabled) => {
+    const setScreenState = (isEnabled: boolean) => {
         setStreamState((currentState) => {
             return {
                 ...currentState,

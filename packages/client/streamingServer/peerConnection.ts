@@ -1,5 +1,10 @@
-import firepadRef from "./firebase";
-import { store } from "../redux/store";
+import { getFirepadRef } from "./firebase";
+import { store } from "@/redux/store";
+
+const firepadRef = getFirepadRef();
+if (!firepadRef) {
+    throw new Error("firepadRef is undefined — must run on client side!");
+}
 
 const participantRef = firepadRef.child("participants");
 
@@ -43,6 +48,10 @@ export const createOffer = async (
 // Answer for remote offer
 const createAnswer = async (otherUserId: string, userId: string) => {
     const pc = store.getState().liveVideoStreaming.participants[otherUserId]?.peerConnection;
+    if (!pc) {
+        console.error(`No peerConnection for ${otherUserId}`);
+        return;
+    }
     const participantRef1 = participantRef.child(otherUserId);
 
     pc.onicecandidate = (event) => {

@@ -23,3 +23,4 @@ export const UPLOAD = '/icons/create_course.svg';
 export const LOGOUT = '/icons/logout.svg';
 export const FACEBOOK = '/icons/facebook.svg';
 export const GOOGLE = '/icons/google.svg';
+export const ADMIN = '/icons/admin.svg';

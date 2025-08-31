@@ -65,4 +65,10 @@ export class VideoController {
         const userId = req.user.id;
         return await this.videoService.removeProgress(lessonId, userId);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    async getAll(): Promise<VideoDTO[]> {
+        return await this.videoService.findAll();
+    }
 }

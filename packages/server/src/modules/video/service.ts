@@ -105,6 +105,14 @@ export class VideoService {
         });
     }
 
+    async findAll(): Promise<VideoDTO[]> {
+        try {
+            return await this.databaseService.video.findMany();
+        } catch (error) {
+            this.logger.error(error.message);
+            throw new InternalServerErrorException(error);
+        }
+    }
 
     // async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
     //     try {

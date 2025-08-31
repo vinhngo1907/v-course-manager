@@ -1,42 +1,51 @@
+// ./streamingServer/firebase.ts
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
-// Firebase config
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_LIVE_STREAMING_KEY,
-    databaseURL:
-        "https://live-video-streaming-b0312-default-rtdb.europe-west1.firebasedatabase.app/",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
 };
 
-// Initialize Firebase if not already
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+	firebase.initializeApp(firebaseConfig);
 }
 
-// export const db = firebase;
 export const db = firebase.database();
 export const ServerValue = firebase.database.ServerValue;
 
-// let firepadRef = firebase.database().ref();
+/**
+ * ✅ Create Firepad ref, running in client
+ */
+export const getFirepadRef = () => {
+	if (typeof window === "undefined") {
+		// Running SSR => return null
+		return null;
+	}
 
-// const urlparams = new URLSearchParams(window.location.search);
-// const roomId = urlparams.get("id");
+	let firepadRef = firebase.database().ref();
 
-// if (window.location.href.includes("live-stream")) {
-//     if (roomId) {
-//         firepadRef = firepadRef.child(roomId);
-//     } else {
-//         firepadRef = firepadRef.push();
-//         window.history.replaceState(null, "Meet", "?id=" + firepadRef.key);
+	// GET ?id in URL
+	const urlParams = new URLSearchParams(window.location.search);
+	const roomId = urlParams.get("id");
 
-//         window.onbeforeunload = (e: any) => {
-//             e.preventDefault();
-//             e.returnValue = "";
-//             firepadRef.remove().then(() => {
-//                 console.log("All data removed successfully.");
-//             });
-//         };
-//     }
-// }
+	if (window.location.href.includes("live-stream")) {
+		if (roomId) {
+			firepadRef = firepadRef.child(roomId);
+		} else {
+			firepadRef = firepadRef.push();
+			window.history.replaceState(null, "Meet", "?id=" + firepadRef.key);
 
-// export default firepadRef;
+			window.onbeforeunload = (e: any) => {
+				e.preventDefault();
+				e.returnValue = "";
+				firepadRef.remove().then(() => {
+					console.log("All data removed successfully.");
+				});
+			};
+		}
+	}
+
+	return firepadRef;
+};

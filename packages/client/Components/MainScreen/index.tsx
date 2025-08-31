@@ -1,18 +1,24 @@
-import React, { useRef, useEffect } from 'react';
-import MeetingFooter from '@/Components/MeetingFooter';
-import Participants from '@/Components/Participants';
-import './index.module.css';
-import { useDispatch } from 'react-redux';
-import { AppDispatch, useAppSelector } from '@/redux/store';
-import { setMainStream, updateUser } from '@/redux/features/liveVideoStreamingSlice';
+import React, { useRef, useEffect } from "react";
+import "./index.module.css";
+import MeetingFooter from "@/Components/MeetingFooter";
+import Participants from "@/Components/Participants";
+import SidePanel from "@/Components/MainScreen/SidePanel";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/redux/store";
+import {
+    setMainStream,
+    updateUser,
+} from "@/redux/features/liveVideoStreamingSlice";
 
-
-const MainScreen: React.FC = () => {
+const MainScreen: React.FC<{ isStreamer: boolean }> = ({ isStreamer }) => {
     const dispatch = useDispatch<AppDispatch>();
-
     const stream = useAppSelector((state) => state.liveVideoStreaming.mainStream);
-    const participants = useAppSelector((state) => state.liveVideoStreaming.participants);
-    const currentUser = useAppSelector((state) => state.liveVideoStreaming.currentUser);
+    const participants = useAppSelector(
+        (state) => state.liveVideoStreaming.participants
+    );
+    const currentUser = useAppSelector(
+        (state) => state.liveVideoStreaming.currentUser
+    );
 
     const participantRef = useRef(participants);
 
@@ -30,21 +36,18 @@ const MainScreen: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        participantRef.current = participants;
-    }, [participants]);
-
     const updateStream = (newStream: MediaStream) => {
         for (const key in participantRef.current) {
             const sender = participantRef.current[key];
             if (sender.currentUser) continue;
+            if (sender.peerConnection) {
+                const videoSender = sender.peerConnection
+                    .getSenders()
+                    .find((s) => s.track?.kind === "video");
 
-            const videoSender = sender.peerConnection
-                .getSenders()
-                .find((s) => s.track?.kind === 'video');
-
-            if (videoSender && newStream.getVideoTracks().length > 0) {
-                videoSender.replaceTrack(newStream.getVideoTracks()[0]);
+                if (videoSender && newStream.getVideoTracks().length > 0) {
+                    videoSender.replaceTrack(newStream.getVideoTracks()[0]);
+                }
             }
         }
 
@@ -57,8 +60,10 @@ const MainScreen: React.FC = () => {
             video: true,
         });
 
-        const user = Object.values(currentUser)[0];
-        localStream.getVideoTracks()[0].enabled = user.video;
+        const user = Object.values(currentUser ?? {})[0];
+        if (user) {
+            localStream.getVideoTracks()[0].enabled = user.video;
+        }
 
         updateStream(localStream);
         dispatch(updateUser({ screen: false }));
@@ -70,12 +75,14 @@ const MainScreen: React.FC = () => {
         if ((navigator as any).getDisplayMedia) {
             mediaStream = await (navigator as any).getDisplayMedia({ video: true });
         } else if (navigator.mediaDevices.getDisplayMedia) {
-            mediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            mediaStream = await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+            });
         } else {
             mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    ...({ mediaSource: 'screen' } as MediaTrackConstraints)
-                }
+                    ...({ mediaSource: "screen" } as MediaTrackConstraints),
+                },
             });
         }
 
@@ -85,18 +92,30 @@ const MainScreen: React.FC = () => {
         dispatch(updateUser({ screen: true }));
     };
 
+    useEffect(() => {
+        participantRef.current = participants;
+    }, [participants]);
+
     return (
-        <div className="wrapper">
-            <div className="main-screen">
-                <Participants />
+        <div className="flex flex-col w-full h-screen bg-black">
+            <div className="flex flex-1">
+                <div className="flex-1">
+                    <Participants />
+                </div>
+                <div className="w-[400px] border-l border-gray-700">
+                    <SidePanel />
+                </div>
             </div>
-            <div className="footer">
-                <MeetingFooter
-                    onScreenClick={onScreenClick}
-                    onMicClick={onMicClick}
-                    onVideoClick={onVideoClick}
-                />
-            </div>
+
+            {isStreamer && (
+                <div className="footer">
+                    <MeetingFooter
+                        onScreenClick={onScreenClick}
+                        onMicClick={onMicClick}
+                        onVideoClick={onVideoClick}
+                    />
+                </div>
+            )}
         </div>
     );
 };

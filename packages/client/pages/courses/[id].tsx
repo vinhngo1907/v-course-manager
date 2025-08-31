@@ -69,7 +69,7 @@ export default function CoursePage() {
                             />
                         )}
 
-                        {course && course.createdBy.id == authState.user?.id && (
+                        {course && course.createdBy.id !== authState.user?.id && (
                             <Button
                                 onClick={async () => {
                                     try {

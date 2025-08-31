@@ -8,15 +8,19 @@ import { VideoDetailsType } from "@/context/VideoLoadContext";
 import { apiUrl } from "@/constants/configs";
 import { axios } from "@/utils/axios";
 import { IUser, IVideo } from "@/interfaces/index";
+import { Video } from "@/types";
 
 export const getAllVideos = async (idUser?: string): Promise<AxiosResponse<any>> => {
+    console.log({ apiUrl: `${apiUrl}/video`, idUser });
+    
     try {
         const url = idUser
-            ? `${apiUrl}videosRecommend?idUser=${idUser}`
-            : `${apiUrl}videos`;
+            ? `${apiUrl}/videosRecommend?idUser=${idUser}`
+            : `${apiUrl}/video`;
 
         return await axios.get(url);
     } catch (err) {
+        console.log("Why so error: ",err);
         throw new Error("Failed to fetch videos");
     }
 };
@@ -55,11 +59,9 @@ export const createVideo = async (
     videoDetails: VideoDetailsType
 ): Promise<AxiosResponse<any>> => {
     try {
-        const res = await axios.post(
-            `${apiUrl}videos`,
-            videoDetails,
-            { headers: AuthorizationHeader() }
-        );
+        const res = await axios.post(`${apiUrl}/videos`, videoDetails, {
+            headers: AuthorizationHeader(),
+        });
 
         // sendVideoUploadedNotification(
         //   `Just uploaded a new video: ${videoDetails.title}`,

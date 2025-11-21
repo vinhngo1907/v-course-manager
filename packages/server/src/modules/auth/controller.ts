@@ -86,7 +86,7 @@ export class AuthController {
         @Body() registerPayload: RegisterPayload,
         @Res() res: Response
     ): Promise<any> {
-        console.log(registerPayload)
+        // console.log(registerPayload)
         const { cookie, user } = await this.authService.register(registerPayload);
         res.setHeader('Set-header', cookie);
         return res.send({ ...user, role: "admin" });

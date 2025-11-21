@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable, Put, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UseGuards, Res, Req, BadRequestException, Injectable, Put, Patch, Query } from '@nestjs/common';
 import { CourseService } from './service';
 import { Request, Response } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
@@ -44,8 +44,10 @@ export class CourseController {
     // @UseGuards(JwtAuthGuard)
     @Get()
     @UseInterceptors(CrudRequestInterceptor)
-    async getAll(@ParsedRequest() req: CrudRequest): Promise<any> {
-        return await this.courseService.findAll(req);
+    async getAll(
+        @ParsedRequest() req: CrudRequest,
+        @Query('authorId') authorId?: string,): Promise<any> {
+        return await this.courseService.findAll(req, authorId);
     }
 
     @Get("/list")

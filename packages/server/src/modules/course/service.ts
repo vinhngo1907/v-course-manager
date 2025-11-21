@@ -13,32 +13,65 @@ export class CourseService {
         private readonly logger: Logger,
     ) { }
 
-    async findAll(req: CrudRequest): Promise<{
+    async findAll(req: CrudRequest, authorId: string): Promise<{
         data: CourseWithLessonsDTO[],
         total: number,
         page: number,
         pageCount: number,
         limit: number
     }> {
+        // try {
+        //     console.log({ req: req.parsed });
+        //     const page = req.parsed.page || 1;
+        //     const limit = req.parsed.limit || 20;
+        //     const authorFilter = req.parsed.filter?.find(
+        //         (f) => f.field === 'authorId'
+        //     );
+        //     const authorId = authorFilter?.value;
+        //     console.log({ authorId, authorFilter });
+        //     const where = authorId ? { createdById: authorId } : {};
+        //     // const [data, total] = await this.getManyAndCountCourses(req);
+        //     const courses = await this.databaseService.course.findMany({
+        //         where,
+        //         include: {
+        //             lessons: {
+        //                 include: {
+        //                     video: true
+        //                 }
+        //             }
+        //         }
+        //     });
+        //     const mappedCourses = courses.map(course => ({
+        //         ...course,
+        //         thumbnailUrl: course.thumbnail,
+        //     }));
+
+        //     return {
+        //         data: mappedCourses,
+        //         page,
+        //         limit,
+        //         total: courses.length,
+        //         pageCount: Math.ceil(courses.length / limit),
+        //     };
+        // } catch (error) {
+        //     this.logger.error(error.message);
+        //     throw new InternalServerErrorException(error);
+        // }
         try {
             const page = req.parsed.page || 1;
             const limit = req.parsed.limit || 20;
-            const authorFilter = req.parsed.filter?.find(
-                (f) => f.field === 'authorId'
-            );
-            const authorId = authorFilter?.value;
+
             const where = authorId ? { createdById: authorId } : {};
-            // const [data, total] = await this.getManyAndCountCourses(req);
+
             const courses = await this.databaseService.course.findMany({
                 where,
                 include: {
                     lessons: {
-                        include: {
-                            video: true
-                        }
+                        include: { video: true }
                     }
                 }
             });
+
             const mappedCourses = courses.map(course => ({
                 ...course,
                 thumbnailUrl: course.thumbnail,

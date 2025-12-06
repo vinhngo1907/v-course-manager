@@ -1,0 +1,14 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore
+# Scope: component or file name (optional)
+# Subject: present tense, lowercase, no period, <50 chars
+#
+# Examples:
+# feat(auth): add login functionality
+# fix(api): resolve timeout issue
+# docs(readme): update installation guide

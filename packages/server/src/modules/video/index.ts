@@ -5,8 +5,8 @@ import { DatabaseService } from '@modules/database/service';
 import { CourseService } from '@modules/course/service';
 
 @Module({
-    providers: [VideoService, DatabaseService, Logger, CourseService],
-    controllers: [VideoController],
-    exports: [VideoService]
+  providers: [VideoService, DatabaseService, Logger, CourseService],
+  controllers: [VideoController],
+  exports: [VideoService],
 })
-export class VideoModule { }
+export class VideoModule {}

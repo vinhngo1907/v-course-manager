@@ -19,33 +19,33 @@ import { CommentReactionsModule } from './comment-reactions';
 import { FileUploadModule } from './file-upload';
 
 @Module({
-	imports: [
-		AppConfigModule,
-		DatabaseModule,
-		UserModule,
-		AuthModule,
-		AccountModule,
-		RoleModule,
-		LoggerModule,
-		VideoModule,
-		SubtitlesModule,
-		SubLinesModule,
-		CourseModule,
-		CommentsModule,
-		StreamModule,
-		CommentReactionsModule,
-		FileUploadModule
-	],
-	providers: [
-		Logger,
-		{
-			provide: APP_FILTER,
-			useClass: HttpExceptionFilter
-		}
-	],
+  imports: [
+    AppConfigModule,
+    DatabaseModule,
+    UserModule,
+    AuthModule,
+    AccountModule,
+    RoleModule,
+    LoggerModule,
+    VideoModule,
+    SubtitlesModule,
+    SubLinesModule,
+    CourseModule,
+    CommentsModule,
+    StreamModule,
+    CommentReactionsModule,
+    FileUploadModule,
+  ],
+  providers: [
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggerMiddleware).forRoutes('*');
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }

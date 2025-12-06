@@ -1,8 +1,8 @@
 import {
-    INestApplication,
-    Injectable,
-    Logger,
-    OnModuleInit,
+  INestApplication,
+  Injectable,
+  Logger,
+  OnModuleInit,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
@@ -12,73 +12,75 @@ import { middlewares } from './middleware';
 
 @Injectable()
 export class DatabaseService extends PrismaClient implements OnModuleInit {
-    private logger: Logger;
+  private logger: Logger;
 
-    constructor() {
-        super();
-        this.logger = new Logger(DatabaseService.name);
-        // Apply all middleware functions
-        middlewares.forEach(middleware => this.$use(middleware()));
+  constructor() {
+    super();
+    this.logger = new Logger(DatabaseService.name);
+    // Apply all middleware functions
+    middlewares.forEach((middleware) => this.$use(middleware()));
+  }
+
+  async onModuleInit() {
+    await this.$connect();
+    this.logger.log('Prisma connected');
+  }
+
+  async enableShutdownHooks(app: INestApplication) {
+    this.$on('beforeExit', async () => {
+      await app.close();
+      this.logger.log('Primsa disconnected');
+    });
+  }
+
+  async close() {
+    await this.$disconnect();
+  }
+
+  async dropDatabase() {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('Cannot drop database in production');
     }
 
-    async onModuleInit() {
-        await this.$connect();
-        this.logger.log('Prisma connected');
-    }
+    const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
+    return Promise.all(
+      modelKeys.map((modelName) =>
+        (this[camelCase(modelName)] as any).deleteMany(),
+      ),
+    );
+  }
 
-    async enableShutdownHooks(app: INestApplication) {
-        this.$on('beforeExit', async () => {
-            await app.close();
-            this.logger.log('Primsa disconnected');
-        });
-    }
+  // async seedDatabase() {
+  //     if (process.env.NODE_ENV === 'production') {
+  //         throw new Error('Cannot seed database in production');
+  //     }
 
-    async close() {
-        await this.$disconnect();
-    }
+  //     const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
 
-    async dropDatabase() {
-        if (process.env.NODE_ENV === 'production') {
-            throw new Error('Cannot drop database in production');
-        }
+  //     await Promise.all(
+  //         modelKeys.map((model) => {
+  //             const files = fs.readdirSync(
+  //                 path.resolve(__dirname, `../${snakeCase(model)}/mocks`),
+  //             );
 
-        const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
-        return Promise.all(
-            modelKeys.map((modelName) => (this[camelCase(modelName)] as any).deleteMany()),
-        );
-    }
+  //             const modelData = [];
 
-    // async seedDatabase() {
-    //     if (process.env.NODE_ENV === 'production') {
-    //         throw new Error('Cannot seed database in production');
-    //     }
+  //             files.forEach((file) => {
+  //                 const fileName = path.resolve(
+  //                     __dirname,
+  //                     `../${snakeCase(model)}/mocks`,
+  //                     file,
+  //                 );
+  //                 const data = fs.readFileSync(fileName, 'utf8');
 
-    //     const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
+  //                 modelData.push(JSON.parse(data));
+  //             });
 
-    //     await Promise.all(
-    //         modelKeys.map((model) => {
-    //             const files = fs.readdirSync(
-    //                 path.resolve(__dirname, `../${snakeCase(model)}/mocks`),
-    //             );
-
-    //             const modelData = [];
-
-    //             files.forEach((file) => {
-    //                 const fileName = path.resolve(
-    //                     __dirname,
-    //                     `../${snakeCase(model)}/mocks`,
-    //                     file,
-    //                 );
-    //                 const data = fs.readFileSync(fileName, 'utf8');
-
-    //                 modelData.push(JSON.parse(data));
-    //             });
-
-    //             return this[camelCase(model)].createMany({
-    //                 data: flattenDeep(modelData),
-    //                 skipDuplicates: true,
-    //             });
-    //         }),
-    //     );
-    // }
+  //             return this[camelCase(model)].createMany({
+  //                 data: flattenDeep(modelData),
+  //                 skipDuplicates: true,
+  //             });
+  //         }),
+  //     );
+  // }
 }

@@ -16,13 +16,15 @@ import { CourseCreationDTO } from './dto/create-course.dto';
 import { CrudRequest } from '@nestjsx/crud';
 import { CourseUpdateDTO } from './dto/update-course';
 import { CourseNotFoundException } from './exception';
+import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
+import { CourseResponseDto } from './dto/course-response.dto';
 
 @Injectable()
 export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
   async findAll(
     req: CrudRequest,
@@ -103,14 +105,33 @@ export class CourseService {
       throw new InternalServerErrorException(error);
     }
   }
-  async listCourse() {
-    const courses = await this.databaseService.course.findMany({});
-    const mappedCourses = courses.map((course) => ({
+  async listCourse(query: GetListCoursesQueryDto) {
+    const page = query.page || 1;
+    const limit = query.limit || 10;
+
+    const [courses, total] = await Promise.all([
+      this.databaseService.course.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        // orderBy: { createdAt: 'desc' },
+      }),
+      this.databaseService.course.count(),
+    ]);
+
+    const mappedCourses: CourseResponseDto[] = courses.map((course) => ({
       ...course,
       thumbnailUrl: course.thumbnail,
     }));
 
-    return { data: mappedCourses };
+    return {
+      data: mappedCourses,
+      meta: {
+        page,
+        limit,
+        total,
+        pageCount: Math.ceil(total / limit),
+      }
+    };
   }
   async registerCourse(dto: RegisterCourseDTO) {
     return await this.databaseService.courseRegistration.create({
@@ -244,7 +265,7 @@ export class CourseService {
     });
   }
   async findCourseByUser(dto: CourseByUser) {
-    console.log({ dto });
+    // console.log({ dto });
     const course = await this.databaseService.course.findFirst({
       where: {
         id: dto.courseId,

@@ -7,7 +7,7 @@ export class AppConfigService {
   constructor(
     // private readonly env: { [k: string]: string | undefined },
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   private getValue(key: string, throwOnMissing = true): string {
     const value = this.configService.get(configKeys[key]);
@@ -60,6 +60,23 @@ export class AppConfigService {
       origin: isProd ? this.getClientUrl() : ['http://localhost:3000'],
       methods: 'GET,HEAD,POST,PUT,DELETE,PATCH,OPTIONS',
       credentials: true,
+    };
+  }
+
+  public getCorsAllowedOrigins() {
+    return this.getValue(configKeys.CORS_ALLOWED_ORIGINS);
+  }
+
+  public getMinioConfig() {
+    return {
+      endPoint: this.getValue(configKeys.MINIO_ENDPOINT),
+      port: Number(this.getValue(configKeys.MINIO_PORT)),
+      useSSL: this.getValue(configKeys.MINIO_USE_SSL) === 'true',
+      accessKey: this.getValue(configKeys.MINIO_ACCESS_KEY),
+      secretKey: this.getValue(configKeys.MINIO_SECRET_KEY),
+      bucket: this.getValue(configKeys.MINIO_BUCKET_NAME),
+      publicUrl: this.getValue(configKeys.MINIO_PUBLIC_URL),
+      folder: this.getValue(configKeys.MINIO_FOLDER),
     };
   }
 }

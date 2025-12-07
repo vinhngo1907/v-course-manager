@@ -6,16 +6,23 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileUpload } from './file-upload.interface';
 import { FileUploadByS3 } from './strategies/s3';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDTO } from './dto/file-upload.dto';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 
 @ApiTags('Upload file')
-@Controller('file')
+@Controller({
+  path: 'file',
+  version: '1'
+})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class FileUploadController {
   private fileUpload: FileUpload;
   constructor() {
@@ -27,7 +34,7 @@ export class FileUploadController {
     @UploadedFile() file: Express.Multer.File,
     @Body() fileUploadDTO: FileUploadDTO,
   ) {
-    console.log('>>>>', fileUploadDTO);
+    // console.log('>>>>', fileUploadDTO);
     if (!file) throw new BadRequestException('File is required');
     if (!fileUploadDTO.type) throw new BadRequestException('Type is required');
 

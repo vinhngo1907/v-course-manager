@@ -19,7 +19,7 @@ import { CourseService } from './service';
 import { Request, Response } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudRequest,
@@ -31,7 +31,11 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 import { JwtStrategy } from '@modules/auth/strategies/jwt';
 import { CourseUpdateDTO } from './dto/update-course';
-import { OptionalJwtAuthGuard } from '@modules/auth/guards/OptionalJwtAuthGuard';
+import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
+import { CourseResponseDto } from './dto/course-response.dto';
+import { ApiPaginatedResponse } from 'src/common/decorator/api-paginated-response.decorator';
+import { PaginatedResult } from 'src/common/interfaces/response.interface';
+
 @Injectable()
 @ApiTags('Courses')
 @Crud({
@@ -57,11 +61,19 @@ import { OptionalJwtAuthGuard } from '@modules/auth/guards/OptionalJwtAuthGuard'
     },
   },
 })
-@Controller('courses')
+@Controller({
+  path: 'courses',
+  version: '1',
+})
 export class CourseController {
-  constructor(public readonly courseService: CourseService) {}
+  constructor(public readonly courseService: CourseService) { }
   // @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiOperation({
+    summary: "Get course list by user",
+    description: "Retrieves paginated courses for the authenticated user"
+  }
+  )
   @UseInterceptors(CrudRequestInterceptor)
   async getAll(
     @ParsedRequest() req: CrudRequest,
@@ -71,8 +83,31 @@ export class CourseController {
   }
 
   @Get('/list')
-  async findAll(@ParsedRequest() req: CrudRequest): Promise<any> {
-    return await this.courseService.listCourse();
+  @ApiOperation({
+    summary: 'Get list course',
+    description: 'Retrieves paginated courses',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of courses per page (default: 10, max: 50)',
+    example: 10,
+  })
+  @ApiPaginatedResponse(CourseResponseDto, {
+    description: 'Courses retrieved successfully',
+  })
+  async findAll(
+    @Query() query: GetListCoursesQueryDto,
+  ): Promise<PaginatedResult<CourseResponseDto>> {
+    return await this.courseService.listCourse(query);
   }
 
   // @UseGuards(JwtAuthGuard)

@@ -14,11 +14,11 @@ export class FileUploadByS3 implements FileUpload {
   async getAllFile(marker: string = '') {
     const bucketName = process.env.MINIO_BUCKET_NAME;
     const stream = minioClient.listObjectsV2(bucketName, marker, true);
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      MaxKeys: 10,
-      Marker: marker,
-    };
+    // const params = {
+    //   Bucket: process.env.AWS_S3_BUCKET_NAME,
+    //   MaxKeys: 10,
+    //   Marker: marker,
+    // };
 
     const data: { url: string; size: number; marker: string }[] = [];
 
@@ -53,13 +53,13 @@ export class FileUploadByS3 implements FileUpload {
           ? await this.uploadSinglePart(bucketName, objectName, file)
           : await this.uploadMultiplePart(bucketName, objectName, file);
 
-      console.log({ uploadPromise });
-      console.log('>>>>' + file.size + '<<<<');
+      // console.log({ uploadPromise });
+      // console.log('>>>>' + file.size + '<<<<');
       // await this.uploadSinglePart(bucketName, objectName, file);
       // await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
-      console.log(
-        `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`,
-      );
+      // console.log(
+      //   `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`,
+      // );
       return `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`;
     } catch (error) {}
   }

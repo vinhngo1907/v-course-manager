@@ -14,6 +14,8 @@ import {
 import * as winston from 'winston';
 import * as cookieParser from 'cookie-parser';
 import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
+// import { TypedConfigService } from './config/typed-config.service';
+import { createCorsOptions } from './common/utils/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -95,7 +97,12 @@ async function bootstrap() {
   // 	credentials: true
   // });
 
-  app.enableCors(appConfigService.getCorsConfig());
+  // app.enableCors(appConfigService.getCorsConfig());
+  // Configure CORS with wildcard pattern support
+  // const configService = app.get(TypedConfigService);
+  const allowedOrigins = appConfigService.getCorsAllowedOrigins();
+  const corsOptions = createCorsOptions(allowedOrigins);
+  app.enableCors(corsOptions);
 
   await app.listen(port, () => {
     logger.log(`Server is running on port ${port}`, 'Bootstrap');

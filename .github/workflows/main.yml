@@ -22,6 +22,26 @@ jobs:
           cache-dependency-path: |
             packages/server/package-lock.json
             packages/client/package-lock.json
+      - 
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Ho_Chi_Minh"
+
+      - name: Create env file
+        working-directory: packages/server
+        run: |
+          touch .env.test
+          echo NODE_ENV=test >> .env.test
+          
+          echo JWT_SECRET=test >> .env.test
+          echo JWT_EXPIRATION='10m' >> .env.test
+
+          echo POSTGRES_HOST=localhost >> .env.test
+          echo POSTGRES_PORT=5432 >> .env.test
+          echo POSTGRES_USER=test_user >> .env.test
+          echo POSTGRES_PASSWORD=test_pw >> .env.test
+          echo POSTGRES_DB=test_db >> .env.test
+          echo DATABASE_URL=postgres://test_user:test_pw@localhost:5432/test_db >> .env.test
 
       - name: Install server dependencies
         run: |
@@ -33,17 +53,22 @@ jobs:
           cd packages/client
           npm ci
 
-      # - name: Lint server
-      #   run: |
-      #     cd packages/server
-      #     npm run lint
+      - name: Lint server
+        run: |
+          cd packages/server
+          npm run lint
 
       # - name: Lint client
       #   run: |
       #     cd packages/client
       #     npm run lint
 
-      # - name: Build client
-      #   run: |
-      #     cd packages/client
-      #     npm run build
+      - name: Build client
+        run: |
+          cd packages/client
+          npm run build
+
+      - name: Test server
+        run: |
+          cd packages/server
+          npm run test

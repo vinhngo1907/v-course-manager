@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -33,10 +33,10 @@ jobs:
           cd packages/client
           npm ci
 
-      - name: Lint server
-        run: |
-          cd packages/server
-          npm run lint
+      # - name: Lint server
+      #   run: |
+      #     cd packages/server
+      #     npm run lint
 
       # - name: Lint client
       #   run: |

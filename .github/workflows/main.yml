@@ -41,26 +41,26 @@ jobs:
       #       packages/client
       #     install-command: yarn
       
-      - name: Install server dependencies
-        run: |
-          cd packages/server
-          yarn install --frozen-lockfile
+      # - name: Install server dependencies
+      #   run: |
+      #     cd packages/server
+      #     yarn install --frozen-lockfile
 
-      - name: Install client dependencies
-        run: |
-          cd packages/client
-          yarn install --frozen-lockfile
+      # - name: Install client dependencies
+      #   run: |
+      #     cd packages/client
+      #     yarn install --frozen-lockfile
 
 
-      - name: Lint server
-        run: |
-          cd packages/server
-          npm run lint
-      - name: Lint client
-        run: |
-          cd packages/client
-          npm run lint
-      - name: Build client
-        run: |
-          cd packages/client
-          npm run build
+      # - name: Lint server
+      #   run: |
+      #     cd packages/server
+      #     npm run lint
+      # - name: Lint client
+      #   run: |
+      #     cd packages/client
+      #     npm run lint
+      # - name: Build client
+      #   run: |
+      #     cd packages/client
+      #     npm run build

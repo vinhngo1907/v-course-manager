@@ -1,0 +1,11 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
+  },
+  "devDependencies": {
+    "husky": "^9.1.3"
+  }
+}

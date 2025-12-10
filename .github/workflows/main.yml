@@ -38,13 +38,13 @@ jobs:
       #       packages/client
       #     install-command: yarn
       - name: Install server dependencies
-        uses: bahmutov/npm-install@v1.6.0
+        uses: bahmutov/npm-install@v2
         with:
           working-directory: packages/server
           install-command: yarn
 
       - name: Install client dependencies
-        uses: bahmutov/npm-install@v1.6.0
+        uses: bahmutov/npm-install@v2
         with:
           working-directory: packages/client
           install-command: yarn

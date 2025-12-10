@@ -6,7 +6,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { ModalContext } from "@/context/ModalContext";
 
 const SettingsPage: React.FC = () => {
-    const { authState: { isAuthenticated, user, authLoading } } = useContext(AuthContext)!;
+    const { authState: { isAuthenticated, authLoading } } = useContext(AuthContext)!;
     const { toggleModal } = useContext(ModalContext)!;
     useEffect(() => {
         if (!authLoading && !isAuthenticated) {

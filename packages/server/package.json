@@ -25,7 +25,6 @@
     "test:integration:watch": "jest --config ./jest.integration.config.ts --watch",
     "pretest:int": "dotenv -e .env -- ts-node --transpile-only src/seeds/02-admin.ts",
     "test:int": "dotenv -e .env -- jest -i --no-cache --watch --config jest-int.json",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:pull": "prisma db pull --schema=prisma/schema.prisma",

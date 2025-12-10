@@ -12,56 +12,101 @@ on:
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+# jobs:
+#   # This workflow contains a single job called "build"
+#   build:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       - name: Setup Node.js environment
+#         uses: actions/setup-node@v2.1.5
+#         with:
+#           node-version: 18
+        
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - name: Checkout repo
+#         uses: actions/checkout@v2
+      
+#       # Runs a single command using the runners shell
+#       - name: Run a one-line script
+#         run: echo Hello, world!
+      
+#       - name: NPM install
+#         uses: bahmutov/npm-install@v1.6.0
+#         with:
+#           working-directory: |
+#             packages/server
+#             packages/client
+#           install-command: yarn
+      
+#       - name: Install server dependencies
+#         run: |
+#           cd packages/server
+#           yarn install --frozen-lockfile
+
+#       - name: Install client dependencies
+#         run: |
+#           cd packages/client
+#           yarn install --frozen-lockfile
+
+#       - name: Lint server
+#         run: |
+#           cd packages/server
+#           npm run lint
+#       - name: Lint client
+#         run: |
+#           cd packages/client
+#           npm run lint
+#       - name: Build client
+#         run: |
+#           cd packages/client
+#           npm run build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-        
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-      
-      # - name: NPM install
-      #   uses: bahmutov/npm-install@v1.6.0
-      #   with:
-      #     working-directory: |
-      #       packages/server
-      #       packages/client
-      #     install-command: yarn
-      
-      - name: Install server dependencies
-        uses: bahmutov/npm-install@v1.6.0
-        with:
-          working-directory: packages/server
-          install-command: yarn
 
-      - name: Install client dependencies
-        uses: bahmutov/npm-install@v1.6.0
+      - name: Cache server deps
+        uses: actions/cache@v3
         with:
-          working-directory: packages/client
-          install-command: yarn
+          path: |
+            packages/server/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-server-yarn-${{ hashFiles('packages/server/yarn.lock') }}
+
+      - name: Install server deps
+        run: |
+          cd packages/server
+          yarn install --frozen-lockfile
+
+      - name: Cache client deps
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/client/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-client-yarn-${{ hashFiles('packages/client/yarn.lock') }}
+
+      - name: Install client deps
+        run: |
+          cd packages/client
+          yarn install --frozen-lockfile
 
       - name: Lint server
         run: |
           cd packages/server
-          npm run lint
+          yarn lint
+
       - name: Lint client
         run: |
           cd packages/client
-          npm run lint
-      - name: Build client
-        run: |
-          cd packages/client
-          npm run build
+          yarn lint

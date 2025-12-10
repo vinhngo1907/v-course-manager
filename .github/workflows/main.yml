@@ -30,13 +30,26 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
       
-      - name: NPM install
+      # - name: NPM install
+      #   uses: bahmutov/npm-install@v1.6.0
+      #   with:
+      #     working-directory: |
+      #       packages/server
+      #       packages/client
+      #     install-command: yarn
+      
+      - name: Install server dependencies
         uses: bahmutov/npm-install@v1.6.0
         with:
-          working-directory: |
-            packages/server
-            packages/client
+          working-directory: packages/server
           install-command: yarn
+
+      - name: Install client dependencies
+        uses: bahmutov/npm-install@v1.6.0
+        with:
+          working-directory: packages/client
+          install-command: yarn
+
       - name: Lint server
         run: |
           cd packages/server

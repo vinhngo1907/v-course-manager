@@ -43,11 +43,11 @@ jobs:
           working-directory: packages/server
           install-command: npm install
 
-      - name: Install client dependencies
-        uses: bahmutov/npm-install@v1.6.0
-        with:
-          working-directory: packages/client
-          install-command: npm install
+      # - name: Install client dependencies
+      #   uses: bahmutov/npm-install@v1.6.0
+      #   with:
+      #     working-directory: packages/client
+      #     install-command: npm install
 
       
       - name: Lint server

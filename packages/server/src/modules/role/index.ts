@@ -5,7 +5,7 @@ import { DatabaseService } from '@modules/database/service';
 
 @Global()
 @Module({
-	providers: [RoleService, DatabaseService, Logger],
-	controllers: [RoleController]
+  providers: [RoleService, DatabaseService, Logger],
+  controllers: [RoleController],
 })
-export class RoleModule { }
+export class RoleModule {}

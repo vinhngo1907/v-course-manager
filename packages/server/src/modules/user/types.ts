@@ -1,20 +1,20 @@
-import { IRole } from "@modules/role/types";
+import { IRole } from '@modules/role/types';
 
 export interface IAdmin {
-    id: string;
+  id: string;
 }
 
 export interface IMod {
-    id: string;
+  id: string;
 }
 
 export interface ISupporter {
-    id: string;
+  id: string;
 }
 
 export interface IUser {
-    id: string;
-    email: string;
-    fullName: string;
-    roles?: IRole[]
+  id: string;
+  email: string;
+  fullName: string;
+  roles?: IRole[];
 }

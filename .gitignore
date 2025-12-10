@@ -1,8 +1,5 @@
 /packages/client-1
 
-index.sql
-test.js
-example.sql
 node_modules/
 dist/
 docs/request.http

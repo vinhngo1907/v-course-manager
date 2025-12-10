@@ -5,6 +5,6 @@ import { DatabaseService } from '@modules/database/service';
 
 @Module({
   controllers: [SubtitlesController],
-  providers: [SubtitlesService, DatabaseService]
+  providers: [SubtitlesService, DatabaseService],
 })
-export class SubtitlesModule { }
+export class SubtitlesModule {}

@@ -7,7 +7,13 @@ import { CourseService } from '../course/service';
 
 @Global()
 @Module({
-	providers: [DatabaseService, Logger, StreamService, VideoService, CourseService],
-	controllers: [StreamController]
+  providers: [
+    DatabaseService,
+    Logger,
+    StreamService,
+    VideoService,
+    CourseService,
+  ],
+  controllers: [StreamController],
 })
-export class StreamModule { }
+export class StreamModule {}

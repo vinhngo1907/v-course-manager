@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { VideoService } from './service';
 import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
@@ -7,68 +17,64 @@ import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 
 @Controller('video')
 export class VideoController {
-    constructor(
-        private readonly videoService: VideoService,
-    ) { }
+  constructor(private readonly videoService: VideoService) {}
 
-    @Get("/:id")
-    async getVideosByCourse(
-        @Param("id") id: string
-    ): Promise<VideoDTO[]> {
-        return await this.videoService.findVideosByCourse(id);
-    }
+  @Get('/:id')
+  async getVideosByCourse(@Param('id') id: string): Promise<VideoDTO[]> {
+    return await this.videoService.findVideosByCourse(id);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Get("/lesson/:lessonId")
-    async getVideoByLesson(
-        @Param("lessonId") lessonId: string
-    ): Promise<LessonDTO> {
-        return await this.videoService.findOneWithVideo(lessonId);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get('/lesson/:lessonId')
+  async getVideoByLesson(
+    @Param('lessonId') lessonId: string,
+  ): Promise<LessonDTO> {
+    return await this.videoService.findOneWithVideo(lessonId);
+  }
 
-    @Get("/:id")
-    async getOne(@Param("id") id: string) {
-        return await this.videoService.findOne(id);
-    }
+  @Get('/:id')
+  async getOne(@Param('id') id: string) {
+    return await this.videoService.findOne(id);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Post()
-    async create(
-        @Body() createVideoDTO: VideoCreationDTO,
-        @Req() req: RequestWithAccount
-    ): Promise<VideoCreationDTO> {
-        const account = req.user;
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async create(
+    @Body() createVideoDTO: VideoCreationDTO,
+    @Req() req: RequestWithAccount,
+  ): Promise<VideoCreationDTO> {
+    const account = req.user;
 
-        // if (!account || !account.userId) {
-        //     throw new BadRequestException('Account not found or not authenticated.');
-        // }
-        // console.log({ account })
-        return await this.videoService.create(createVideoDTO, account.id);
-    }
+    // if (!account || !account.userId) {
+    //     throw new BadRequestException('Account not found or not authenticated.');
+    // }
+    // console.log({ account })
+    return await this.videoService.create(createVideoDTO, account.id);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Post('/lesson/:lessonId/progress')
-    async markLessonCompleted(
-        @Param('lessonId') lessonId: string,
-        @Req() req: RequestWithAccount,
-    ) {
-        const userId = req.user.id;
-        return await this.videoService.createProgress(lessonId, userId);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Post('/lesson/:lessonId/progress')
+  async markLessonCompleted(
+    @Param('lessonId') lessonId: string,
+    @Req() req: RequestWithAccount,
+  ) {
+    const userId = req.user.id;
+    return await this.videoService.createProgress(lessonId, userId);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Delete('/lesson/:lessonId/progress')
-    async unmarkLessonCompleted(
-        @Param('lessonId') lessonId: string,
-        @Req() req: RequestWithAccount,
-    ) {
-        const userId = req.user.id;
-        return await this.videoService.removeProgress(lessonId, userId);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Delete('/lesson/:lessonId/progress')
+  async unmarkLessonCompleted(
+    @Param('lessonId') lessonId: string,
+    @Req() req: RequestWithAccount,
+  ) {
+    const userId = req.user.id;
+    return await this.videoService.removeProgress(lessonId, userId);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    async getAll(): Promise<VideoDTO[]> {
-        return await this.videoService.findAll();
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAll(): Promise<VideoDTO[]> {
+    return await this.videoService.findAll();
+  }
 }

@@ -4,6 +4,6 @@ import { SubLinesService } from './service';
 
 @Module({
   controllers: [SubLinesController],
-  providers: [SubLinesService]
+  providers: [SubLinesService],
 })
 export class SubLinesModule {}

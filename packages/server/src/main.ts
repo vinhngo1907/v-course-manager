@@ -8,107 +8,121 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { HttpExceptionFilter } from './common/infras/http-exception.filter';
 import { AllExceptionsFilter } from './common/infras/all-exceptions.filter';
 import {
-	utilities as nestWinstonModuleUtilities,
-	WinstonModule,
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
 } from 'nest-winston';
-import * as winston from "winston";
+import * as winston from 'winston';
 import * as cookieParser from 'cookie-parser';
 import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors/responseWithAllowOriginInterceptor';
+// import { TypedConfigService } from './config/typed-config.service';
+import { createCorsOptions } from './common/utils/cors';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule, {
-		logger: WinstonModule.createLogger({
-			level: process.env.LOG_LEVEL || 'info',
-			format: winston.format.combine(
-				winston.format.colorize(),
-				winston.format.simple()
-			),
-			transports: [
-				new winston.transports.Console({
-					format: winston.format.combine(
-						winston.format.timestamp(),
-						winston.format.ms(),
-						nestWinstonModuleUtilities.format.nestLike(),
-					),
-				}),
-				/** 
-				 * - Write all logs with level `error` and below to `error.log`
-				 * - Write all logs with level `info` and below to `combined.log`
-				*/
-				new winston.transports.File({ filename: './src/common/logger/logs/error.log', level: 'error' }),
-				new winston.transports.File({ filename: './src/common/logger/logs/combined.log' }),
-			],
-		})
-	});
-	// if(!configSer)
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      level: process.env.LOG_LEVEL || 'info',
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple(),
+      ),
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.ms(),
+            nestWinstonModuleUtilities.format.nestLike(),
+          ),
+        }),
+        /**
+         * - Write all logs with level `error` and below to `error.log`
+         * - Write all logs with level `info` and below to `combined.log`
+         */
+        new winston.transports.File({
+          filename: './src/common/logger/logs/error.log',
+          level: 'error',
+        }),
+        new winston.transports.File({
+          filename: './src/common/logger/logs/combined.log',
+        }),
+      ],
+    }),
+  });
+  // if(!configSer)
 
-	app.useGlobalPipes(
-		new ValidationPipe({
-			transform: true,
-			whitelist: true,
-		}),
-	);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
 
-	const appConfigService = app.get(AppConfigService);
-	const requiredEnvVariables = [
-		'POSTGRES_HOST',
-		'POSTGRES_PORT',
-		'POSTGRES_USER',
-		'POSTGRES_PASSWORD',
-		'POSTGRES_DATABASE',
-		'JWT_SECRET',
-		'JWT_EXPIRATION_TIME',
-		'MODE',
-		"CLIENT_URL"
-	];
+  const appConfigService = app.get(AppConfigService);
+  const requiredEnvVariables = [
+    'POSTGRES_HOST',
+    'POSTGRES_PORT',
+    'POSTGRES_USER',
+    'POSTGRES_PASSWORD',
+    'POSTGRES_DATABASE',
+    'JWT_SECRET',
+    'JWT_EXPIRATION_TIME',
+    'MODE',
+    'CLIENT_URL',
+  ];
 
-	appConfigService.ensureValues(requiredEnvVariables);
-	if (!appConfigService.isProduction()) {
-		setupSwagger(app);
-	}
+  appConfigService.ensureValues(requiredEnvVariables);
+  if (!appConfigService.isProduction()) {
+    setupSwagger(app);
+  }
 
-	const prismaSerivce = app.get(DatabaseService);
-	prismaSerivce.$connect();
+  const prismaSerivce = app.get(DatabaseService);
+  prismaSerivce.$connect();
 
-	const logger = app.get(AppLoggerService);
-	app.useLogger(logger);
+  const logger = app.get(AppLoggerService);
+  app.useLogger(logger);
 
-	const port = appConfigService.port || 3333;
+  const port = appConfigService.port || 3333;
 
-	const NODE_ENV = process.env.NODE_ENV || 'development';
+  const NODE_ENV = process.env.NODE_ENV || 'development';
 
-	app.useGlobalFilters(new AllExceptionsFilter(appConfigService));
-	app.use(cookieParser());
-	app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor(appConfigService));
-	// const clientURL = appConfigService.getClientUrl();
+  app.useGlobalFilters(new AllExceptionsFilter(appConfigService));
+  app.use(cookieParser());
+  app.useGlobalInterceptors(
+    new ResponseAddAccessTokenToHeaderInterceptor(appConfigService),
+  );
+  // const clientURL = appConfigService.getClientUrl();
 
-	// app.enableCors({
-	// 	origin: [`${clientURL}`],
-	// 	methods: 'GET,POST,PUT,DELETE,PATCH',
-	// 	credentials: true
-	// });
+  // app.enableCors({
+  // 	origin: [`${clientURL}`],
+  // 	methods: 'GET,POST,PUT,DELETE,PATCH',
+  // 	credentials: true
+  // });
 
-	app.enableCors(appConfigService.getCorsConfig())
+  // app.enableCors(appConfigService.getCorsConfig());
+  // Configure CORS with wildcard pattern support
+  // const configService = app.get(TypedConfigService);
+  const allowedOrigins = appConfigService.getCorsAllowedOrigins();
+  const corsOptions = createCorsOptions(allowedOrigins);
+  app.enableCors(corsOptions);
 
-	await app.listen(port, () => {
-		logger.log(`Server is running on port ${port}`, 'Bootstrap');
-		logger.log(`Current node environment: ${NODE_ENV}`);
-	});
+  await app.listen(port, () => {
+    logger.log(`Server is running on port ${port}`, 'Bootstrap');
+    logger.log(`Current node environment: ${NODE_ENV}`);
+  });
 
-	await prismaSerivce.enableShutdownHooks(app);
+  await prismaSerivce.enableShutdownHooks(app);
 }
 
 bootstrap();
 
 function setupSwagger(app: INestApplication) {
-	const config = new DocumentBuilder()
-		.setTitle('V Course Management API')
-		.setDescription('The V Course API description')
-		.setVersion('1.0')
-		.addTag('auth')
-		.build();
-	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('docs', app, document);
+  const config = new DocumentBuilder()
+    .setTitle('V Course Management API')
+    .setDescription('The V Course API description')
+    .setVersion('1.0')
+    .addTag('auth')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 }
 
-export const SRC_DIR = __dirname
+export const SRC_DIR = __dirname;

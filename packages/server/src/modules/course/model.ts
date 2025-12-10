@@ -1,6 +1,6 @@
 export class CourseEntity {
-    id: string;
-    title: string;
-    description: string;
-    thumbnail?: string;
+  id: string;
+  title: string;
+  description: string;
+  thumbnail?: string;
 }

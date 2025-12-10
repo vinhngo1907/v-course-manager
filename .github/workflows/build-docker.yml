@@ -1,7 +1,8 @@
 name: Build
 on:
   workflow_run:
-    workflows: ["Prebuild"]
+    # workflows: ["Prebuild"]
+    workflows: ["CI"]
     branches: [master]
     types:
       - completed

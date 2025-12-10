@@ -19,14 +19,14 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 @ApiTags('Upload file')
 @Controller({
   path: 'file',
-  version: '1'
+  version: '1',
 })
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class FileUploadController {
-  private fileUpload: FileUpload;
-  constructor() {
-    this.fileUpload = new FileUploadByS3();
+  // private fileUpload: FileUpload;
+  constructor(private readonly fileUpload: FileUploadByS3) {
+    // this.fileUpload = new FileUploadByS3();
   }
   @Post()
   @UseInterceptors(FileInterceptor('file'))

@@ -13,6 +13,6 @@
 //  ) {}
 
 //  async canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-     
+
 //  }
 // }

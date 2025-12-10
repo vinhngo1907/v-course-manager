@@ -1,30 +1,36 @@
 import * as Minio from 'minio';
 import { FileUpload } from '../file-upload.interface';
 import { FileUploadType } from 'src/common/enums/file-upload-type.enum';
+import { MinioService } from 'src/config/minio';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 
-const minioClient = new Minio.Client({
-  endPoint: process.env.MINIO_ENDPOINT,
-  port: parseInt(process.env.MINIO_PORT, 10),
-  useSSL: process.env.MINIO_USE_SSL === 'true',
-  accessKey: process.env.MINIO_ACCESS_KEY,
-  secretKey: process.env.MINIO_SECRET_KEY,
-});
+// const minioClient = new Minio.Client({
+//   endPoint: process.env.MINIO_ENDPOINT,
+//   port: parseInt(process.env.MINIO_PORT, 10),
+//   useSSL: process.env.MINIO_USE_SSL === 'true',
+//   accessKey: process.env.MINIO_ACCESS_KEY,
+//   secretKey: process.env.MINIO_SECRET_KEY,
+// });
 
 export class FileUploadByS3 implements FileUpload {
-  async getAllFile(marker: string = '') {
-    const bucketName = process.env.MINIO_BUCKET_NAME;
-    const stream = minioClient.listObjectsV2(bucketName, marker, true);
-    // const params = {
-    //   Bucket: process.env.AWS_S3_BUCKET_NAME,
-    //   MaxKeys: 10,
-    //   Marker: marker,
-    // };
+  private readonly logger: Logger = new Logger(FileUploadByS3.name);
+  constructor(private readonly minioService: MinioService) {}
+
+  private get client() {
+    return this.minioService.getClient();
+  }
+
+  async getAllFile(marker = '') {
+    const bucketName = this.minioService.getBucket();
+    // const stream = minioClient.listObjectsV2(bucketName, marker, true);
+    const stream = this.client.listObjectsV2(bucketName, marker, true);
+    const publicUrl = this.minioService.getPublicUrl();
 
     const data: { url: string; size: number; marker: string }[] = [];
 
     for await (const obj of stream) {
       data.push({
-        url: `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${obj.name}`,
+        url: `${publicUrl}/${bucketName}/${obj.name}`,
         size: obj.size,
         marker: obj.name,
       });
@@ -43,15 +49,19 @@ export class FileUploadByS3 implements FileUpload {
 
   async uploadFile(file: Express.Multer.File, type: FileUploadType) {
     try {
-      const fileType = file.originalname.split('.').pop();
+      const folder = this.minioService.getFolder();
+      const bucketName = this.minioService.getBucket();
+      const publicUrl = this.minioService.getPublicUrl();
+
       const fileName = new Date().getTime();
-      const objectName = `${process.env.MINIO_FOLDER}/${type}/${fileName}.${fileType}`;
-      const bucketName = process.env.MINIO_BUCKET_NAME;
-      console.log({ fileType, fileName, objectName, bucketName });
-      const uploadPromise =
-        file.size <= 60000000
-          ? await this.uploadSinglePart(bucketName, objectName, file)
-          : await this.uploadMultiplePart(bucketName, objectName, file);
+      const fileType = file.originalname.split('.').pop();
+      const objectName = `${folder}/${type}/${fileName}.${fileType}`;
+
+      if (file.size <= 60000000) {
+        await this.uploadSinglePart(bucketName, objectName, file);
+      } else {
+        await this.uploadMultiplePart(bucketName, objectName, file);
+      }
 
       // console.log({ uploadPromise });
       // console.log('>>>>' + file.size + '<<<<');
@@ -60,15 +70,19 @@ export class FileUploadByS3 implements FileUpload {
       // console.log(
       //   `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`,
       // );
-      return `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`;
-    } catch (error) {}
+      return `${publicUrl}/${bucketName}/${objectName}`;
+    } catch (error: any) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
   }
   private async uploadSinglePart(
     bucketName: string,
     objectName: string,
     file: Express.Multer.File,
   ) {
-    const uploadResult = await minioClient.putObject(
+    // const uploadResult = await minioClient.putObject(
+    const uploadResult = await this.client.putObject(
       bucketName,
       objectName,
       file.buffer,
@@ -86,9 +100,10 @@ export class FileUploadByS3 implements FileUpload {
     const partSize = 1024 * 1024 * 5; // 5MB parts
     const etags: { etag: string; part: number }[] = [];
 
-    let uploadId;
+    let uploadId = null;
     try {
-      uploadId = await minioClient.initiateNewMultipartUpload(
+      // uploadId = await minioClient.initiateNewMultipartUpload(
+      uploadId = await this.client.initiateNewMultipartUpload(
         bucketName,
         objectName,
         { 'Content-Type': file.mimetype },
@@ -104,7 +119,8 @@ export class FileUploadByS3 implements FileUpload {
         const end = Math.min(start + partSize, file.buffer.length);
         const partBuffer = file.buffer.slice(start, end);
 
-        const partUploadInfo = await minioClient.putObject(
+        // const partUploadInfo = await minioClient.putObject(
+        const partUploadInfo = await this.client.putObject(
           bucketName,
           objectName,
           uploadId,
@@ -116,7 +132,8 @@ export class FileUploadByS3 implements FileUpload {
         partNumber++;
       }
 
-      await minioClient.completeMultipartUpload(
+      // await minioClient.completeMultipartUpload(
+      await this.client.completeMultipartUpload(
         bucketName,
         objectName,
         uploadId,
@@ -124,7 +141,8 @@ export class FileUploadByS3 implements FileUpload {
       );
     } catch (error) {
       if (uploadId) {
-        await minioClient.abortMultipartUpload(
+        // await minioClient.abortMultipartUpload(
+        await this.client.abortMultipartUpload(
           bucketName,
           objectName,
           uploadId,

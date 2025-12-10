@@ -13,7 +13,7 @@ export async function hashPassword(rawPass: string): Promise<string> {
 export async function isMatch(
   password: string,
   hash: string,
-): Promise<Boolean> {
+): Promise<boolean> {
   return await bcrypt.compare(password, hash);
 }
 

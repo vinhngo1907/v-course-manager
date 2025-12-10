@@ -1,4 +1,4 @@
-import {Logger} from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 
 /**
  * Options for retry helper
@@ -67,7 +67,7 @@ export class RetryHelper {
     fn: () => Promise<T>,
     options: RetryOptions,
   ): Promise<T> {
-    const {maxAttempts, delays, onRetry, onExhausted} = options;
+    const { maxAttempts, delays, onRetry, onExhausted } = options;
 
     let lastError: Error;
 
@@ -102,6 +102,6 @@ export class RetryHelper {
    * Sleep helper
    */
   private static sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

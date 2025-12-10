@@ -24,7 +24,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async findAll(
     req: CrudRequest,
@@ -130,7 +130,7 @@ export class CourseService {
         limit,
         total,
         pageCount: Math.ceil(total / limit),
-      }
+      },
     };
   }
   async registerCourse(dto: RegisterCourseDTO) {

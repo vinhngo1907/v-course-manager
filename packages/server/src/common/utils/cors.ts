@@ -1,4 +1,4 @@
-import {CorsOptions} from '@nestjs/common/interfaces/external/cors-options.interface';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 /**
  * Checks if an origin matches a pattern with wildcard support
@@ -76,8 +76,8 @@ export function matchesOriginPattern(origin: string, pattern: string): boolean {
 export function createCorsOptions(allowedOrigins: string): CorsOptions {
   const patterns = allowedOrigins
     .split(',')
-    .map(origin => origin.trim())
-    .filter(origin => origin.length > 0);
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
 
   // If wildcard is present, disable credentials for security
   const hasWildcard = patterns.includes('*');
@@ -96,7 +96,7 @@ export function createCorsOptions(allowedOrigins: string): CorsOptions {
     }
 
     // Check if origin matches any pattern
-    const isAllowed = patterns.some(pattern =>
+    const isAllowed = patterns.some((pattern) =>
       matchesOriginPattern(requestOrigin, pattern),
     );
 
@@ -105,7 +105,9 @@ export function createCorsOptions(allowedOrigins: string): CorsOptions {
     } else {
       callback(
         new Error(
-          `Origin '${requestOrigin}' is not allowed by CORS policy. Allowed patterns: ${patterns.join(', ')}`,
+          `Origin '${requestOrigin}' is not allowed by CORS policy. Allowed patterns: ${patterns.join(
+            ', ',
+          )}`,
         ),
         false,
       );

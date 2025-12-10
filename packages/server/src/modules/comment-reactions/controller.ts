@@ -4,14 +4,14 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CommentReactionsService } from './service';
 
 @Controller({
-    path: 'comment-reactions',
-    version: '1',
+  path: 'comment-reactions',
+  version: '1',
 })
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 @ApiTags('Comment Reactions')
 export class CommentReactionsController {
-    constructor(
-        private readonly commentReactionsService: CommentReactionsService,
-    ){}
+  constructor(
+    private readonly commentReactionsService: CommentReactionsService,
+  ) {}
 }

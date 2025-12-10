@@ -7,7 +7,7 @@ export class AppConfigService {
   constructor(
     // private readonly env: { [k: string]: string | undefined },
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   private getValue(key: string, throwOnMissing = true): string {
     const value = this.configService.get(configKeys[key]);

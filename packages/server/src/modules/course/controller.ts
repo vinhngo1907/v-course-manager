@@ -19,7 +19,13 @@ import { CourseService } from './service';
 import { Request, Response } from 'express';
 import { CourseDTO, RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Crud,
   CrudRequest,
@@ -66,14 +72,13 @@ import { PaginatedResult } from 'src/common/interfaces/response.interface';
   version: '1',
 })
 export class CourseController {
-  constructor(public readonly courseService: CourseService) { }
+  constructor(public readonly courseService: CourseService) {}
   // @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({
-    summary: "Get course list by user",
-    description: "Retrieves paginated courses for the authenticated user"
-  }
-  )
+    summary: 'Get course list by user',
+    description: 'Retrieves paginated courses for the authenticated user',
+  })
   @UseInterceptors(CrudRequestInterceptor)
   async getAll(
     @ParsedRequest() req: CrudRequest,

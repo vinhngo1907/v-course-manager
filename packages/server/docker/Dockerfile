@@ -50,7 +50,7 @@ COPY prisma/ ./prisma/
 
 RUN pnpm prune --prod
 
-RUN ["chmod", "+x", "./start-docker.sh"]
+RUN ["chmod", "+x", "./scripts/start-docker.sh"]
 
 CMD ["./scripts/start-docker.sh"]
 

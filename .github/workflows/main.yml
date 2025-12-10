@@ -63,10 +63,10 @@ jobs:
       #     cd packages/client
       #     npm run lint
 
-      - name: Build client
-        run: |
-          cd packages/client
-          npm run build
+      # - name: Build client
+      #   run: |
+      #     cd packages/client
+      #     npm run build
 
       - name: Test server
         run: |

@@ -38,16 +38,16 @@ jobs:
       #       packages/client
       #     install-command: yarn
       - name: Install server dependencies
-        uses: bahmutov/npm-install@v2
+        uses: bahmutov/npm-install@v1.6.0
         with:
           working-directory: packages/server
-          install-command: yarn
+          install-command: npm install
 
       - name: Install client dependencies
-        uses: bahmutov/npm-install@v2
+        uses: bahmutov/npm-install@v1.6.0
         with:
           working-directory: packages/client
-          install-command: yarn
+          install-command: npm install
 
       
       - name: Lint server

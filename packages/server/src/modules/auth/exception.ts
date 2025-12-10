@@ -4,27 +4,27 @@ import { CustomNotFoundException } from 'src/common/exceptions/CustomNotFoundExc
 import { CustomUnknownException } from 'src/common/exceptions/CustomUnknownException';
 
 export class AuthNotFoundException extends CustomNotFoundException {
-	constructor(accountId: string) {
-		super(accountId, 'Auth');
-	}
+  constructor(accountId: string) {
+    super(accountId, 'Auth');
+  }
 }
 
 export class AuthBadRequestException extends CustomBadRequestException {
-	constructor(action: string) {
-		super(action, 'Auth');
-	}
+  constructor(action: string) {
+    super(action, 'Auth');
+  }
 }
 
 export class AuthUnknownException extends CustomUnknownException {
-	constructor(action: string, additionalInfo: string) {
-		super(action, 'Auth', additionalInfo);
-	}
+  constructor(action: string, additionalInfo: string) {
+    super(action, 'Auth', additionalInfo);
+  }
 }
 
 export class AuthForbiddenException extends CustomForbiddenException {
-	constructor(userId: string, accountId: string, action: string) {
-		super(userId, accountId, action, 'Auth');
-	}
+  constructor(userId: string, accountId: string, action: string) {
+    super(userId, accountId, action, 'Auth');
+  }
 }
 
 // export class AutUnauthorizedException extends CustomForbiddenException {

@@ -5,9 +5,9 @@ name: CI
 # Controls when the action will run. 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ master, main ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -22,10 +22,45 @@ jobs:
     steps:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18
         
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
       
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
+      
+      # - name: NPM install
+      #   uses: bahmutov/npm-install@v1.6.0
+      #   with:
+      #     working-directory: |
+      #       packages/server
+      #       packages/client
+      #     install-command: yarn
+      
+      # - name: Install server dependencies
+      #   run: |
+      #     cd packages/server
+      #     yarn install --frozen-lockfile
+
+      # - name: Install client dependencies
+      #   run: |
+      #     cd packages/client
+      #     yarn install --frozen-lockfile
+
+
+      # - name: Lint server
+      #   run: |
+      #     cd packages/server
+      #     npm run lint
+      # - name: Lint client
+      #   run: |
+      #     cd packages/client
+      #     npm run lint
+      # - name: Build client
+      #   run: |
+      #     cd packages/client
+      #     npm run build

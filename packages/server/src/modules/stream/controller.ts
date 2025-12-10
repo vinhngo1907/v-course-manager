@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Injectable, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Injectable,
+  Logger,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Crud } from '@nestjsx/crud';
 import { StreamService } from './service';
@@ -7,8 +15,8 @@ import { StreamService } from './service';
 @ApiTags('stream')
 @Controller('stream')
 export class StreamController {
-    constructor(
-        private readonly roleService: StreamService,
-        private readonly logger: Logger
-    ) { }
+  constructor(
+    private readonly roleService: StreamService,
+    private readonly logger: Logger,
+  ) {}
 }

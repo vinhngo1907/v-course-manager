@@ -4,9 +4,9 @@ import { VideoService } from '@modules/video/service';
 
 @Injectable()
 export class StreamService {
-    private readonly logger: Logger = new Logger(StreamService.name);
-    constructor(
-        private readonly databaseService: DatabaseService,
-        private readonly videoService: VideoService
-    ) { }
+  private readonly logger: Logger = new Logger(StreamService.name);
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly videoService: VideoService,
+  ) {}
 }

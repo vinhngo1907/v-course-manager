@@ -4,8 +4,8 @@ import { CourseController } from './controller';
 import { DatabaseService } from '@modules/database/service';
 
 @Module({
-    providers: [DatabaseService, CourseService, Logger],
-    controllers: [CourseController],
-    exports: [CourseService],
+  providers: [DatabaseService, CourseService, Logger],
+  controllers: [CourseController],
+  exports: [CourseService],
 })
-export class CourseModule { }
+export class CourseModule {}

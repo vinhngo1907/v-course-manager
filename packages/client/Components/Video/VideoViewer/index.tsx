@@ -64,11 +64,17 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
                 onTimeUpdate={() => {
                     const currentTime = videoRef.current?.currentTime || 0;
                     const duration = videoRef.current?.duration || 0;
-                    setProgress(currentTime);
-                    // Bạn cũng có thể set thêm % để làm thanh progress nếu cần
+                    // setProgress(currentTime);
+                     if (duration > 0) {
+                        setProgress((currentTime / duration) * 100); // % progress
+                    }
+                    
                 }}
                 onEnded={videoEnd}
             />
+            <div className={style.ProgressBar}>
+                <div className={style.ProgressFill} style={{ width: `${progress}%` }} />
+            </div>
             <div className={style.Control}>
                 <span onClick={startVideo}>
                     <img src={isVideoStarted ? STOP : START} alt="stop" />

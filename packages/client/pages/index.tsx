@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '@/Components/Layouts';
 // import CourseList from '@/Components/Video/VideoList';
 import { axios } from '@/utils/axios';

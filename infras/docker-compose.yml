@@ -1,0 +1,44 @@
+version: '3.5'
+services:
+  server_service:
+    build: .
+    container_name: server_course_manager
+    env_file: ./packages/server/.env
+    ports:
+      - "${HTTP_SERVER_PORT}:${HTTP_SERVER_PORT}"
+    restart: always
+    networks:
+      - v_network
+    depends_on:
+      - course_manager_progresql
+      - course_manager_redis
+
+  course_manager_progresql:
+    image: postgres:latest
+    container_name: course_manager_progresql
+    env_file: ./packages/server/.env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    restart: always
+    networks:
+      - v_network
+    volumes:
+      - postgres_data:${PGDATA}
+  
+  course_manager_redis:
+    image: redis:latest
+    container_name: course_manager_redis
+    env_file: .env
+    command: >
+          --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+    restart: always
+    networks:
+      - v_network
+
+networks:
+  v_network:
+
+volumes:
+  postgres_data:

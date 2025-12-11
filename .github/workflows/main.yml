@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -22,6 +22,26 @@ jobs:
           cache-dependency-path: |
             packages/server/package-lock.json
             packages/client/package-lock.json
+      - 
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Ho_Chi_Minh"
+
+      - name: Create env file
+        working-directory: packages/server
+        run: |
+          touch .env.test
+          echo NODE_ENV=test >> .env.test
+          
+          echo JWT_SECRET=test >> .env.test
+          echo JWT_EXPIRATION='10m' >> .env.test
+
+          echo POSTGRES_HOST=localhost >> .env.test
+          echo POSTGRES_PORT=5432 >> .env.test
+          echo POSTGRES_USER=test_user >> .env.test
+          echo POSTGRES_PASSWORD=test_pw >> .env.test
+          echo POSTGRES_DB=test_db >> .env.test
+          echo DATABASE_URL=postgres://test_user:test_pw@localhost:5432/test_db >> .env.test
 
       - name: Install server dependencies
         run: |
@@ -47,3 +67,26 @@ jobs:
       #   run: |
       #     cd packages/client
       #     npm run build
+
+      - name: Test server
+        run: |
+          cd packages/server
+
+          # Unit tests
+          if [ $(find test -name "*.spec.ts" | wc -l) -eq 0 ]; then
+            echo "No unit tests found. Skipping."
+          else
+            npm run test:unit
+          fi
+
+          # Integration tests
+          if [ $(find test -name "*.integration.spec.ts" | wc -l) -eq 0 ]; then
+            echo "No integration tests found. Skipping."
+          else
+            npm run test:integration
+          fi
+      
+      - name: Build server
+        run: |
+          cd packages/server
+          npm run build

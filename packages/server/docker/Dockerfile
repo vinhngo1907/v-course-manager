@@ -45,7 +45,8 @@ COPY --from=development /usr/src/app/node_modules ./node_modules
 COPY --from=development /usr/src/app/package*.json ./
 COPY --from=development /usr/src/app/pnpm-lock.yaml ./
 COPY --from=development /usr/src/app/dist ./dist
-COPY ./start-docker.sh ./start-docker.sh
+COPY ../scripts/start-docker.sh ./scripts/start-docker.sh
+
 COPY prisma/ ./prisma/
 
 RUN pnpm prune --prod

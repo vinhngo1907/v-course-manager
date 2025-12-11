@@ -75,4 +75,6 @@ jobs:
           npm run test:integration
       
       - name: Build server
-        run: npm run build
+        run: |
+          cd packages/server
+          npm run build

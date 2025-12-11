@@ -13,12 +13,12 @@ COPY ../prisma ./prisma
 RUN npm ci
 
 # Copy source code
-COPY ../src ./src
-COPY ../nest-cli.json ./nest-cli.json
+COPY ../ .
 
 RUN npm run build
 
 # Production stage
+
 FROM node:18-alpine AS production
 RUN apk add --no-cache python3 openssl make g++
 
@@ -35,7 +35,7 @@ COPY --from=development /usr/src/app/dist ./dist
 COPY --from=development /usr/src/app/prisma ./prisma
 COPY ../src/scripts/start-docker.sh ./scripts/start-docker.sh
 
-COPY prisma/ ./prisma/
+COPY ../prisma/ ./prisma/
 
 # RUN pnpm prune --prod
 

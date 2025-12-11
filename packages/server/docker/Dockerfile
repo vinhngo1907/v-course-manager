@@ -2,54 +2,42 @@
 
 FROM node:18-alpine AS development
 
-RUN apk add --no-cache python2 make g++
-RUN npm install -g pnpm   
-RUN pnpm config set auto-install-peers true
-RUN pnpm config set strict-peer-dependencies false
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /usr/src/app
 
-RUN pnpm add glob rimraf
+# Copy dependency files
+COPY ../package*.json ./
+COPY ../prisma ./prisma
 
-COPY package.json .
-COPY pnpm-lock.yaml .
-COPY prisma/ ./prisma/
+RUN npm ci
 
-RUN pnpm i
+# Copy source code
+COPY ../src ./src
+COPY ../nest-cli.json ./nest-cli.json
 
-COPY . .
-
-RUN pnpm build
+RUN npm run build
 
 # Production stage
+FROM node:18-alpine AS production
+RUN apk add --no-cache python3 openssl make g++
 
-FROM node:18-alpine as production
-RUN apk add --no-cache python2 openssl make g++
-
-ENV dockerize_version v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$dockerize_version/dockerize-alpine-linux-amd64-$dockerize_version.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$dockerize_version.tar.gz \
-    && rm dockerize-alpine-linux-amd64-$dockerize_version.tar.gz
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
-RUN npm install -g pnpm   
-RUN pnpm config set auto-install-peers true
-RUN pnpm config set strict-peer-dependencies false
-
+# Copy node_modules FROM build stage
 COPY --from=development /usr/src/app/node_modules ./node_modules
 
+# Copy app files
 COPY --from=development /usr/src/app/package*.json ./
-COPY --from=development /usr/src/app/pnpm-lock.yaml ./
 COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/prisma ./prisma
 COPY ../src/scripts/start-docker.sh ./scripts/start-docker.sh
 
 COPY prisma/ ./prisma/
 
-RUN pnpm prune --prod
+# RUN pnpm prune --prod
 
 RUN ["chmod", "+x", "./scripts/start-docker.sh"]
 

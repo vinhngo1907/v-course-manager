@@ -70,7 +70,7 @@ jobs:
 
       - name: Test server
         run: |
-          cd packages/server
+          cd packages/server/test
           npm run test:unit
           npm run test:integration
       

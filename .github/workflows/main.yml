@@ -70,9 +70,21 @@ jobs:
 
       - name: Test server
         run: |
-          cd packages/server/test
-          npm run test:unit
-          npm run test:integration
+          cd packages/server
+
+          # Unit tests
+          if [ $(find test -name "*.spec.ts" | wc -l) -eq 0 ]; then
+            echo "No unit tests found. Skipping."
+          else
+            npm run test:unit
+          fi
+
+          # Integration tests
+          if [ $(find test -name "*.integration.spec.ts" | wc -l) -eq 0 ]; then
+            echo "No integration tests found. Skipping."
+          else
+            npm run test:integration
+          fi
       
       - name: Build server
         run: |

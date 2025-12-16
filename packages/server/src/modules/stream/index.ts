@@ -4,6 +4,7 @@ import { StreamController } from './controller';
 import { StreamService } from './service';
 import { VideoService } from '@modules/video/service';
 import { CourseService } from '../course/service';
+import { LivekitService } from 'src/config/livekit';
 
 @Global()
 @Module({
@@ -13,6 +14,7 @@ import { CourseService } from '../course/service';
     StreamService,
     VideoService,
     CourseService,
+    LivekitService,
   ],
   controllers: [StreamController],
 })

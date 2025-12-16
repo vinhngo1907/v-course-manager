@@ -39,10 +39,10 @@ model Account {
 }
 
 model User {
-    id          String     @id @default(uuid())
-    email       String     @unique @db.VarChar(255)
-    fullName    String     @db.VarChar(255)
-    avatar      String      @default("https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png")
+    id       String @id @default(uuid())
+    email    String @unique @db.VarChar(255)
+    fullName String @db.VarChar(255)
+    avatar   String @default("https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png")
 
     roles       Role[]
     modId       String?
@@ -60,6 +60,8 @@ model User {
 
     comments    Comment[]
     commentTags CommentTag[]
+
+    streams Stream[]
 }
 
 model Role {
@@ -105,6 +107,8 @@ model Course {
 
     completedLessons UserLessonProgress[]
 
+    streams Stream[]
+
     @@map("Course")
 }
 
@@ -139,6 +143,9 @@ model Video {
     status      String    @default("preparing")
     posterTime  Float?
     comments    Comment[]
+
+    sourceStreams   Stream[] @relation("SourceVideo")
+    recordedStreams Stream[] @relation("RecordedVideo")
 
     @@map("Video")
 }
@@ -217,6 +224,59 @@ model UserLessonProgress {
     courseId    String?
 
     @@id([userId, lessonId])
+}
+
+enum StreamType {
+    WEBCAM
+    VIDEO
+}
+
+enum StreamStatus {
+    CREATED
+    LIVE
+    ENDED
+    ERROR
+}
+
+model Stream {
+    id           String  @id @default(uuid())
+    title        String  @db.VarChar(300)
+    description  String? @db.Text
+    thumbnailUrl String? @db.Text
+
+    ingressId String? @unique
+    serverUrl String? @db.Text
+    streamKey String? @db.Text
+
+    type   StreamType
+    status StreamStatus @default(CREATED)
+    isLive Boolean      @default(false)
+
+    isChatEnabled       Boolean @default(true)
+    isChatDelayed       Boolean @default(false)
+    isChatFollowersOnly Boolean @default(false)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    courseId String?
+    course   Course? @relation(fields: [courseId], references: [id])
+
+    sourceVideoId String?
+    sourceVideo   Video?  @relation("SourceVideo", fields: [sourceVideoId], references: [id])
+
+    recordedVideoId String?
+    recordedVideo   Video?  @relation("RecordedVideo", fields: [recordedVideoId], references: [id])
+
+    startedAt DateTime?
+    endedAt   DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
+    @@index([courseId])
+    @@index([ingressId])
 }
 
 // Define junction table for the many-to-many relationship

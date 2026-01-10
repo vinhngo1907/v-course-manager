@@ -15,6 +15,6 @@ export class LessonDTO {
   id: string;
   name: string;
   description: string;
-  video: VideoDTO;
+  videos: VideoDTO[];
   courseId: string;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateTokenDto {
   @ApiProperty({
@@ -16,4 +16,10 @@ export class CreateTokenDto {
   })
   @IsString()
   userId: string;
+
+  @ApiProperty({
+    description: 'Host or not'
+  })
+  @IsBoolean()
+  isHost?: boolean
 }

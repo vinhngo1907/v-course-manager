@@ -70,17 +70,5 @@ export class LivekitService {
     return this.host;
   }
 
-  /** Start Recorder */
-  //   async startRecording(room: string) {
-  //     const req: CreateRecordingRequest = {
-  //       roomName: room,
-  //       options: {
-  //         // Output video to file mp4 in LiveKit
-  //         fileType: "mp4",
-  //         videoCodec: "h264",
-  //       },
-  //     };
 
-  //     return await this.roomService.startRecording(req);
-  //   }
 }

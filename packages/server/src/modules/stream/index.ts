@@ -5,6 +5,7 @@ import { StreamService } from './service';
 import { VideoService } from '@modules/video/service';
 import { CourseService } from '../course/service';
 import { LivekitService } from 'src/config/livekit';
+import { LivekitWebhookController } from './controllers/stream-webhook';
 
 @Global()
 @Module({
@@ -16,6 +17,6 @@ import { LivekitService } from 'src/config/livekit';
     CourseService,
     LivekitService,
   ],
-  controllers: [StreamController],
+  controllers: [StreamController, LivekitWebhookController],
 })
 export class StreamModule {}

@@ -52,16 +52,19 @@ model User {
     supporterId String?
     supporter   Supporter?
 
-    accountId          String              @unique
-    account            Account             @relation(fields: [accountId], references: [id])
-    courses            Course[]
-    videos             Video[]
-    UserLessonProgress UserLessonProgress?
+    accountId String   @unique
+    account   Account  @relation(fields: [accountId], references: [id])
+    courses   Course[]
+    videos    Video[]
+
+    // streams Stream[]
 
     comments    Comment[]
     commentTags CommentTag[]
 
-    streams Stream[]
+    userLessonProgress  UserLessonProgress?
+    courseRegistrations CourseRegistration[]
+    userVideoProgresses UserVideoProgress[]
 }
 
 model Role {
@@ -105,9 +108,7 @@ model Course {
     createdBy   User    @relation(fields: [createdById], references: [id])
     published   Boolean @default(false)
 
-    completedLessons UserLessonProgress[]
-
-    streams Stream[]
+    // streams Stream[]
 
     @@map("Course")
 }
@@ -118,24 +119,75 @@ model Lesson {
     description    String               @db.VarChar(300)
     course         Course               @relation(fields: [courseId], references: [id])
     courseId       String
-    video          Video?
+    videos         Video[]
     usersCompleted UserLessonProgress[]
+}
 
-    // comments Comment[]
+model CourseRegistration {
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    courseId String
+    course   Course @relation(fields: [courseId], references: [id])
+
+    registeredAt DateTime @default(now())
+
+    isCompleted Boolean  @default(false)
+    completedAt DateTime?
+
+    @@unique([userId, courseId])
+    @@map("CourseRegistration")
+}
+
+model UserLessonProgress {
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @unique
+
+    lesson   Lesson @relation(fields: [lessonId], references: [id])
+    lessonId String @unique
+
+    isCompleted Boolean  @default(false)
+    completedAt DateTime?
+
+    // @@id([userId, lessonId])
+    @@map("UserLessonProgress")
+}
+
+model UserVideoProgress {
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    videoId     String    @unique
+    video       Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+    isCompleted Boolean   @default(false)
+    completedAt DateTime?
+
+    watchedSeconds Float    @default(0)
+    duration       Float
+    lastWatched    DateTime @updatedAt
+
+    @@id([userId, videoId])
+    @@index([userId])
+    @@index([videoId])
 }
 
 model Video {
-    id          String     @id @default(uuid())
-    title       String     @db.VarChar(300)
-    description String     @db.VarChar(300)
-    thumbnail   String?    @db.VarChar(300)
-    videoUrl    String?    @db.VarChar(300)
-    // order       Int        @db.SmallInt
-    subtitles   Subtitle[]
-    lesson      Lesson?    @relation(fields: [lessonId], references: [id])
-    lessonId    String?    @unique
-    owner       User       @relation(fields: [ownerId], references: [id])
-    ownerId     String
+    id          String  @id @default(uuid())
+    title       String  @db.VarChar(300)
+    description String  @db.VarChar(300)
+    thumbnail   String? @db.VarChar(300)
+    videoUrl    String? @db.VarChar(300)
+    position    Int
+
+    subtitles Subtitle[]
+
+    lesson   Lesson? @relation(fields: [lessonId], references: [id])
+    lessonId String? @unique
+
+    owner   User   @relation(fields: [ownerId], references: [id])
+    ownerId String
+
+    muxData MuxData?
 
     publishAt   DateTime  @default(now())
     duration    Float
@@ -144,10 +196,20 @@ model Video {
     posterTime  Float?
     comments    Comment[]
 
-    sourceStreams   Stream[] @relation("SourceVideo")
-    recordedStreams Stream[] @relation("RecordedVideo")
+    // sourceStreams       Stream[]            @relation("SourceVideo")
+    // recordedStreams     Stream[]            @relation("RecordedVideo")
+    userVideoProgresses UserVideoProgress[]
 
     @@map("Video")
+}
+
+model MuxData {
+    id         String  @id @default(uuid())
+    assetId    String
+    playbackId String?
+
+    videoId String @unique
+    video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
@@ -202,95 +264,55 @@ model CommentReactions {
     @@map("Comment_Reaction")
 }
 
-model CourseRegistration {
-    id           String   @id @default(uuid())
-    userId       String
-    courseId     String
-    registeredAt DateTime @default(now())
+// enum StreamType {
+//     WEBCAM
+//     VIDEO
+// }
 
-    course Course @relation(fields: [courseId], references: [id])
+// enum StreamStatus {
+//     CREATED
+//     LIVE
+//     ENDED
+//     ERROR
+// }
 
-    @@unique([userId, courseId])
-    @@map("CourseRegistration")
-}
+// model Stream {
+//     id           String  @id @default(uuid())
+//     title        String  @db.VarChar(300)
+//     description  String? @db.Text
+//     thumbnailUrl String? @db.Text
 
-model UserLessonProgress {
-    user        User     @relation(fields: [userId], references: [id])
-    userId      String   @unique // relation scalar field (used in the `@relation` attribute above)
-    lesson      Lesson   @relation(fields: [lessonId], references: [id])
-    lessonId    String   @unique // relation scalar field (used in the `@relation` attribute above)
-    completedAt DateTime @default(now())
-    Course      Course?  @relation(fields: [courseId], references: [id])
-    courseId    String?
+//     ingressId String? @unique
+//     serverUrl String? @db.Text
+//     streamKey String? @db.Text
 
-    @@id([userId, lessonId])
-}
+//     type   StreamType
+//     status StreamStatus @default(CREATED)
+//     isLive Boolean      @default(false)
 
-enum StreamType {
-    WEBCAM
-    VIDEO
-}
+//     isChatEnabled       Boolean @default(true)
+//     isChatDelayed       Boolean @default(false)
+//     isChatFollowersOnly Boolean @default(false)
 
-enum StreamStatus {
-    CREATED
-    LIVE
-    ENDED
-    ERROR
-}
+//     userId String
+//     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model Stream {
-    id           String  @id @default(uuid())
-    title        String  @db.VarChar(300)
-    description  String? @db.Text
-    thumbnailUrl String? @db.Text
+//     courseId String?
+//     course   Course? @relation(fields: [courseId], references: [id])
 
-    ingressId String? @unique
-    serverUrl String? @db.Text
-    streamKey String? @db.Text
+//     sourceVideoId String?
+//     sourceVideo   Video?  @relation("SourceVideo", fields: [sourceVideoId], references: [id])
 
-    type   StreamType
-    status StreamStatus @default(CREATED)
-    isLive Boolean      @default(false)
+//     recordedVideoId String?
+//     recordedVideo   Video?  @relation("RecordedVideo", fields: [recordedVideoId], references: [id])
 
-    isChatEnabled       Boolean @default(true)
-    isChatDelayed       Boolean @default(false)
-    isChatFollowersOnly Boolean @default(false)
-
-    userId String
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    courseId String?
-    course   Course? @relation(fields: [courseId], references: [id])
-
-    sourceVideoId String?
-    sourceVideo   Video?  @relation("SourceVideo", fields: [sourceVideoId], references: [id])
-
-    recordedVideoId String?
-    recordedVideo   Video?  @relation("RecordedVideo", fields: [recordedVideoId], references: [id])
-
-    startedAt DateTime?
-    endedAt   DateTime?
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([userId])
-    @@index([courseId])
-    @@index([ingressId])
-}
-
-// Define junction table for the many-to-many relationship
-// model UserRoles {
-//     userId String @unique
-//     roleId String @unique
-
-//     user User @relation(fields: [userId], references: [id])
-//     role Role @relation(fields: [roleId], references: [id])
+//     startedAt DateTime?
+//     endedAt   DateTime?
 
 //     createdAt DateTime @default(now())
-//     createdBy String   @default("system")
 //     updatedAt DateTime @updatedAt
-//     updatedBy String   @default("system")
 
-//     @@id([userId, roleId])
+//     @@index([userId])
+//     @@index([courseId])
+//     @@index([ingressId])
 // }

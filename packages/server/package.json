@@ -36,7 +36,7 @@
     "prisma:seed": "ts-node prisma/seed.ts",
     "preview:setup": "npm run prisma:migrate:deploy && npm run prisma:seed",
     "db:sync": "prisma db pull && prisma generate",
-    "db:generate": "prisma generate --schema=prisma/schema.prisma && prisma generate --schema=prisma/schema.murror.prisma",
+    "db:generate": "prisma generate --schema=prisma/schema.prisma",
     "db:seed:app-versions": "ts-node prisma/seed-app-versions.ts",
     "version:check": "bash scripts/generate-version.sh",
     "version:next": "bash scripts/generate-version.sh --dry-run"

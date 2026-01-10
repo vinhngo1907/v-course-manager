@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Crud, CrudController } from '@nestjsx/crud';
+// import { Crud, CrudController } from '@nestjsx/crud';
 import { AuthService } from './service';
 import RequestWithAccount from './interfaces/RequestWithAccount';
 import { Response } from 'express';

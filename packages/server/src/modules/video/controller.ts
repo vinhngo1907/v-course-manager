@@ -14,6 +14,9 @@ import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
+import { ApiOperation } from '@nestjs/swagger';
+import { ApiErrorResponse, ApiSuccessResponse } from 'src/common/decorator/swagger-response.decorator';
+import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
 
 @Controller('video')
 export class VideoController {
@@ -39,6 +42,31 @@ export class VideoController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @ApiOperation({
+    summary: 'Complete creating video',
+    description:
+      'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
+  })
+  @ApiSuccessResponse(CourseResponseDto, {
+    status: 201,
+    description: 'Creating video completed successfully',
+  })
+  @ApiErrorResponse({
+    status: 400,
+    description: 'Invalid request data - validation errors or invalid',
+  })
+  @ApiErrorResponse({
+    status: 401,
+    description: 'Unauthorized - valid authentication token required',
+  })
+  @ApiErrorResponse({
+    status: 409,
+    description: 'Conflict - creating already completed',
+  })
+  @ApiErrorResponse({
+    status: 500,
+    description: 'Internal server error during creating video',
+  })
   async create(
     @Body() createVideoDTO: VideoCreationDTO,
     @Req() req: RequestWithAccount,

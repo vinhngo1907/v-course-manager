@@ -17,31 +17,32 @@ export class VideoService {
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
     private readonly courseService: CourseService,
-  ) {}
+  ) { }
 
   async findVideosByCourse(courseId: string): Promise<VideoDTO[]> {
     try {
-      const courses = await this.databaseService.course.findMany({
+      const course = await this.databaseService.course.findUnique({
         where: { id: courseId },
         select: {
           lessons: {
-            include: { video: true },
+            include: { videos: true },
           },
         },
       });
 
-      const videoDTOs: VideoDTO[] = courses.flatMap((course) =>
-        course.lessons
-          .filter((lesson) => lesson.video != null)
-          .map((lesson) => ({
-            title: lesson.video.title,
-            description: lesson.video.description,
-            thumbnail: lesson.video.thumbnail ?? '',
-            vieoUrl: lesson.video.videoUrl,
+      if (!course) return [];
+
+      const videoDTOs: VideoDTO[] = course.lessons.flatMap((lesson) =>
+        lesson.videos
+          .map((video) => ({
+            title: video.title,
+            description: video.description,
+            thumbnail: video.thumbnail ?? '',
+            vieoUrl: video.videoUrl,
             subtitles: [],
-            lessonId: lesson.video.lessonId!,
-            ownerId: lesson.video.ownerId,
-            duration: lesson.video.duration,
+            lessonId: video.lessonId!,
+            ownerId: video.ownerId,
+            duration: video.duration,
           })),
       );
 
@@ -83,7 +84,7 @@ export class VideoService {
     try {
       return await this.databaseService.lesson.findUnique({
         where: { id: lessonId },
-        include: { video: true },
+        include: { videos: true },
       });
     } catch (error) {
       this.logger.error(error.message);
@@ -118,44 +119,13 @@ export class VideoService {
     }
   }
 
-  // async create(createVideoDto: VideoCreationDTO, userId: string): Promise<VideoCreationDTO> {
-  //     try {
-  //         const { courseId, ...videoData } = createVideoDto;
-
-  //         let data: any = {
-  //             ...videoData,
-  //         };
-
-  //         if (courseId) {
-  //             const course = await this.courseService.findOne(courseId);
-  //             if (!course) {
-  //                 throw new VideoBadRequestException("Course does not exist");
-  //             }
-
-  //             if (course.createdById !== userId) {
-  //                 throw new VideoBadRequestException("You don not own this course");
-  //             }
-
-  //             data['course'] = { connect: { id: course.id } };
-  //         }
-
-  //         const newVideo = await this.databaseService.video.create({
-  //             data,
-  //             include: { lesson: true },
-  //         });
-
-  //         return newVideo;
-  //     } catch (error) {
-  //         this.logger.error(error);
-  //         catchError(error);
-  //     }
-  // }
-
   async create(createVideoDto: VideoCreationDTO, userId: string) {
-    // console.log({createVideoDto})
     try {
-      const { courseId, title, description, videoUrl, duration, thumbnailUrl } =
-        createVideoDto;
+      const {
+         courseId,
+         title, description, videoUrl, duration, 
+        thumbnailUrl, position 
+      } = createVideoDto;
 
       const course = await this.courseService.findOne(courseId);
       if (!course) throw new VideoBadRequestException('Course not found');
@@ -171,19 +141,18 @@ export class VideoService {
         },
       });
 
-      const newVideo = await this.databaseService.video.create({
+      return await this.databaseService.video.create({
         data: {
           title: title,
           description,
           videoUrl,
-          lesson: { connect: { id: newLesson.id } },
-          owner: { connect: { id: userId } },
           duration,
           thumbnail: thumbnailUrl,
+          position,
+          lesson: { connect: { id: newLesson.id } },
+          owner: { connect: { id: userId } },
         },
       });
-
-      return newVideo;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error);

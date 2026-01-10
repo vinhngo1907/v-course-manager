@@ -24,7 +24,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
   async findAll(
     req: CrudRequest,
@@ -36,43 +36,6 @@ export class CourseService {
     pageCount: number;
     limit: number;
   }> {
-    // try {
-    //     console.log({ req: req.parsed });
-    //     const page = req.parsed.page || 1;
-    //     const limit = req.parsed.limit || 20;
-    //     const authorFilter = req.parsed.filter?.find(
-    //         (f) => f.field === 'authorId'
-    //     );
-    //     const authorId = authorFilter?.value;
-    //     console.log({ authorId, authorFilter });
-    //     const where = authorId ? { createdById: authorId } : {};
-    //     // const [data, total] = await this.getManyAndCountCourses(req);
-    //     const courses = await this.databaseService.course.findMany({
-    //         where,
-    //         include: {
-    //             lessons: {
-    //                 include: {
-    //                     video: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    //     const mappedCourses = courses.map(course => ({
-    //         ...course,
-    //         thumbnailUrl: course.thumbnail,
-    //     }));
-
-    //     return {
-    //         data: mappedCourses,
-    //         page,
-    //         limit,
-    //         total: courses.length,
-    //         pageCount: Math.ceil(courses.length / limit),
-    //     };
-    // } catch (error) {
-    //     this.logger.error(error.message);
-    //     throw new InternalServerErrorException(error);
-    // }
     try {
       const page = req.parsed.page || 1;
       const limit = req.parsed.limit || 20;
@@ -83,15 +46,59 @@ export class CourseService {
         where,
         include: {
           lessons: {
-            include: { video: true },
+            include: {videos: true}
           },
         },
       });
 
-      const mappedCourses = courses.map((course) => ({
-        ...course,
-        thumbnailUrl: course.thumbnail,
-      }));
+
+      const mappedCourses: CourseWithLessonsDTO[] = courses.map((course) => {
+        const totalLessons = course.lessons.length;
+
+        const totalVideos = course.lessons.reduce(
+          (sum, lesson) => sum + lesson.videos.length,
+          0,
+        );
+
+        const totalDuration = course.lessons.reduce(
+          (sum, lesson) =>
+            sum +
+            lesson.videos.reduce((s, v) => s + (v.duration ?? 0), 0),
+          0,
+        );
+
+        return {
+          id: course.id,
+          title: course.title,
+          description: course.description,
+          thumbnail: course.thumbnail ?? undefined,
+
+          totalLessons,
+          totalVideos,
+          totalDuration,
+
+          lessons: course.lessons.map((lesson) => ({
+            id: lesson.id,
+            name: lesson.name,
+            description: lesson.description,
+
+            totalVideos: lesson.videos.length,
+            totalDuration: lesson.videos.reduce(
+              (sum, v) => sum + (v.duration ?? 0),
+              0,
+            ),
+            videos: lesson.videos.map((video) => ({
+              id: video.id,
+              title: video.title,
+              videoUrl: video.videoUrl ?? undefined,
+              duration: video.duration,
+              thumbnail: video.thumbnail ?? undefined,
+              description: video.description ?? undefined,
+              
+            })),
+          })),
+        };
+      });
 
       return {
         data: mappedCourses,
@@ -153,7 +160,7 @@ export class CourseService {
     const course = await this.databaseService.course.findFirst({
       where: { id: courseId },
       include: {
-        lessons: { include: { video: true } },
+        lessons: { include: { videos: true } },
         createdBy: true,
       },
     });
@@ -274,7 +281,7 @@ export class CourseService {
       include: {
         lessons: {
           include: {
-            video: true,
+            videos: true,
           },
         },
       },

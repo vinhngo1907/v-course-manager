@@ -96,7 +96,7 @@ export class AuthController {
     description:
       'Completes the registration process for the authenticated user by saving their profile information.',
   })
-   @ApiSuccessResponse(RegisterResponseDto, {
+  @ApiSuccessResponse(RegisterResponseDto, {
     status: 201,
     description: 'Onboarding completed successfully',
   })
@@ -116,22 +116,15 @@ export class AuthController {
   async register(
     @Body() registerPayload: RegisterPayload,
     @Res() res: Response,
-  ): Promise<RegisterResponseDto> {
+  ): Promise<any> {
     const { cookie, user } = await this.authService.register(registerPayload);
     res.setHeader('Set-header', cookie);
-    // return res.send({
-    //   success: true,
-    //    message: "Register in successfully!",
-    //   data: { user, role: 'admin' }
-    // });
 
-    return {
+    return res.send({
       success: true,
       message: 'Register completed successfully',
-      data: {
-        user,
-      },
-    };
+      ...user, role: 'admin'
+    });
   }
 
   @UseGuards(JwtAuthGuard)

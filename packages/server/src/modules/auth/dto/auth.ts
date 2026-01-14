@@ -4,3 +4,10 @@ export interface AuthDTO {
   fullName: string;
   password?: string;
 }
+
+export interface LoginDataDto {
+   userId: string;
+    username: string;
+    email: string;
+    fullName: string
+}

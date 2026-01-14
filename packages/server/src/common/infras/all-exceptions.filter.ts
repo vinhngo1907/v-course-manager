@@ -10,7 +10,7 @@ import { AppConfigService } from 'src/config/service';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly appConfigService: AppConfigService) {}
+  constructor(private readonly appConfigService: AppConfigService) { }
   // catch(exception: unknown, host: ArgumentsHost) {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -54,19 +54,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
       }
     }
-    // response.setHeader(
-    //     'Access-Control-Allow-Origin',
-    //     // configService.getClientUrl(),
-    // );
+
     const exceptionResponse = exception.getResponse();
     response.status(status).json({
       status,
       timestamp: new Date().toUTCString(),
-      // message,
-        ...(typeof exceptionResponse === 'string'
+      path: request.url,
+      message,
+      ...(typeof exceptionResponse === 'string'
         ? { message: exceptionResponse }
         : exceptionResponse),
-      path: request.url,
     });
   }
 }

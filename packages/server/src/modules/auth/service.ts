@@ -4,7 +4,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
-import { AccountBadRequestException } from '@modules/account/exception';
+import { AccountBadRequestException, AccountConflictException } from '@modules/account/exception';
 import { AuthDTO } from './dto/auth';
 import { RegisterPayload, TokenPayload } from './types';
 import { hashPassword, isMatch } from './utils';
@@ -112,7 +112,8 @@ export class AuthService {
       this.logger.error(`${error}`);
       if (
         error instanceof UserConflictException ||
-        error instanceof UserNotFoundException
+        error instanceof UserNotFoundException ||
+        error instanceof AccountConflictException
       ) {
         throw error;
       }

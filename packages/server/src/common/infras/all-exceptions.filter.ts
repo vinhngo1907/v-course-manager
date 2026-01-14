@@ -11,7 +11,8 @@ import { AppConfigService } from 'src/config/service';
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly appConfigService: AppConfigService) {}
-  catch(exception: unknown, host: ArgumentsHost) {
+  // catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
@@ -57,10 +58,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     //     'Access-Control-Allow-Origin',
     //     // configService.getClientUrl(),
     // );
+    const exceptionResponse = exception.getResponse();
     response.status(status).json({
       status,
       timestamp: new Date().toUTCString(),
-      message,
+      // message,
+        ...(typeof exceptionResponse === 'string'
+        ? { message: exceptionResponse }
+        : exceptionResponse),
       path: request.url,
     });
   }

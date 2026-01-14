@@ -14,6 +14,7 @@ import { Prisma } from '@prisma/client';
 import { AppConfigService } from 'src/config/service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { UserConflictException, UserNotFoundException } from '@modules/user/exception';
 
 @Injectable()
 export class AuthService {
@@ -109,7 +110,14 @@ export class AuthService {
       });
     } catch (error) {
       this.logger.error(`${error}`);
-      throw new InternalServerErrorException(error.message);
+      if (
+        error instanceof UserConflictException ||
+        error instanceof UserNotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException("Failed to complete register. Please try again.");
     }
   }
 

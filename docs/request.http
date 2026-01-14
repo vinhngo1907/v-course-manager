@@ -27,7 +27,7 @@ POST {{serverUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "vinhtrungngo@yahoo.com",
+   "email": "vinhngotrung1999@gmail.com",
    "username":"vinnyngo",
    "fullName": "Vinny Ngo",
    "password": "123456"
@@ -38,7 +38,7 @@ POST {{serverUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "vinhngotrung1999@gmail.com",
+   "email": "vinhtrungngo@yahoo.com",
    "username":"kookuu",
    "fullName": "Imma Kuu Koo",
    "password": "123456"

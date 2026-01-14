@@ -1,0 +1,31 @@
+.meeting-footer {
+    background: #202124;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.meeting-icons {
+    color: white;
+    border-radius: 50%;
+    background: #3c4043;
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.active {
+    background-color: #ea4335;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+    cursor: not-allowed;
+}

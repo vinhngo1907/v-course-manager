@@ -6,7 +6,7 @@ import { Course } from '@/types';
 import CourseList from '@/Components/Course/CourseList';
 import Loading from '@/Components/Loading';
 import {useMediaQuery} from "usehooks-ts";
-import { useSidebar } from '@/store/use-sidebar';
+import { useSidebar } from '@/hooks/use-sidebar';
 
 export default function Home() {
 	const [courses, setCourses] = useState<Course[]>([]);

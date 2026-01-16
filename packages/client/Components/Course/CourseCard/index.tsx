@@ -3,6 +3,7 @@ import Heading from "../Heading";
 import { Course, Lesson, Video } from '@/types';
 import { useContext } from 'react';
 import { ModalContext } from '@/context/ModalContext';
+import { TEST_VIDEO } from '@/constants/videos';
 
 type Props = {
     isAdmin: boolean;
@@ -26,7 +27,7 @@ const CourseCard = ({ course, isAdmin, forcePublic, isAuthenticated }: Props) =>
 
 
     const fallbackThumbnail = course.lessons?.[0]?.video?.thumbnail;
-    const thumbnailUrl = course.thumbnail ?? fallbackThumbnail ?? '/default-thumbnail.jpg';
+    const thumbnailUrl = course.thumbnail ?? fallbackThumbnail ?? `${TEST_VIDEO}`;
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (!isAuthenticated) {

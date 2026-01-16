@@ -1,4 +1,9 @@
+"use client";
+// sidebar/sidebar-routes.tsx
 import * as icons from '@/constants/icons'
+import { useState } from "react";
+// import sidebars from "./sidebars";
+import SidebarItem from "./sidebar-items";
 
 export interface SidebarItem {
 	icon: string,
@@ -33,4 +38,23 @@ const sidebars: SidebarItem[] = [
 	// }
 ]
 
-export default sidebars;
+// export default sidebars;
+
+export default function SidebarRoutes() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  return (
+    <>
+      {sidebars.map((sidebar, index) => (
+        <SidebarItem
+          key={index}
+          icon={sidebar.icon}
+          label={sidebar.label}
+          path={sidebar.path}
+          active={index === currentIndex}
+          onClick={() => setCurrentIndex(index)}
+        />
+      ))}
+    </>
+  );
+}

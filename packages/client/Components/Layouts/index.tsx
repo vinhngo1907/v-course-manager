@@ -1,4 +1,4 @@
-import React, { JSX, useContext, useState } from 'react';
+import React, { JSX, useContext } from 'react';
 import PropTypes from 'prop-types';
 import HeaderComponent from './Header';
 import SidebarComponent from './Sidebar';
@@ -9,8 +9,8 @@ import RegisterModal from '@/Components/Register';
 import { AuthContext } from '@/context/AuthContext';
 import { ModalContext } from '@/context/ModalContext';
 import ForgotPasswordModal from '../ForgotPassword';
-import { useSidebar } from '@/store/use-sidebar';
-import { ArrowLeftFromLine, ArrowLeftFromLineIcon, ArrowRightFromLine, ArrowRightFromLineIcon } from "lucide-react";
+import { Container } from './container';
+import { useSidebar } from '@/hooks/use-sidebar';
 
 interface Layout {
     isWide: boolean
@@ -26,11 +26,11 @@ export enum ModalTypeEnum {
     None = 'none'
 };
 
-function Layout({ children, isWide, title }: Layout) {
+function Layout({ children, title }: Layout) {
     const { modalType, toggleModal } = useContext(ModalContext);
     const { authState: { user } } = useContext(AuthContext)!;
-    const { collapsed, toggle } = useSidebar();
-
+    const {collapsed} = useSidebar();
+      const sidebarWidth = collapsed ? "10px" : "auto";
     return (
         <>
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}
@@ -38,20 +38,11 @@ function Layout({ children, isWide, title }: Layout) {
             {modalType === ModalTypeEnum.ForgotPass && <ForgotPasswordModal toggleModal={toggleModal} />}
             <div className={styles.container}>
                 {/* <SidebarComponent isWide={isWide} /> */}
-                <SidebarComponent isWide={collapsed} />
-                <section className={styles.main}>
+                <SidebarComponent />
+                <section className={styles.main}
+                style={{marginLeft:sidebarWidth, transition: "margin-left 0.3s ease"}}
+                >
                     <HeaderComponent user={user} toggleModal={toggleModal} />
-                    <button
-                        onClick={toggle}
-                        className={`
-                        absolute top-55 z-50 rounded-full bg-[#FFB347] p-2 shadow
-                        transition-all duration-300
-                        ${collapsed ? "left-[90px]" : "left-[260px]"}
-                    `}
-                        aria-label="Toggle sidebar"
-                    >
-                        {collapsed ? <ArrowRightFromLine size={18} /> : <ArrowLeftFromLine size={18} />}
-                    </button>
                     <div className={styles.content}>
                         <div className={styles.pageHeader}>
                             <h2 className={`${styles.pageTitle} text-[#FFF1DC]`}>{title}</h2>
@@ -61,7 +52,12 @@ function Layout({ children, isWide, title }: Layout) {
                                 </div>
                             </div>
                         </div>
-                        <div className="page-content">{children}</div>
+
+                        <div className="page-content">
+                            <Container>
+                                {children}
+                            </Container>
+                        </div>
                     </div>
                 </section>
             </div>

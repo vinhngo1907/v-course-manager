@@ -1,4 +1,7 @@
+"use client";
 // sidebar/sidebar-items.tsx
+
+import Link from "next/link";
 import styles from "./index.module.css";
 
 export interface SidebarItemProps {
@@ -21,12 +24,12 @@ export default function SidebarItem({
       onClick={onClick}
       className={`${styles.sidebarItem} ${active ? styles.itemActive : ""}`}
     >
-      <a href={path}>
+      <Link href={path}>
         <div className={styles.itemIcon}>
           <img src={icon} alt="icon" className="w-6 h-6" />
         </div>
         <div className={styles.itemLabel}>{label}</div>
-      </a>
+      </Link>
     </div>
   );
 }

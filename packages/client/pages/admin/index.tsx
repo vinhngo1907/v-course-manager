@@ -13,7 +13,7 @@ type AdminProps = {
     profile: Session | null
 }
 
-const Admin: NextPage<AdminProps> = () => {
+const AdminLayout: NextPage<AdminProps> = () => {
     return (
         <Layout title="Admin">
            <AdminPage />
@@ -21,4 +21,4 @@ const Admin: NextPage<AdminProps> = () => {
     )
 }
 
-export default Admin
+export default AdminLayout

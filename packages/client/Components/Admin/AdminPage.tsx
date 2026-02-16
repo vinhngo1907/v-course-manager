@@ -6,6 +6,9 @@ import CourseGrid from '@/Components/Course/CourseGrid';
 import Button from '@/Components/Layouts/Button';
 import { AuthContext } from '@/context/AuthContext';
 import { ModalContext } from '@/context/ModalContext';
+import { isAdmin } from '@/libs/admin';
+import { CourseTable } from '../Course/CourseTable';
+import { columns } from '../Course/CourseTable/columns';
 
 export default function AdminPage() {
     const { authState: { isAuthenticated, user, authLoading } } = useContext(AuthContext)!;
@@ -18,16 +21,16 @@ export default function AdminPage() {
         if (!user) return
 
         const loadCourses = async () => {
-            try {
-                const { data } = await axios.get(`/courses?authorId=${user.id}`)
-                setCourses(data.data)
-            } catch (e) {
-                console.log(e)
-            }
+            const url = isAdmin(user.id)
+                ? "/courses"
+                : `/courses?authorId=${user.id}`
+            const { data } = await axios.get(url)
+            setCourses(data.data)
         }
 
         loadCourses()
-    }, [user])
+    }, [user]);
+    
 
     if (authLoading) {
         return (
@@ -62,16 +65,17 @@ export default function AdminPage() {
             {/* <h2>Your courses</h2> */}
 
             {courses.length > 0 ? (
-                <CourseGrid courses={courses} isAdmin isAuthenticated={isAuthenticated}/>
+                // <CourseGrid courses={courses} isAdmin isAuthenticated={isAuthenticated} />
+                <CourseTable columns={columns} data={courses} />
             ) : (
                 <div>
                     <h3 className="mt-2 text-gray-300">You don&apos;t have any courses yet.</h3>
                 </div>
             )}
 
-            <Link href="/admin/courses">
+            {/* <Link href="/admin/courses">
                 <Button className='mt-4 inline-block rounded bg-[#FFB347] px-4 py-2 text-white hover:bg-[#F5A028] cursor-pointer'>Create a course</Button>
-            </Link>
+            </Link> */}
         </>
     )
 }

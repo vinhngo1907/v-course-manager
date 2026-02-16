@@ -30,7 +30,7 @@ function Layout({ children, title }: Layout) {
     const { modalType, toggleModal } = useContext(ModalContext);
     const { authState: { user } } = useContext(AuthContext)!;
     const {collapsed} = useSidebar();
-      const sidebarWidth = collapsed ? "10px" : "auto";
+      const sidebarWidth = collapsed ? "0px" : "auto";
     return (
         <>
             {modalType === ModalTypeEnum.Register && <RegisterModal toggleModal={toggleModal} />}

@@ -7,7 +7,7 @@ import { cn } from "@/libs/utils";
 import { useSidebar } from "@/hooks/use-sidebar";
 
 export function Container({ children }: { children: React.ReactNode }) {
-  const { collapsed, onCollapse, onExpand } = useSidebar(
+  const { onCollapse, onExpand } = useSidebar(
     (state) => state
   );
   const matches = useMediaQuery(`(max-width: 1024px)`);

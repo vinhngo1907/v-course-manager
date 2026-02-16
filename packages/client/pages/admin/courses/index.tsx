@@ -3,7 +3,7 @@ import AdminNewCoursePage from '@/Components/Admin/AdminNewCourse'
 
 export default function AdminNewCourse() {
     return (
-        <Layout title="Create new course" isWide>
+        <Layout title="Name your course" isWide>
             <AdminNewCoursePage />
         </Layout>
     )

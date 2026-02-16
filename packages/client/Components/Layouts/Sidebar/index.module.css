@@ -121,7 +121,7 @@
 
 .toggleBtn {
   position: absolute;
-  right: -14px;       /* 🔥 đẩy ra ngoài sidebar */
+  right: -14px;
   top: 24px;
 
   width: 28px;

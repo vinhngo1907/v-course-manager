@@ -2,23 +2,48 @@ import { useFormContext, RegisterOptions } from "react-hook-form";
 import Field from "./Field";
 import Label from "./Label";
 
-
 type Props = {
-    name: string;
-    label: string;
-    options: RegisterOptions;
-}
+  name: string;
+  label?: string;
+  options?: RegisterOptions;
+};
 
 const TextInput = ({ name, label, options }: Props) => {
-    const { register, formState: { errors } } = useFormContext();
+  const { register, formState: { errors } } = useFormContext();
 
-    return (
-        <Field>
-            <Label htmlFor={name}>{label}</Label>
-            <input type="text" className='border border-gray-200 p-2 rounded mb-2 text-[#F5A028]' {...register(name, options)} />
-            {errors[name] && <span className='text-red-600 text-sm'>{name} is required</span>}
-        </Field>
-    )
-}
+  return (
+    <Field>
+      {label && <Label htmlFor={name}>{label}</Label>}
+
+      <input
+        id={name}
+        type="text"
+        className="
+        w-full
+        rounded-md
+        px-3
+        py-2
+        bg-[#FFF1DC]
+        border
+        border-[#FFB347]/40
+        text-[#2C2C2C]
+        placeholder-[#F5A028]/60
+        focus:outline-none
+        focus:ring-2
+        focus:ring-[#FFB347]
+        focus:border-[#FFB347]
+        transition
+        "
+        {...register(name, options)}
+      />
+
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-1">
+          {name} is required
+        </span>
+      )}
+    </Field>
+  );
+};
 
 export default TextInput;

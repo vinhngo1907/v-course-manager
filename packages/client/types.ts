@@ -23,6 +23,7 @@ export type Lesson = {
     description: string;
     video: Video;
     courseId: string
+    published: boolean
 }
 
 export type Video = {

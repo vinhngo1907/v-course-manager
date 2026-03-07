@@ -1,30 +1,24 @@
-<svg
-  width="36"
-  height="33"
-  viewBox="0 0 36 33"
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
->
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Outer circle -->
   <circle
-    cx="18"
-    cy="16.5"
-    r="10"
-    stroke="#ffb347"
-    stroke-width="2"
+    cx="10"
+    cy="10"
+    r="7"
+    stroke="#FFB347"
+    stroke-width="1.8"
   />
 
   <!-- Compass needle -->
   <path
-    d="M18 9 L21.5 17 L18 24 L14.5 17 Z"
-    fill="#ffb347"
+    d="M10 4 L12.6 10 L10 16 L7.4 10 Z"
+    fill="#FFB347"
   />
 
   <!-- Center dot -->
   <circle
-    cx="18"
-    cy="16.5"
-    r="1.6"
-    fill="#ffb347"
+    cx="10"
+    cy="10"
+    r="1.2"
+    fill="#FFB347"
   />
 </svg>

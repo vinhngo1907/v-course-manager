@@ -25,9 +25,9 @@ export default function SidebarRoutes() {
     <>
       {sidebars.map((sidebar) => {
         const isActive =
-          (pathname === "/" && sidebar.path === "/") ||
+          !!(pathname && ((pathname === "/" && sidebar.path === "/") ||
           pathname === sidebar.path ||
-          pathname.startsWith(`${sidebar.path}/`);
+          pathname.startsWith(`${sidebar.path}/`)));
 
         return (
           <SidebarItem

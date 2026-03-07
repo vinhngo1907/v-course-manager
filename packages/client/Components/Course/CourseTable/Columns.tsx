@@ -62,12 +62,10 @@ export const columns: ColumnDef<Course>[] = [
         ),
         cell: ({ row }) => {
             const isPublished = Boolean(row.getValue("isPublished"));
-
             return (
                 <span
-                    className={`inline-block rounded px-2 py-1 text-xs font-medium text-white ${
-                        isPublished ? "bg-sky-600" : "bg-slate-500"
-                    }`}
+                    className={`inline-block rounded px-2 py-1 text-xs font-medium text-white ${isPublished ? "bg-sky-600" : "bg-slate-500"
+                        }`}
                 >
                     {isPublished ? "Published" : "Draft"}
                 </span>

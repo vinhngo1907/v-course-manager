@@ -113,25 +113,28 @@ export function CourseTable<TData, TValue>({
 
                     <tbody>
                         {table.getRowModel().rows.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <tr
-                                    key={row.id}
-                                    className="transition-colors hover:bg-[#3a3a3a] data-[state=selected]:bg-[#404040]
+                            table.getRowModel().rows.map((row) => {
+                                // console.log({row: row.original})
+                                return (
+                                    <tr
+                                        key={row.id}
+                                        className="transition-colors hover:bg-[#3a3a3a] data-[state=selected]:bg-[#404040]
 "
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <td
-                                            key={cell.id}
-                                            className="border-b px-4 py-3 text-sm"
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <td
+                                                key={cell.id}
+                                                className="border-b px-4 py-3 text-sm"
+                                            >
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                )
+                            })
                         ) : (
                             <tr>
                                 <td
@@ -159,12 +162,12 @@ export function CourseTable<TData, TValue>({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                     className="rounded-md
-    border border-[#3a3a3a]
-    bg-[#2C2C2C]
-    px-3 py-1.5
-    text-sm text-white
-    hover:bg-[#3a3a3a]
-    disabled:opacity-40"
+                            border border-[#3a3a3a]
+                            bg-[#2C2C2C]
+                            px-3 py-1.5
+                            text-sm text-white
+                            hover:bg-[#3a3a3a]
+                            disabled:opacity-40"
                 >
                     Next
                 </button>

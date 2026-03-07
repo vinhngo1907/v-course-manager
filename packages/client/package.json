@@ -12,6 +12,7 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@hello-pangea/dnd": "^18.0.1",
     "@mux/mux-node": "^12.8.1",
     "@mux/mux-player-react": "^3.10.2",
     "@reduxjs/toolkit": "^2.8.2",

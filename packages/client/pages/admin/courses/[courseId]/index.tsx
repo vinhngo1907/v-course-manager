@@ -54,24 +54,24 @@ export default function AdminEditCourse() {
         );
     }
 
-    if (!isAuthenticated) {
-        return (
-            <Layout title="Course setup" isWide>
-                <div className="flex items-center justify-center">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-semibold text-[#F4A300]">Access Denied</h2>
-                        <p className="mt-2 text-gray-300">You don&apos;t have permission to view this page.</p>
-                        <button
-                            onClick={() => toggleModal('login')}
-                            className="mt-4 inline-block rounded bg-[#FFB347] px-4 py-2 text-white hover:bg-[#F5A028] cursor-pointer"
-                        >
-                            Login
-                        </button>
-                    </div>
-                </div>
-            </Layout>
-        );
-    }
+    // if (!isAuthenticated) {
+    //     return (
+    //         <Layout title="Course setup" isWide>
+    //             <div className="flex items-center justify-center">
+    //                 <div className="text-center">
+    //                     <h2 className="text-3xl font-semibold text-[#F4A300]">Access Denied</h2>
+    //                     <p className="mt-2 text-gray-300">You don&apos;t have permission to view this page.</p>
+    //                     <button
+    //                         onClick={() => toggleModal('login')}
+    //                         className="mt-4 inline-block rounded bg-[#FFB347] px-4 py-2 text-white hover:bg-[#F5A028] cursor-pointer"
+    //                     >
+    //                         Login
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //         </Layout>
+    //     );
+    // }
 
     if (!course) {
         return null;
@@ -83,7 +83,6 @@ export default function AdminEditCourse() {
         //     </Layout>
         // );
     }
-
     return (
         <Layout title="Course setup" isWide>
             <AdminCourseEditPage course={course} />

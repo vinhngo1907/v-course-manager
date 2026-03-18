@@ -62,3 +62,11 @@ export type Comment = {
     parent?: Comment | null;
 
 };
+
+export type MuxData = {
+    id: string;
+    assetId: string;
+    playbackId?: string;
+    videoId: string;
+    video: Video
+}

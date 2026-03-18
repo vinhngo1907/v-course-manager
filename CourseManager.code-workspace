@@ -47,6 +47,7 @@
         "workbench.editor.enablePreview": false,
         "eslint.packageManager": "yarn",
         "npm.packageManager": "yarn",
-        "files.eol": "\n"
+        "files.eol": "\n",
+        "prisma.pinToPrisma6": true
     },
 }

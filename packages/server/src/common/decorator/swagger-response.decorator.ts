@@ -1,5 +1,5 @@
-import {applyDecorators, Type} from '@nestjs/common';
-import {ApiExtraModels, ApiResponse, getSchemaPath} from '@nestjs/swagger';
+import { applyDecorators, Type } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { ApiResponseDto, createResponseSchema } from '../dtos/api-response.dto';
 
 // Instead of extending ApiResponseOptions, create a new interface that includes
@@ -24,7 +24,7 @@ interface ApiResponseDecoratorOptions {
  * @returns Decorator
  */
 export function ApiStandardResponse(options: ApiResponseDecoratorOptions) {
-  const {dataType, isArray, isPaginated, ...responseOptions} = options;
+  const { dataType, isArray, isPaginated, ...responseOptions } = options;
 
   // Determine the schema reference based on whether a data type is provided
   let schema: Record<string, any>;
@@ -36,7 +36,7 @@ export function ApiStandardResponse(options: ApiResponseDecoratorOptions) {
     // Create a reference to the data property schema
     const dataSchema = {
       allOf: [
-        {$ref: getSchemaPath(ApiResponseDto)},
+        { $ref: getSchemaPath(ApiResponseDto) },
         {
           properties: {
             data: isArray
@@ -65,10 +65,10 @@ export function ApiStandardResponse(options: ApiResponseDecoratorOptions) {
                     pagination: {
                       type: 'object',
                       properties: {
-                        page: {type: 'number', example: 1},
-                        limit: {type: 'number', example: 10},
-                        total: {type: 'number', example: 50},
-                        pageCount: {type: 'number', example: 5},
+                        page: { type: 'number', example: 1 },
+                        limit: { type: 'number', example: 10 },
+                        total: { type: 'number', example: 50 },
+                        pageCount: { type: 'number', example: 5 },
                       },
                     },
                   },

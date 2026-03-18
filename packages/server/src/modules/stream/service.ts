@@ -1,10 +1,15 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+  // BadRequestException,
+  // ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { DatabaseService } from '@modules/database/service';
 import { VideoService } from '@modules/video/service';
 import { AccessToken } from 'livekit-server-sdk';
 import { AppConfigService } from 'src/config/service';
 import { LivekitService } from 'src/config/livekit';
-import { StartLiveStreamDto } from './dto/livestream';
+// import { StartLiveStreamDto } from './dto/livestream';
 // import { CreateStreamDto } from './dto/create-stream';
 
 @Injectable()
@@ -14,8 +19,8 @@ export class StreamService {
     private readonly databaseService: DatabaseService,
     private readonly videoService: VideoService,
     private readonly appConfigService: AppConfigService,
-    private readonly livekitService: LivekitService
-  ) { }
+    private readonly livekitService: LivekitService,
+  ) {}
   /**
    * Generate Token for joining a room
    */

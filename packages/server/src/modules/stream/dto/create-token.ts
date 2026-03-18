@@ -18,8 +18,8 @@ export class CreateTokenDto {
   userId: string;
 
   @ApiProperty({
-    description: 'Host or not'
+    description: 'Host or not',
   })
   @IsBoolean()
-  isHost?: boolean
+  isHost?: boolean;
 }

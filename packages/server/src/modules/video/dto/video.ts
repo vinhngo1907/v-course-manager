@@ -1,4 +1,5 @@
-import { Lesson } from '@prisma/client';
+import { Type } from 'class-transformer';
+import { IsArray, ValidateNested } from 'class-validator';
 
 export class VideoDTO {
   title: string;
@@ -7,7 +8,7 @@ export class VideoDTO {
   vieoUrl?: string;
   subtitles?: [];
   lessonId: string;
-  ownerId: string;
+  // ownerId?: string;
   duration: number;
 }
 
@@ -17,4 +18,16 @@ export class LessonDTO {
   description: string;
   videos: VideoDTO[];
   courseId: string;
+}
+
+class ChapterReorderItemDto {
+  id: string;
+  position: number;
+}
+
+export class ReorderChapterDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ChapterReorderItemDto)
+  list: ChapterReorderItemDto[];
 }

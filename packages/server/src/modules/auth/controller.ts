@@ -2,26 +2,39 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
+  // HttpCode,
   Injectable,
   Post,
   Req,
   Res,
-  UnauthorizedException,
+  // UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  // ApiBearerAuth,
+  ApiBody,
+  // ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 // import { Crud, CrudController } from '@nestjsx/crud';
 import { AuthService } from './service';
 import RequestWithAccount from './interfaces/RequestWithAccount';
 import { Response } from 'express';
-import { LoginPayload, RegisterPayload } from './types';
+import { RegisterPayload } from './types';
 import { Public } from './decorator';
 import { LocalAuthGuard } from './guards/local';
 import { JwtAuthGuard } from './guards/jwt';
-import { createResponseSchema } from 'src/common/dtos/api-response.dto';
-import { LoginResponseDto, LogoutResponseDto, RegisterResponseDto } from './dto/auth-response';
-import { ApiErrorResponse, ApiSuccessResponse } from 'src/common/decorator/swagger-response.decorator';
+// import { createResponseSchema } from 'src/common/dtos/api-response.dto';
+import {
+  LoginResponseDto,
+  LogoutResponseDto,
+  RegisterResponseDto,
+} from './dto/auth-response';
+import {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from 'src/common/decorator/swagger-response.decorator';
 // import { JwtStrategy } from "./strategies/jwt";
 
 @Injectable()
@@ -31,7 +44,7 @@ import { ApiErrorResponse, ApiSuccessResponse } from 'src/common/decorator/swagg
   version: '1',
 })
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   // @HttpCode(200)
   @ApiSuccessResponse(LoginResponseDto)
@@ -48,12 +61,12 @@ export class AuthController {
 
     return res.send({
       success: true,
-      message: "Login in successfully",
+      message: 'Login in successfully',
       data: {
         user,
         accessToken: token,
-        role: 'admin'
-      }
+        role: 'admin',
+      },
     });
   }
 
@@ -123,7 +136,8 @@ export class AuthController {
     return res.send({
       success: true,
       message: 'Register completed successfully',
-      ...user, role: 'admin'
+      ...user,
+      role: 'admin',
     });
   }
 

@@ -1,7 +1,7 @@
 import { VideoDTO } from '@modules/video/dto/video';
 import { ApiProperty } from '@nestjs/swagger';
-import { Course, Lesson, Video } from '@prisma/client';
-import { IsEmpty, IsNotEmpty, IsUUID } from 'class-validator';
+// import { Course, Lesson, Video } from '@prisma/client';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export interface CourseDTO {
   title: string;
@@ -27,14 +27,28 @@ export interface CourseWithLessonsDTO {
   title: string;
   description: string;
   thumbnail?: string;
+  published?: boolean;
+
+  createdBy?: {
+    id: string;
+    fullName: string;
+    email: string;
+    avatar: string;
+  };
 
   totalLessons: number;
   totalVideos: number;
   totalDuration: number;
+  totalRegistration?: number;
 
   lessons: LessonWithVideosDTO[];
+  registrations?: {
+    id: string;
+    fullName: string;
+    email: string;
+    avatar: string;
+  }[];
 }
-
 
 export interface CourseByUser {
   courseId: string;

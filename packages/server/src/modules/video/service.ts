@@ -1,13 +1,11 @@
 import { DatabaseService } from '@modules/database/service';
 import {
-  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
-import { catchError } from 'rxjs';
 import { CourseService } from '@modules/course/service';
 import { VideoBadRequestException } from './exception';
 
@@ -17,7 +15,7 @@ export class VideoService {
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
     private readonly courseService: CourseService,
-  ) { }
+  ) {}
 
   async findVideosByCourse(courseId: string): Promise<VideoDTO[]> {
     try {
@@ -33,17 +31,16 @@ export class VideoService {
       if (!course) return [];
 
       const videoDTOs: VideoDTO[] = course.lessons.flatMap((lesson) =>
-        lesson.videos
-          .map((video) => ({
-            title: video.title,
-            description: video.description,
-            thumbnail: video.thumbnail ?? '',
-            vieoUrl: video.videoUrl,
-            subtitles: [],
-            lessonId: video.lessonId!,
-            ownerId: video.ownerId,
-            duration: video.duration,
-          })),
+        lesson.videos.map((video) => ({
+          title: video.title,
+          description: video.description,
+          thumbnail: video.thumbnail ?? '',
+          vieoUrl: video.videoUrl,
+          subtitles: [],
+          lessonId: video.lessonId!,
+          // ownerId: video.ownerId,
+          duration: video.duration,
+        })),
       );
 
       return videoDTOs;
@@ -101,6 +98,18 @@ export class VideoService {
     });
   }
 
+  async getChapterByLesson(lessonId: string, userId: string) {
+    console.log({ userId });
+    return this.databaseService.video.findFirst({
+      where: {
+        lessonId,
+      },
+      include: {
+        muxData: true,
+      },
+    });
+  }
+
   async removeProgress(lessonId: string, userId: string) {
     return this.databaseService.userLessonProgress.deleteMany({
       where: {
@@ -122,9 +131,13 @@ export class VideoService {
   async create(createVideoDto: VideoCreationDTO, userId: string) {
     try {
       const {
-         courseId,
-         title, description, videoUrl, duration, 
-        thumbnailUrl, position 
+        courseId,
+        title,
+        description,
+        videoUrl,
+        duration,
+        thumbnailUrl,
+        position,
       } = createVideoDto;
 
       const course = await this.courseService.findOne(courseId);
@@ -150,7 +163,7 @@ export class VideoService {
           thumbnail: thumbnailUrl,
           position,
           lesson: { connect: { id: newLesson.id } },
-          owner: { connect: { id: userId } },
+          // owner: { connect: { id: userId } },
         },
       });
     } catch (error) {

@@ -6,8 +6,8 @@ export interface AuthDTO {
 }
 
 export interface LoginDataDto {
-   userId: string;
-    username: string;
-    email: string;
-    fullName: string
+  userId: string;
+  username: string;
+  email: string;
+  fullName: string;
 }

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+// import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CourseUpdateDTO {
   @IsOptional()
@@ -17,4 +17,18 @@ export class CourseUpdateDTO {
   @IsNotEmpty()
   @IsString()
   authorId: string;
+}
+
+export class CourseUpdatePublishDto {
+  @IsNotEmpty()
+  @IsString()
+  courseId: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  published: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  accountId: string;
 }

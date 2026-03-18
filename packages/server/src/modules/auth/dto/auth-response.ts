@@ -1,40 +1,39 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthUserDto {
-    @ApiProperty({
-        example: "clx123abc",
-        description: "User identififer"
-    })
-    id: string;
+  @ApiProperty({
+    example: 'clx123abc',
+    description: 'User identififer',
+  })
+  id: string;
 
-    @ApiProperty({
-        example: 'user@gmail.com',
-        description: 'User email',
-    })
-    email: string;
+  @ApiProperty({
+    example: 'user@gmail.com',
+    description: 'User email',
+  })
+  email: string;
 
-    @ApiProperty({
-        example: 'admin',
-        description: 'User role',
-    })
-    role: string;
+  @ApiProperty({
+    example: 'admin',
+    description: 'User role',
+  })
+  role: string;
 }
 
 export class LoginResponseDto {
-    @ApiProperty({ type: () => AuthUserDto })
-    user: AuthUserDto
+  @ApiProperty({ type: () => AuthUserDto })
+  user: AuthUserDto;
 
-    @ApiProperty({
-        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    })
-    accessToken: string;
+  @ApiProperty({
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  accessToken: string;
 }
 
 export class RegisterDataDto {
   @ApiProperty({ type: () => AuthUserDto })
   user: AuthUserDto;
 }
-
 
 export class RegisterResponseDto {
   @ApiProperty({ example: true })
@@ -47,8 +46,7 @@ export class RegisterResponseDto {
   readonly data: RegisterDataDto;
 }
 
-
 export class LogoutResponseDto {
-    @ApiProperty({ example: true })
-    loggedOut: boolean;
+  @ApiProperty({ example: true })
+  loggedOut: boolean;
 }

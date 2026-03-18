@@ -15,12 +15,19 @@ import { VideoCreationDTO } from './dto/create-video.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 import { ApiOperation } from '@nestjs/swagger';
-import { ApiErrorResponse, ApiSuccessResponse } from 'src/common/decorator/swagger-response.decorator';
+import {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
+import { CourseService } from '@modules/course/service';
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private readonly courseService: CourseService,
+  ) {}
 
   @Get('/:id')
   async getVideosByCourse(@Param('id') id: string): Promise<VideoDTO[]> {
@@ -88,6 +95,16 @@ export class VideoController {
   ) {
     const userId = req.user.id;
     return await this.videoService.createProgress(lessonId, userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/chapter/:lessonId/')
+  async getChapter(
+    @Param('lessonId') lessonId: string,
+    @Req() req: RequestWithAccount,
+  ) {
+    const userId = req.user.id;
+    return await this.videoService.getChapterByLesson(lessonId, userId);
   }
 
   @UseGuards(JwtAuthGuard)

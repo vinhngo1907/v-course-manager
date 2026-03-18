@@ -1,8 +1,12 @@
-import * as Minio from 'minio';
+// import * as Minio from 'minio';
 import { FileUpload } from '../file-upload.interface';
 import { FileUploadType } from 'src/common/enums/file-upload-type.enum';
 import { MinioService } from 'src/config/minio';
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 
 // const minioClient = new Minio.Client({
 //   endPoint: process.env.MINIO_ENDPOINT,
@@ -11,7 +15,7 @@ import { InternalServerErrorException, Logger } from '@nestjs/common';
 //   accessKey: process.env.MINIO_ACCESS_KEY,
 //   secretKey: process.env.MINIO_SECRET_KEY,
 // });
-
+@Injectable()
 export class FileUploadByS3 implements FileUpload {
   private readonly logger: Logger = new Logger(FileUploadByS3.name);
   constructor(private readonly minioService: MinioService) {}
@@ -40,10 +44,11 @@ export class FileUploadByS3 implements FileUpload {
   }
 
   downloadVideo(url: string) {
-    throw new Error('Method not implemented.');
+    throw new Error(`Method not implemented. ${url}`);
   }
 
   getVideoByRange(startTime: string, endTime: any) {
+    console.log({ startTime, endTime });
     throw new Error('Method not implemented.');
   }
 

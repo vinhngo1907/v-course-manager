@@ -55,7 +55,7 @@ model User {
     accountId String   @unique
     account   Account  @relation(fields: [accountId], references: [id])
     courses   Course[]
-    videos    Video[]
+    // videos    Video[]
 
     // streams Stream[]
 
@@ -99,7 +99,7 @@ model Subline {
 model Course {
     id                 String               @id @default(uuid())
     title              String               @db.VarChar(300)
-    description        String               @db.VarChar(300)
+    description        String?              @db.VarChar(300)
     thumbnail          String?              @db.VarChar(300)
     lessons            Lesson[]
     CourseRegistration CourseRegistration[]
@@ -108,19 +108,35 @@ model Course {
     createdBy   User    @relation(fields: [createdById], references: [id])
     published   Boolean @default(false)
 
+    categoryId String?
+    category   Category? @relation(fields: [categoryId], references: [id])
+
     // streams Stream[]
 
+    @@index([categoryId])
     @@map("Course")
 }
 
+model Category {
+    id   String @id @default(uuid())
+    name String @unique
+
+    courses Course[]
+}
+
 model Lesson {
-    id             String               @id @default(uuid())
-    name           String               @db.VarChar(300)
-    description    String               @db.VarChar(300)
-    course         Course               @relation(fields: [courseId], references: [id])
-    courseId       String
-    videos         Video[]
+    id          String  @id @default(uuid())
+    name        String  @db.VarChar(300)
+    description String? @db.VarChar(300)
+    course      Course  @relation(fields: [courseId], references: [id])
+    courseId    String
+    videos      Video[]
+
+    published      Boolean              @default(false)
     usersCompleted UserLessonProgress[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model CourseRegistration {
@@ -132,7 +148,7 @@ model CourseRegistration {
 
     registeredAt DateTime @default(now())
 
-    isCompleted Boolean  @default(false)
+    isCompleted Boolean   @default(false)
     completedAt DateTime?
 
     @@unique([userId, courseId])
@@ -146,7 +162,7 @@ model UserLessonProgress {
     lesson   Lesson @relation(fields: [lessonId], references: [id])
     lessonId String @unique
 
-    isCompleted Boolean  @default(false)
+    isCompleted Boolean   @default(false)
     completedAt DateTime?
 
     // @@id([userId, lessonId])
@@ -174,32 +190,36 @@ model UserVideoProgress {
 model Video {
     id          String  @id @default(uuid())
     title       String  @db.VarChar(300)
-    description String  @db.VarChar(300)
+    description String? @db.VarChar(300)
     thumbnail   String? @db.VarChar(300)
     videoUrl    String? @db.VarChar(300)
     position    Int
 
     subtitles Subtitle[]
 
-    lesson   Lesson? @relation(fields: [lessonId], references: [id])
-    lessonId String? @unique
+    lesson   Lesson @relation(fields: [lessonId], references: [id])
+    lessonId String @unique
 
-    owner   User   @relation(fields: [ownerId], references: [id])
-    ownerId String
+    // owner   User   @relation(fields: [ownerId], references: [id])
+    // ownerId String
 
     muxData MuxData?
 
-    publishAt   DateTime  @default(now())
-    duration    Float
-    aspectRatio String?
-    status      String    @default("preparing")
-    posterTime  Float?
-    comments    Comment[]
+    published  Boolean  @default(false)
+    publishAt  DateTime @default(now())
+    // aspectRatio String?
+    status     String   @default("preparing")
+    duration   Float?   @default(0.0)
+    posterTime Float?
 
-    // sourceStreams       Stream[]            @relation("SourceVideo")
-    // recordedStreams     Stream[]            @relation("RecordedVideo")
+    comments Comment[]
+
     userVideoProgresses UserVideoProgress[]
 
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([lessonId])
     @@map("Video")
 }
 

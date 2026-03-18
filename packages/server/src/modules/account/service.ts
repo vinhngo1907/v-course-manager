@@ -4,12 +4,15 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { AuthService } from '../auth/service';
+// import { AuthService } from '../auth/service';
 import { DatabaseService } from '../database/service';
 import { AccountDTO, IAccount } from './dto/account';
 import { mapAccountToAccountDTO } from './mapper';
 import { AccountUpdationDTO } from './dto/account-updation.dto';
-import { AccountBadRequestException, AccountConflictException } from './exception';
+import {
+  // AccountBadRequestException,
+  AccountConflictException,
+} from './exception';
 
 @Injectable()
 export class AccountsService {
@@ -17,7 +20,7 @@ export class AccountsService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async findOne(username: string) {
     return this.databaseService.account.findFirst({
@@ -107,7 +110,7 @@ export class AccountsService {
       throw new AccountConflictException('Username is existed');
     }
   }
-  
+
   async remove(accountId: string): Promise<boolean> {
     const result = await this.databaseService.account.delete({
       where: {

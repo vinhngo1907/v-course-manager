@@ -30,45 +30,43 @@ export class LivekitService {
   }
 
   /** Create token */
-  async createHostToken(roomName: string, identity: string) {
-    const { AccessToken } = require('livekit-server-sdk');
-    const token = new AccessToken(this.apiKey, this.apiSecret, {
-      identity,
-      ttl: '1h',
-    });
+  // async createHostToken(roomName: string, identity: string) {
+  //   const { AccessToken } = require('livekit-server-sdk');
+  //   const token = new AccessToken(this.apiKey, this.apiSecret, {
+  //     identity,
+  //     ttl: '1h',
+  //   });
 
-    token.addGrant({
-      room: roomName,
-      roomJoin: true,
-      canPublish: true,
-      canSubscribe: true,
-      canPublishSources: ['camera', 'microphone', 'screen_share'],
-    });
+  //   token.addGrant({
+  //     room: roomName,
+  //     roomJoin: true,
+  //     canPublish: true,
+  //     canSubscribe: true,
+  //     canPublishSources: ['camera', 'microphone', 'screen_share'],
+  //   });
 
-    return token.toJwt();
-  }
+  //   return token.toJwt();
+  // }
 
   /** Create token for viewer */
-  createViewerToken(roomName: string, identity: string) {
-    const { AccessToken } = require('livekit-server-sdk');
-    const token = new AccessToken(this.apiKey, this.apiSecret, {
-      identity,
-      ttl: '1h',
-    });
+  // createViewerToken(roomName: string, identity: string) {
+  //   const { AccessToken } = require('livekit-server-sdk');
+  //   const token = new AccessToken(this.apiKey, this.apiSecret, {
+  //     identity,
+  //     ttl: '1h',
+  //   });
 
-    token.addGrant({
-      room: roomName,
-      roomJoin: true,
-      canSubscribe: true,
-      canPublish: false,
-    });
+  //   token.addGrant({
+  //     room: roomName,
+  //     roomJoin: true,
+  //     canSubscribe: true,
+  //     canPublish: false,
+  //   });
 
-    return token.toJwt();
-  }
+  //   return token.toJwt();
+  // }
 
   public getServerUrl() {
     return this.host;
   }
-
-
 }

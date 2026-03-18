@@ -1,4 +1,4 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
 import {
   ApiResponse,
@@ -70,7 +70,7 @@ export class ResponseFactory {
     paginatedData: PaginatedResult<T>,
     message = 'Data retrieved successfully',
   ): ApiResponse<T[]> {
-    const {data, meta} = paginatedData;
+    const { data, meta } = paginatedData;
 
     return this.success(data, message, HttpStatus.OK, {
       pagination: meta,

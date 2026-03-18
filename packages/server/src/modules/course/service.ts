@@ -1,30 +1,35 @@
 import { DatabaseService } from '@modules/database/service';
 import {
-  BadRequestException,
+  // BadRequestException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   CourseByUser,
-  CourseDTO,
+  // CourseDTO,
   CourseWithLessonsDTO,
   RegisterCourseDTO,
 } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
 import { CrudRequest } from '@nestjsx/crud';
-import { CourseUpdateDTO } from './dto/update-course';
+import { CourseUpdateDTO, CourseUpdatePublishDto } from './dto/update-course';
 import { CourseNotFoundException } from './exception';
 import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
+// import { LessonDTO } from '@modules/video/dto/video';
+// import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
+import { AddLessonInput } from './lesson.interface';
 
 @Injectable()
 export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async findAll(
     req: CrudRequest,
@@ -46,11 +51,10 @@ export class CourseService {
         where,
         include: {
           lessons: {
-            include: {videos: true}
+            include: { videos: true },
           },
         },
       });
-
 
       const mappedCourses: CourseWithLessonsDTO[] = courses.map((course) => {
         const totalLessons = course.lessons.length;
@@ -62,8 +66,7 @@ export class CourseService {
 
         const totalDuration = course.lessons.reduce(
           (sum, lesson) =>
-            sum +
-            lesson.videos.reduce((s, v) => s + (v.duration ?? 0), 0),
+            sum + lesson.videos.reduce((s, v) => s + (v.duration ?? 0), 0),
           0,
         );
 
@@ -72,7 +75,7 @@ export class CourseService {
           title: course.title,
           description: course.description,
           thumbnail: course.thumbnail ?? undefined,
-
+          published: course.published,
           totalLessons,
           totalVideos,
           totalDuration,
@@ -91,10 +94,9 @@ export class CourseService {
               id: video.id,
               title: video.title,
               videoUrl: video.videoUrl ?? undefined,
-              duration: video.duration,
+              // duration: video.duration,
               thumbnail: video.thumbnail ?? undefined,
               description: video.description ?? undefined,
-              
             })),
           })),
         };
@@ -288,5 +290,111 @@ export class CourseService {
     });
 
     return course;
+  }
+
+  async updatePublishStatus({
+    courseId,
+    accountId,
+    published,
+  }: CourseUpdatePublishDto) {
+    const existedCourse = await this.databaseService.course.findFirst({
+      where: { id: courseId },
+      select: {
+        id: true,
+        createdBy: true,
+      },
+    });
+
+    if (!existedCourse) throw new NotFoundException('Course does not exist');
+
+    if (existedCourse.createdBy.id !== accountId) {
+      throw new ForbiddenException('You are not owner of this course');
+    }
+
+    return this.databaseService.course.update({
+      where: { id: courseId },
+      data: {
+        published,
+      },
+    });
+  }
+
+  async addLesson({ name, courseId, accountId }: AddLessonInput) {
+    // 1️⃣ Authentication
+    if (!accountId) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
+    // 2️⃣ Authorization (check owner)
+    const courseOwner = await this.databaseService.course.findUnique({
+      where: { id: courseId },
+      select: { createdById: true },
+    });
+
+    if (!courseOwner || courseOwner.createdById !== accountId) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
+    // 4️⃣ Create lesson
+    const lesson = await this.databaseService.lesson.create({
+      data: {
+        name,
+        courseId,
+        // description: "",
+        published: false,
+      },
+    });
+
+    // 3️⃣ Get last lesson position
+    // const lastLesson = await this.databaseService.video.findFirst({
+    //   where: { id: lesson.id },
+    //   orderBy: {
+    //     position: "desc",
+    //   },
+    // });
+
+    // const newPosition = lastLesson
+    //   ? lastLesson.position + 1
+    //   : 1;
+
+    /*
+     Now we can finally create our chapter
+   */
+    // await this.databaseService.video.create({
+    //       data: {
+    //           title: name,
+    //           lessonId: lesson.id,
+    //           description: "",
+    //           duration: 0,
+    //           // ownerId: accountId,
+    //           position: newPosition,
+    //       },
+    //   });
+    return lesson;
+  }
+
+  async updateChapterReorder(
+    courseId: string,
+    userId: string,
+    list: { id: string; position: number }[],
+  ) {
+    try {
+      const courseOwner = await this.databaseService.course.findFirst({
+        where: { id: courseId, createdById: userId },
+      });
+
+      if (!courseOwner) throw new CourseNotFoundException(courseId);
+      for (const item of list) {
+        await this.databaseService.video.update({
+          where: { id: item.id },
+          data: { position: item.position },
+        });
+      }
+
+      return { message: 'Success' };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }

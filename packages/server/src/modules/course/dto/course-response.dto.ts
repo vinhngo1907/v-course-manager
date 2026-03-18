@@ -14,6 +14,9 @@ export class CourseResponseDto {
   @ApiProperty()
   thumbnail: string;
 
+  @ApiProperty()
+  published?: boolean;
+
   // @ApiProperty()
   // createdAt: Date;
 

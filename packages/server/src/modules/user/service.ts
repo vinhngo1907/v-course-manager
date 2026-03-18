@@ -4,13 +4,13 @@ import {
   // Logger,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
-import { UserBadRequestException, UserConflictException } from './exception';
-import { Role, User, Account } from '@prisma/client';
+import { UserConflictException } from './exception';
+import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
   // private readonly logger: Logger = new Logger(UsersService.name);
-  constructor(private readonly databaseService: DatabaseService) { }
+  constructor(private readonly databaseService: DatabaseService) {}
   async checkEmailExisted(email: string): Promise<void> {
     const existedEmail = await this.databaseService.user.findUnique({
       where: {
@@ -18,7 +18,7 @@ export class UsersService {
       },
     });
     if (existedEmail) {
-      throw new UserConflictException('Email is existed!', "email");
+      throw new UserConflictException('Email is existed!', 'email');
     }
     // try {
     //   const existedEmail = await this.databaseService.user.findUnique({

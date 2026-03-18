@@ -1,5 +1,5 @@
-import {Type} from '@nestjs/common';
-import {ApiProperty, ApiPropertyOptions} from '@nestjs/swagger';
+import { Type } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 
 /**
  * Base metadata structure for all responses
@@ -34,16 +34,16 @@ export class ApiErrorMetaDto extends ApiResponseMetaDto {
  * Pagination information for paginated responses
  */
 export class PaginationMetaDto {
-  @ApiProperty({example: 1})
+  @ApiProperty({ example: 1 })
   page: number;
 
-  @ApiProperty({example: 10})
+  @ApiProperty({ example: 10 })
   limit: number;
 
-  @ApiProperty({example: 50})
+  @ApiProperty({ example: 50 })
   total: number;
 
-  @ApiProperty({example: 5})
+  @ApiProperty({ example: 5 })
   pageCount: number;
 }
 
@@ -101,7 +101,7 @@ export class ApiSuccessResponseDto<T = any> extends ApiResponseDto<T> {
   @ApiProperty({
     example: 'success',
   })
-  status: string = 'success';
+  status = 'success';
 }
 
 /**
@@ -111,12 +111,12 @@ export class ApiErrorResponseDto extends ApiResponseDto<null> {
   @ApiProperty({
     example: 'error',
   })
-  status: string = 'error';
+  status = 'error';
 
   @ApiProperty({
     example: null,
   })
-  data: null = null;
+  data = null;
 
   @ApiProperty({
     type: ApiErrorMetaDto,
@@ -131,7 +131,7 @@ export class ApiPaginatedResponseDto<T = any> extends ApiResponseDto<T[]> {
   @ApiProperty({
     example: 'success',
   })
-  status: string = 'success';
+  status = 'success';
 
   @ApiProperty({
     isArray: true,

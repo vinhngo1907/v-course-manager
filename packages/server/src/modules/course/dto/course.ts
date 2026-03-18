@@ -1,12 +1,13 @@
+import { VideoDTO } from '@modules/video/dto/video';
 import { ApiProperty } from '@nestjs/swagger';
-import { Course, Lesson, Video } from '@prisma/client';
-import { IsEmpty, IsNotEmpty, IsUUID } from 'class-validator';
+// import { Course, Lesson, Video } from '@prisma/client';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export interface CourseDTO {
   title: string;
   description: string;
   thumbnail?: string;
-  videos?: string[];
+  videos?: VideoDTO[];
 }
 
 export class RegisterCourseDTO {
@@ -21,11 +22,50 @@ export class RegisterCourseDTO {
   courseId: string;
 }
 
-export type CourseWithLessonsDTO = Course & {
-  lessons: (Lesson & { video: Video | null })[];
-};
+export interface CourseWithLessonsDTO {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail?: string;
+  published?: boolean;
+
+  createdBy?: {
+    id: string;
+    fullName: string;
+    email: string;
+    avatar: string;
+  };
+
+  totalLessons: number;
+  totalVideos: number;
+  totalDuration: number;
+  totalRegistration?: number;
+
+  lessons: LessonWithVideosDTO[];
+  registrations?: {
+    id: string;
+    fullName: string;
+    email: string;
+    avatar: string;
+  }[];
+}
 
 export interface CourseByUser {
   courseId: string;
   userId: string;
+}
+
+export interface LessonWithVideosDTO {
+  id: string;
+  name: string;
+  description: string;
+
+  totalVideos: number;
+  totalDuration: number;
+
+  videos: {
+    title: string;
+    description: string;
+    thumbnail: string;
+  }[];
 }

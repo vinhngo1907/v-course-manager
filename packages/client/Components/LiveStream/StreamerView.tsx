@@ -1,294 +1,205 @@
-// import React, { useEffect } from "react";
-// import MainScreen from "@/Components/MainScreen";
-// import { db, ServerValue } from "@/streamingServer/firebase";
-// import { useDispatch } from "react-redux";
-// import {
-//     setMainStream,
-//     setUser,
-//     addParticipant,
-//     setStreamer,
-//     removeParticipant,
-//     updateParticipantField,
-//     Participant,
-// } from "@/redux/features/liveVideoStreamingSlice";
-// import { AppDispatch, useAppSelector } from "@/redux/store";
-
-// const StreamerView: React.FC = () => {
-//     const dispatch = useDispatch<AppDispatch>();
-//     const stream = useAppSelector((state) => state.liveVideoStreaming.mainStream);
-//     const user = useAppSelector((state) => state.liveVideoStreaming.currentUser);
-
-//     const userData =
-//         typeof window !== "undefined"
-//             ? JSON.parse(localStorage.getItem("user") || "{}")
-//             : {};
-//     const userName = userData?.username || "Streamer";
-
-//     useEffect(() => {
-//         if (typeof window === "undefined") return;
-
-//         const urlparams = new URLSearchParams(window.location.search);
-//         const roomId = urlparams.get("id");
-
-//         let firepadRef = db.ref();
-//         if (roomId) {
-//             firepadRef = firepadRef.child(roomId);
-//         } else {
-//             firepadRef = firepadRef.push();
-//             window.history.replaceState(null, "Meet", "?id=" + firepadRef.key);
-//         }
-
-//         window.onbeforeunload = (e: any) => {
-//             e.preventDefault();
-//             e.returnValue = "";
-//             firepadRef.remove().then(() => console.log("All data removed."));
-//         };
-
-//         const connectedRef = db.ref(".info/connected");
-//         const participantRef = firepadRef.child("participants");
-
-//         const getUserStream = async (): Promise<MediaStream> => {
-//             return await navigator.mediaDevices.getUserMedia({
-//                 audio: true,
-//                 video: true,
-//             });
-//         };
-
-//         const setup = async () => {
-//             const localStream = await getUserStream();
-//             dispatch(setMainStream(localStream));
-
-//             connectedRef.on("value", (snap: any) => {
-//                 if (snap.val()) {
-//                     const defaultPreference = {
-//                         audio: true,
-//                         video: true,
-//                         screen: false,
-//                     };
-//                     const userStatusRef = participantRef.push({
-//                         userName,
-//                         timestamp: ServerValue.TIMESTAMP,
-//                         preferences: defaultPreference,
-//                     });
-
-//                     dispatch(
-//                         setUser({
-//                             [userStatusRef.key as string]: { name: userName, ...defaultPreference },
-//                         })
-//                     );
-//                     userStatusRef.onDisconnect().remove();
-//                 }
-//             });
-
-//             // Listen participant logic
-//             participantRef.on("child_added", (snap: any) => {
-//                 const { userName: name, preferences = {} } = snap.val();
-//                 participantRef
-//                     .orderByChild("timestamp")
-//                     .limitToFirst(1)
-//                     .once("value")
-//                     .then((snapshot: any) => {
-//                         const firstElement = snapshot.val();
-//                         dispatch(setStreamer(firstElement));
-//                     });
-
-//                 const preferenceRef = participantRef
-//                     .child(snap.key as string)
-//                     .child("preferences");
-
-//                 preferenceRef.on("child_changed", (prefSnap: any) => {
-//                     dispatch(
-//                         updateParticipantField({
-//                             userId: snap.key as string,
-//                             field: prefSnap.key as keyof Participant,
-//                             value: prefSnap.val(),
-//                         })
-//                     );
-//                 });
-
-//                 dispatch(
-//                     addParticipant({ [snap.key as string]: { name, ...preferences } })
-//                 );
-//             });
-
-//             participantRef.on("child_removed", (snap: any) => {
-//                 dispatch(removeParticipant(snap.key as string));
-//             });
-//         };
-
-//         setup();
-//     }, []);
-
-//     return <MainScreen isStreamer />;
-// };
-
-// export default StreamerView;
-
-import React, { useEffect } from "react";
-import MainScreen from "@/Components/MainScreen";
-import { db, ServerValue } from "@/streamingServer/firebase";
-import { useDispatch } from "react-redux";
+import { useContext, useEffect, useState } from "react";
+import { connectToRoom } from "@/libs/livekit";
 import {
-    setMainStream,
-    setUser,
-    addParticipant,
-    setStreamer,
-    removeParticipant,
-    updateParticipantField,
-    Participant,
-    setStreamId,
+    addOrUpdateParticipant,
+    removeParticipant
 } from "@/redux/features/liveVideoStreamingSlice";
-import { AppDispatch, useAppSelector } from "@/redux/store";
-import { createVideo, getAllVideos } from "@/services/video";
-import { Video } from "@/types";
+import { useDispatch } from "react-redux";
 
-const StreamerView: React.FC = () => {
-    const dispatch = useDispatch<AppDispatch>();
-    const stream = useAppSelector((state) => state.liveVideoStreaming.mainStream);
-    const user = useAppSelector((state) => state.liveVideoStreaming.currentUser);
+import {
+    RoomEvent,
+    createLocalVideoTrack,
+    createLocalAudioTrack,
+    LocalVideoTrack,
+    Participant,
+    Room
+} from "livekit-client";
+import MainScreen from "../MainScreen";
+import { AuthContext } from "@/context/AuthContext";
+import { axios } from "@/utils/axios";
+import { AuthorizationHeader } from "@/services/request.extras";
 
-    const userData =
-        typeof window !== "undefined"
-            ? JSON.parse(localStorage.getItem("user") || "{}")
-            : {};
-    const userName = userData?.username || "Streamer";
+export default function StreamerView() {
+    const dispatch = useDispatch();
+    const [mode, setMode] = useState<"webcam" | "file" | null>(null);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const { authState: { user } } = useContext(AuthContext)!;
+    const [roomName, setRoomName] = useState<string | null>(null);
+
+    // useEffect(() => {
+    //     if (!mode) return;
+    //     let room: Room;
+
+    //     const startStreaming = async () => {
+    //         const res = await axios.post('/stream/start-live', {}, {
+    //             withCredentials: true,
+    //             headers: AuthorizationHeader(),
+    //         });
+
+    //         const { roomName: newRoomName, token, serverUrl } = await res.data;
+    //         setRoomName(newRoomName);
+    //         room = await connectToRoom(serverUrl, token);
+
+    //         // --- PUBLISH TRACKS ---
+    //         if (mode === "webcam") {
+    //             const cam = await createLocalVideoTrack();
+    //             const mic = await createLocalAudioTrack();
+
+    //             await room.localParticipant.publishTrack(cam);
+    //             await room.localParticipant.publishTrack(mic);
+    //         }
+
+    //         if (mode === "file" && videoFile) {
+    //             const videoElement = document.createElement("video");
+    //             videoElement.src = URL.createObjectURL(videoFile);
+    //             videoElement.muted = true;
+    //             // ensure the element starts playing so captureStream works reliably
+    //             try {
+    //                 await videoElement.play();
+    //             } catch (err) {
+    //                 console.warn("videoElement.play() failed:", err);
+    //             }
+
+    //             // create a MediaStream from the video element and build a LocalVideoTrack
+    //             const captureStream = (videoElement as HTMLVideoElement & {
+    //                 captureStream?: () => MediaStream;
+    //             }).captureStream?.();
+
+    //             if (!captureStream) {
+    //                 console.error("captureStream() is not supported in this browser");
+    //             } else {
+    //                 const mediaTrack = captureStream.getVideoTracks()[0];
+    //                 if (!mediaTrack) {
+    //                     console.error("No video track available from captured stream");
+    //                 } else {
+    //                     const fileTrack = new LocalVideoTrack(mediaTrack as MediaStreamTrack);
+    //                     await room.localParticipant.publishTrack(fileTrack);
+    //                 }
+    //             }
+    //         }
+
+    //         // --- UPDATE STREAMER TO REDUX ---
+    //         dispatch(
+    //             addOrUpdateParticipant({
+    //                 identity: room.localParticipant.identity,
+    //                 name: "Streamer",
+    //                 audioEnabled: true,
+    //                 videoEnabled: true,
+    //                 screenEnabled: false
+    //             })
+    //         );
+
+    //         // --- LISTEN FOR JOINERS ---
+    //         room.on(RoomEvent.ParticipantConnected, (p: Participant) => {
+    //             dispatch(
+    //                 addOrUpdateParticipant({
+    //                     identity: p.identity,
+    //                     name: p.identity,
+    //                     audioEnabled: p.isMicrophoneEnabled,
+    //                     videoEnabled: p.isCameraEnabled,
+    //                     screenEnabled: false
+    //                 })
+    //             );
+    //         });
+
+    //         // --- LISTEN LEAVERS ---
+    //         room.on(RoomEvent.ParticipantDisconnected, (p: Participant) => {
+    //             dispatch(removeParticipant(p.identity));
+    //         });
+    //     }
+
+    //     startStreaming();
+
+    //     return () => {
+    //         room?.disconnect();
+    //     };
+    // }, [mode, videoFile]);
 
     useEffect(() => {
-        if (typeof window === "undefined") return;
+        if (!mode) return;
+        let room: Room;
 
-        const urlparams = new URLSearchParams(window.location.search);
-        const roomId = urlparams.get("id");
-
-        let firepadRef = db.ref();
-        if (roomId) {
-            firepadRef = firepadRef.child(roomId);
-        } else {
-            firepadRef = firepadRef.push();
-            window.history.replaceState(null, "Meet", "?id=" + firepadRef.key);
-        }
-
-        window.onbeforeunload = (e: any) => {
-            e.preventDefault();
-            e.returnValue = "";
-            firepadRef.remove().then(() => console.log("All data removed."));
-        };
-
-        const connectedRef = db.ref(".info/connected");
-        const participantRef = firepadRef.child("participants");
-
-        const getUserStream = async (): Promise<MediaStream> => {
-            return await navigator.mediaDevices.getUserMedia({
-                audio: true,
-                video: true,
-            });
-        };
-
-        const setup = async () => {
-            const localStream = await getUserStream();
-            dispatch(setMainStream(localStream));
-
-            connectedRef.on("value", (snap: any) => {
-                if (snap.val()) {
-                    const defaultPreference = {
-                        audio: true,
-                        video: true,
-                        screen: false,
-                    };
-                    const userStatusRef = participantRef.push({
-                        userName,
-                        timestamp: ServerValue.TIMESTAMP,
-                        preferences: defaultPreference,
-                    });
-
-                    dispatch(
-                        setUser({
-                            [userStatusRef.key as string]: { name: userName, ...defaultPreference },
-                        })
-                    );
-                    userStatusRef.onDisconnect().remove();
-                }
+        const startStreaming = async () => {
+            const res = await axios.post("/stream/start-live", {}, {
+                headers: AuthorizationHeader(),
             });
 
-            // Listen participant logic
-            participantRef.on("child_added", (snap: any) => {
-                const { userName: name, preferences = {} } = snap.val();
-                participantRef
-                    .orderByChild("timestamp")
-                    .limitToFirst(1)
-                    .once("value")
-                    .then((snapshot: any) => {
-                        const firstElement = snapshot.val();
-                        dispatch(setStreamer(firstElement));
-                    });
+            const { roomName, token, serverUrl } = res.data;
+            room = await connectToRoom(serverUrl, token);
 
-                const preferenceRef = participantRef
-                    .child(snap.key as string)
-                    .child("preferences");
+            if (mode === "webcam") {
+                const cam = await createLocalVideoTrack();
+                const mic = await createLocalAudioTrack();
+                await room.localParticipant.publishTrack(cam);
+                await room.localParticipant.publishTrack(mic);
+            }
 
-                preferenceRef.on("child_changed", (prefSnap: any) => {
-                    dispatch(
-                        updateParticipantField({
-                            userId: snap.key as string,
-                            field: prefSnap.key as keyof Participant,
-                            value: prefSnap.val(),
-                        })
-                    );
-                });
+            dispatch(
+                addOrUpdateParticipant({
+                    identity: room.localParticipant.identity,
+                    name: "Streamer",
+                    screenEnabled: true,
+                    isLocal: true,
+                    videoEnabled: true,
+                    audioEnabled: true,
+                })
+            );
 
+            room.on(RoomEvent.ParticipantConnected, (p: Participant) => {
                 dispatch(
-                    addParticipant({ [snap.key as string]: { name, ...preferences } })
+                    addOrUpdateParticipant({
+                        identity: p.identity,
+                        name: p.identity,
+                        screenEnabled: true,
+                        audioEnabled: p.isMicrophoneEnabled,
+                        videoEnabled: p.isCameraEnabled,
+                    })
                 );
             });
 
-            participantRef.on("child_removed", (snap: any) => {
-                dispatch(removeParticipant(snap.key as string));
+            room.on(RoomEvent.ParticipantDisconnected, (p) => {
+                dispatch(removeParticipant(p.identity));
             });
         };
 
-        setup();
-    }, []);
+        startStreaming();
 
-    useEffect(() => {
-        const asyncFunc = async () => {
-            // Get all videos and check if the live doesn't exist
-            let liveExist = false;
-            try {
-                const videos = await getAllVideos();
-                console.log(videos?.data?.data);
-                videos?.data?.data?.forEach((video: Video) => {
-                    if (video.title === `Live streaming from ${userName}`) liveExist = true;
-                });
-
-                // Creating the liveStream as a video in DB to show it to users
-                console.log(true);
-                if (!liveExist && user) {
-                    const res = await createVideo({
-                        title: `Live streaming from ${userName}`,
-                        userId: `${user.id}`,
-                        likes: 0,
-                        dislikes: 0,
-                        viewsCount: 0,
-                        videoUrl: window.location.href, // ✅ dùng 'videoUrl' instead of 'videoURL'
-                        status: "public",               // ✅ dùng 'status' instead of 'videoStatus'
-                        thumbnail: "https://media.gettyimages.com/id/1306922705/vector/live-stream-banner.jpg?s=612x612&w=gi&k=20&c=5lgXBYQJSgo4QSRGeODWkpFUp915Nz7p9pKuKjrZ9Yw=",
-                        duration: 0,                    
-                        // publicPlaybackId: true        
-                    });
-
-                    if (res.status === 201) {
-                        console.log("LIVE STREAM CREATED SUCCESSFULLY 🟩");
-                        dispatch(setStreamId(res?.data?.id));
-                    }
-                }
-
-            } catch (error) {
-                console.error("Error fetching videos or creating live stream:", error);
-            }
+        return () => {
+            room?.disconnect();
         };
-        asyncFunc();
-    }, [userName, dispatch]);
+    }, [mode]);
 
-    return <MainScreen isStreamer />;
-};
+    return (
+        <div className="p-4">
+            {!mode && (
+                <div className="space-y-3">
+                    <button
+                        onClick={() => setMode("webcam")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded"
+                    >
+                        🎥 Livestream Webcam
+                    </button>
 
-export default StreamerView;
+                    <button
+                        onClick={() => setMode("file")}
+                        className="px-4 py-2 bg-green-600 text-white rounded"
+                    >
+                        🎬 Livestream Video File
+                    </button>
+                </div>
+            )}
+
+            {mode === "file" && !videoFile && (
+                <div className="mt-4">
+                    <input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                    />
+                </div>
+            )}
+
+            {mode && user && <MainScreen isStreamer roomName={roomName} />}
+        </div>
+    );
+}

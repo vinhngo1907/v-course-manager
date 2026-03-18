@@ -79,4 +79,12 @@ export class AppConfigService {
       folder: this.getValue(configKeys.MINIO_FOLDER),
     };
   }
+
+  public getLivekitConfig() {
+    return {
+      host: this.getValue(configKeys.LIVEKIT_URL),
+      apiKey: this.getValue(configKeys.LIVEKIT_API_KEY),
+      apiSecret: this.getValue(configKeys.LIVEKIT_API_SECRET),
+    };
+  }
 }

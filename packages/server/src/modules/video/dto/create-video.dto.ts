@@ -39,4 +39,8 @@ export class VideoCreationDTO {
   @ApiProperty({ example: 60.5 })
   @IsNumber()
   readonly duration: number;
+
+  @ApiProperty({ example: 1 })
+  @IsNumber()
+  readonly position: number;
 }

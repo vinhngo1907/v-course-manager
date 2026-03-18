@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { setIsStreamer } from "@/redux/features/liveVideoStreamingSlice";
+import { setIsStreamer, setUserRole } from "@/redux/features/liveVideoStreamingSlice";
 import { useRouter } from "next/router";
 
 const useGoLive = () => {
@@ -9,6 +9,8 @@ const useGoLive = () => {
 
     const handleGoLive = () => {
         dispatch(setIsStreamer(true));
+        dispatch(setUserRole("streamer"));
+        
         router.push("/livestream");
     };
 

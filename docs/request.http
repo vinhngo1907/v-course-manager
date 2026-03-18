@@ -27,7 +27,7 @@ POST {{serverUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "vinhtrungngo@yahoo.com",
+   "email": "vinhngotrung1999@gmail.com",
    "username":"vinnyngo",
    "fullName": "Vinny Ngo",
    "password": "123456"
@@ -38,11 +38,18 @@ POST {{serverUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "vinhngotrung1999@gmail.com",
-   "username":"kookuu",
+   "email": "vinhtrungngo@yahoo.com",
+   "username":"kuukoo",
    "fullName": "Imma Kuu Koo",
    "password": "123456"
 }
+
+# {
+#    "email": "vinhtrungngo@yahoo.com",
+#    "username":"kookuu",
+#    "fullName": "Imma Kuu Koo",
+#    "password": "123456"
+# }
 
 ###
 GET {{serverUrl}}/auth/logout
@@ -53,15 +60,20 @@ POST {{serverUrl}}/auth/login
 Content-Type: application/json
 
 {
-   "email": "vinhngotrung1999@gmail.com",
-   "username":"kookuu",
-   "fullName": "Imma Kuu Koo",
-   "password": "123456"
+    "username": "admin",
+    "password": "test"
 }
 
 # {
-#    "email": "vinhtrungngo1@yahoo.com",
-#    "username":"vinhngo1",
+#    "email": "vinhngotrung1999@gmail.com",
+#    "username":"kookuu",
+#    "fullName": "Imma Kuu Koo",
+#    "password": "123456"
+# }
+
+# {
+#    "email": "vinhngotrung1999@gmail.com",
+#    "username":"vinnyngo",
 #    "password": "123456"
 # }
 

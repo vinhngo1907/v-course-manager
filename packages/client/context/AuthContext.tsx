@@ -25,10 +25,10 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
             const res = await axios.post(`${apiUrl}/auth/login`, userForm);
             console.log("Login User",{res})
             if (res.data) {
-                localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.accessToken);
+                localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.data.accessToken);
             }
             await loadUser();
-            return res.data;
+            return res.data.data;
         } catch (error) {
             dispatch(setAuth({
                 isAuthenticated: false,

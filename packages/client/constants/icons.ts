@@ -24,3 +24,4 @@ export const LOGOUT = '/icons/logout.svg';
 export const FACEBOOK = '/icons/facebook.svg';
 export const GOOGLE = '/icons/google.svg';
 export const ADMIN = '/icons/admin.svg';
+export const BROWSE = '/icons/browse.svg';

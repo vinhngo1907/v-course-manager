@@ -4,19 +4,21 @@ import { FaUser, FaSignOutAlt, FaBroadcastTower } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-import { setIsStreamer } from "@/redux/features/liveVideoStreamingSlice";
+import { setIsStreamer, setUserRole } from "@/redux/features/liveVideoStreamingSlice";
+import axios from "axios";
 
 const ProfileDropdown = ({ toggleModal }: { toggleModal: () => void }) => {
     const router = useRouter();
     const dispatch = useDispatch();
 
     const handleGoLive = async () => {
-        // Giả sử gọi API tạo room mới:
-        const res = await fetch("/api/start-live", { method: "POST" });
-        const data = await res.json();
+        // const res = await fetch("/api/start-live", { method: "POST" });
+        const res = await axios.post('/stream/start-live');
+        const data = await res.data;
 
         dispatch(setIsStreamer(true));
-        router.push(`/livestream?id=${data.roomId}`);
+        dispatch(setUserRole("streamer"));
+        router.push(`/livestream?id=${data.roomName}`);
     };
 
     return (

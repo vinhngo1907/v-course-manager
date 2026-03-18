@@ -88,8 +88,6 @@ const MeetingFooter = (props: MeetingFooterProps) => {
                             <FaVideoSlash size={22} />
                         )}
                     </div>
-                    import styles from './index.module.css';
-
                     <div
                         className={`${styles['meeting-icons']} ${streamState.screen ? styles.disabled : ''}`}
                         title="Share Screen"

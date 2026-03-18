@@ -23,6 +23,7 @@ export type Lesson = {
     description: string;
     video: Video;
     courseId: string
+    published: boolean
 }
 
 export type Video = {
@@ -41,7 +42,7 @@ export type Video = {
 }
 
 export type CourseViewerProps = {
-    course: Course, // Course đã bao lessons với Lesson đã bao video rồi!
+    course: Course,
     lessonProgress: string[],
     setLessonProgress: (ids: string[]) => void
 }

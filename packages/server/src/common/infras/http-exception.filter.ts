@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
     const error =
       exception instanceof HttpException
-        ? exception.getResponse()
+        ? exception?.getResponse()
         : filterExceptionByStatus({ status, message: exception['message'] });
 
     response.status(status).json({

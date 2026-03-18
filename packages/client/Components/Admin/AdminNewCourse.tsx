@@ -47,10 +47,10 @@ export default function AdminNewCoursePage() {
 
     const handler = async (newCourse: Inputs) => {
         const payload = { ...newCourse, authorId: user?.id }
-        console.log({ payload })
+        // console.log({ payload })
         const { data } = await axios.post('/courses', payload, {
             withCredentials: true,
-            headers: AuthorizationHeader(), // nếu bạn xài Bearer
+            headers: AuthorizationHeader(),
         });
         return data
     }
@@ -72,9 +72,14 @@ export default function AdminNewCoursePage() {
     }
 
     return (
-        <div>
-            {/* <Heading>New course</Heading> */}
-            <CourseForm onSubmit={onSubmit} isLoading={mutation.isPending} />
+        <div className="max-w-5xl mx-auto flex md:items-center h-full p-6">
+            <div>
+                <p className="text-lg text-slate-600 text-white">
+                    What would you like to name your course? Don&apos;t worry,
+                    you can change this later
+                </p>
+                <CourseForm onSubmit={onSubmit} isLoading={mutation.isPending} />
+            </div>
         </div>
     )
 }

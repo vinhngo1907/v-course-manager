@@ -1,30 +1,38 @@
 import {
   Injectable,
   InternalServerErrorException,
-  Logger,
+  // Logger,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
-import { UserBadRequestException } from './exception';
-import { Role, User, Account } from '@prisma/client';
+import { UserConflictException } from './exception';
+import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  private readonly logger: Logger = new Logger(UsersService.name);
+  // private readonly logger: Logger = new Logger(UsersService.name);
   constructor(private readonly databaseService: DatabaseService) {}
   async checkEmailExisted(email: string): Promise<void> {
-    try {
-      const existedEmail = await this.databaseService.user.findUnique({
-        where: {
-          email: email,
-        },
-      });
-      if (existedEmail) {
-        throw new UserBadRequestException('Email is existed!');
-      }
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException(error.message);
+    const existedEmail = await this.databaseService.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    if (existedEmail) {
+      throw new UserConflictException('Email is existed!', 'email');
     }
+    // try {
+    //   const existedEmail = await this.databaseService.user.findUnique({
+    //     where: {
+    //       email: email,
+    //     },
+    //   });
+    //   if (existedEmail) {
+    //     throw new UserConflictException('Email is existed!', "email");
+    //   }
+    // } catch (error) {
+    //   this.logger.error(error);
+    //   throw new InternalServerErrorException(error.message);
+    // }
   }
 
   async createUserTransaction(
@@ -41,7 +49,7 @@ export class UsersService {
         password: hashedPassword,
       },
     });
-    // console.log({ manager });
+
     // this.logger.verbose(newAccount);
     // await manager.save(newAccount);
     const newUser = await this.databaseService.user.create({

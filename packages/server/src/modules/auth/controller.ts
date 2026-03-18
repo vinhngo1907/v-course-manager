@@ -2,23 +2,39 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
+  // HttpCode,
   Injectable,
   Post,
   Req,
   Res,
-  UnauthorizedException,
+  // UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Crud, CrudController } from '@nestjsx/crud';
+import {
+  // ApiBearerAuth,
+  ApiBody,
+  // ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+// import { Crud, CrudController } from '@nestjsx/crud';
 import { AuthService } from './service';
 import RequestWithAccount from './interfaces/RequestWithAccount';
 import { Response } from 'express';
-import { LoginPayload, RegisterPayload } from './types';
+import { RegisterPayload } from './types';
 import { Public } from './decorator';
 import { LocalAuthGuard } from './guards/local';
 import { JwtAuthGuard } from './guards/jwt';
+// import { createResponseSchema } from 'src/common/dtos/api-response.dto';
+import {
+  LoginResponseDto,
+  LogoutResponseDto,
+  RegisterResponseDto,
+} from './dto/auth-response';
+import {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from 'src/common/decorator/swagger-response.decorator';
 // import { JwtStrategy } from "./strategies/jwt";
 
 @Injectable()
@@ -30,39 +46,28 @@ import { JwtAuthGuard } from './guards/jwt';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(200)
+  // @HttpCode(200)
+  @ApiSuccessResponse(LoginResponseDto)
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: RequestWithAccount, @Res() res: Response) {
-    const { cookie, user: paredUser } = await this.authService.login(req.user);
+    const { cookie, user } = await this.authService.login(req.user);
     res.setHeader('Set-cookie', cookie);
     // Separate cookie to individual parts
     const parts = cookie.split(';').map((p) => p.trim());
     const authCookie = parts.find((p) => p.startsWith('Authentication='));
     const token = authCookie?.split('=')[1];
-    return res.send({ ...paredUser, accessToken: token, role: 'admin' });
 
-    // Extract different properties
-    // const maxAgeStr = parts.find(p => p.startsWith("Max-Age="));
-    // const sameSiteStr = parts.find(p => p.toLowerCase().startsWith("samesite"));
-    // const secure = parts.includes("Secure");
-    // const httpOnly = parts.includes("HttpOnly");
-    // const pathStr = parts.find(p => p.startsWith("Path="));
-
-    // const maxAge = maxAgeStr ? parseInt(maxAgeStr.split("=")[1]) * 1000 : undefined; // ms
-    // console.log({maxAge})
-    // const path = pathStr?.split("=")[1] || "/auth/profile";
-    // const sameSite = sameSiteStr?.split("=")[1] || "Lax";
-
-    // res.cookie("Authentication", token, {
-    //     httpOnly,
-    //     maxAge,
-    //     sameSite: "lax",
-    //     path,
-    // });
-
-    // return res.send({ ...paredUser, accessToken: token, role: "admin" });
+    return res.send({
+      success: true,
+      message: 'Login in successfully',
+      data: {
+        user,
+        accessToken: token,
+        role: 'admin',
+      },
+    });
   }
 
   @Get('isLoggedIn')
@@ -70,7 +75,14 @@ export class AuthController {
     return res.send(true);
   }
 
-  @HttpCode(200)
+  @ApiSuccessResponse(LogoutResponseDto, {
+    status: 201,
+    description: 'Logout successfully',
+  })
+  @ApiErrorResponse({
+    status: 500,
+    description: 'Internal server error during logout',
+  })
   @Get('logout')
   logout(@Res() res: Response) {
     const emptyCookie = this.authService.getEmptyCookie();
@@ -87,20 +99,46 @@ export class AuthController {
     return res.send({ success: true, message: 'Logout in successfully!!!' });
   }
 
-  @HttpCode(200)
+  // @HttpCode(200)
+  @Public()
   @ApiBody({
     type: RegisterPayload,
   })
-  @Public()
+  @ApiOperation({
+    summary: 'Complete user register',
+    description:
+      'Completes the registration process for the authenticated user by saving their profile information.',
+  })
+  @ApiSuccessResponse(RegisterResponseDto, {
+    status: 201,
+    description: 'Onboarding completed successfully',
+  })
+  @ApiErrorResponse({
+    status: 400,
+    description: 'Invalid request data - validation errors',
+  })
+  @ApiErrorResponse({
+    status: 409,
+    description: 'Conflict - account already registered',
+  })
+  @ApiErrorResponse({
+    status: 500,
+    description: 'Internal error',
+  })
   @Post('register')
   async register(
     @Body() registerPayload: RegisterPayload,
     @Res() res: Response,
   ): Promise<any> {
-    // console.log(registerPayload)
     const { cookie, user } = await this.authService.register(registerPayload);
     res.setHeader('Set-header', cookie);
-    return res.send({ ...user, role: 'admin' });
+
+    return res.send({
+      success: true,
+      message: 'Register completed successfully',
+      ...user,
+      role: 'admin',
+    });
   }
 
   @UseGuards(JwtAuthGuard)

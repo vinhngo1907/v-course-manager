@@ -4,12 +4,15 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { AuthService } from '../auth/service';
+// import { AuthService } from '../auth/service';
 import { DatabaseService } from '../database/service';
 import { AccountDTO, IAccount } from './dto/account';
 import { mapAccountToAccountDTO } from './mapper';
 import { AccountUpdationDTO } from './dto/account-updation.dto';
-import { AccountBadRequestException } from './exception';
+import {
+  // AccountBadRequestException,
+  AccountConflictException,
+} from './exception';
 
 @Injectable()
 export class AccountsService {
@@ -97,21 +100,17 @@ export class AccountsService {
   }
 
   async checkUsernameExisted(username: string): Promise<void> {
-    try {
-      const existedAccount = await this.databaseService.account.findUnique({
-        where: {
-          username: username,
-        },
-      });
+    const existedAccount = await this.databaseService.account.findUnique({
+      where: {
+        username: username,
+      },
+    });
 
-      if (existedAccount) {
-        throw new AccountBadRequestException('Username is existed');
-      }
-    } catch (error) {
-      this.logger.error(error);
-      throw new AccountBadRequestException('Username is existed');
+    if (existedAccount) {
+      throw new AccountConflictException('Username is existed');
     }
   }
+
   async remove(accountId: string): Promise<boolean> {
     const result = await this.databaseService.account.delete({
       where: {

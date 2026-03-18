@@ -1,4 +1,5 @@
 import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
+import { CustomConflictException } from 'src/common/exceptions/CustomConflictException';
 import { CustomForbiddenException } from 'src/common/exceptions/CustomForbiddenException';
 import { CustomNotFoundException } from 'src/common/exceptions/CustomNotFoundException';
 import { CustomUnknownException } from 'src/common/exceptions/CustomUnknownException';
@@ -10,6 +11,12 @@ export class AccountNotFoundException extends CustomNotFoundException {
 }
 
 export class AccountBadRequestException extends CustomBadRequestException {
+  constructor(action: string) {
+    super(action, 'Account');
+  }
+}
+
+export class AccountConflictException extends CustomConflictException {
   constructor(action: string) {
     super(action, 'Account');
   }

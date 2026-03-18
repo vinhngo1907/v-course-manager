@@ -9,18 +9,17 @@ import {
   UseGuards,
   Res,
   Req,
-  BadRequestException,
   Injectable,
   Put,
   Patch,
   Query,
 } from '@nestjs/common';
 import { CourseService } from './service';
-import { Request, Response } from 'express';
-import { CourseDTO, RegisterCourseDTO } from './dto/course';
+import { Response } from 'express';
+import { RegisterCourseDTO } from './dto/course';
 import { CourseCreationDTO } from './dto/create-course.dto';
 import {
-  ApiBearerAuth,
+  // ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiResponse,
@@ -35,12 +34,14 @@ import {
 import { CourseEntity } from './model';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
-import { JwtStrategy } from '@modules/auth/strategies/jwt';
+// import { JwtStrategy } from '@modules/auth/strategies/jwt';
 import { CourseUpdateDTO } from './dto/update-course';
 import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { ApiPaginatedResponse } from 'src/common/decorator/api-paginated-response.decorator';
 import { PaginatedResult } from 'src/common/interfaces/response.interface';
+import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
+import { ReorderChapterDto } from '@modules/video/dto/video';
 
 @Injectable()
 @ApiTags('Courses')
@@ -136,6 +137,29 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post(':id/chapters')
+  @ApiOperation({ summary: 'Create new lesson' })
+  @ApiResponse({
+    status: 201,
+    description: 'Lesson is created in successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Data input is not correct!' })
+  async createLesson(
+    @Param('id') courseId: string,
+    @Req() req: RequestWithAccount,
+    @Body() dto: LessonCreationDTO,
+  ) {
+    const account = req.user;
+    console.log({ name: dto.name, courseId, accountId: account.id });
+    // return true;
+    return await this.courseService.addLesson({
+      ...dto,
+      courseId,
+      accountId: account.id,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @ApiOperation({ summary: 'Update a course' })
   @ApiResponse({
@@ -200,5 +224,36 @@ export class CourseController {
       userId: account.id,
     });
     return res.send(course);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/publish')
+  async updatePublishStatus(
+    @Param('id') courseId: string,
+    @Req() req: RequestWithAccount,
+    @Body('published') published: boolean,
+  ) {
+    const account = req.user;
+    return await this.courseService.updatePublishStatus({
+      courseId,
+      accountId: account.id,
+      published,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':courseId/chapters/reorder')
+  async updateReorder(
+    @Param('courseId') courseId: string,
+    @Req() req: RequestWithAccount,
+    @Body() body: ReorderChapterDto,
+  ) {
+    const accountId = req.user.id;
+    console.log('>>>>', body.list);
+    return await this.courseService.updateChapterReorder(
+      courseId,
+      accountId,
+      body.list,
+    );
   }
 }

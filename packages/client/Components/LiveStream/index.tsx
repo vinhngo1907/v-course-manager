@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "@/redux/store";
 import StreamerView from "@/Components/LiveStream/StreamerView";
-import ParticipantView from "@/Components/LiveStream/ParticipantView";
+import ParticipantView from "./ParticipantView";
 
 const LiveStream: React.FC = () => {
     const isStreamer = useAppSelector(

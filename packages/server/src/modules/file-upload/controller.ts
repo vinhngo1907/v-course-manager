@@ -10,7 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { FileUpload } from './file-upload.interface';
+// import { FileUpload } from './file-upload.interface';
 import { FileUploadByS3 } from './strategies/s3';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDTO } from './dto/file-upload.dto';

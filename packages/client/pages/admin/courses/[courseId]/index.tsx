@@ -43,7 +43,7 @@ export default function AdminEditCourse() {
 
     if (authLoading) {
         return (
-            <Layout title="Edit a course" isWide>
+            <Layout title="Course setup" isWide>
                 <div className="flex items-center justify-center">
                     <div className="flex items-center space-x-2">
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent border-[#F4A300]"></div>
@@ -56,7 +56,7 @@ export default function AdminEditCourse() {
 
     if (!isAuthenticated) {
         return (
-            <Layout title="Edit a course" isWide>
+            <Layout title="Course setup" isWide>
                 <div className="flex items-center justify-center">
                     <div className="text-center">
                         <h2 className="text-3xl font-semibold text-[#F4A300]">Access Denied</h2>
@@ -75,7 +75,7 @@ export default function AdminEditCourse() {
 
     if (!course) {
         return (
-            <Layout title="Edit a course" isWide>
+            <Layout title="Course setup" isWide>
                 <div className="flex h-screen items-center justify-center">
                     <p className="text-gray-500">Course not found or you do not have permission.</p>
                 </div>
@@ -84,7 +84,7 @@ export default function AdminEditCourse() {
     }
 
     return (
-        <Layout title="Edit a course" isWide>
+        <Layout title="Course setup" isWide>
             <AdminCourseEditPage course={course} />
         </Layout>
     );

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Crud, CrudController } from '@nestjsx/crud';
+// import { Crud, CrudController } from '@nestjsx/crud';
 import { UsersService } from './service';
 
 @ApiTags('Users')

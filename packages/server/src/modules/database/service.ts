@@ -5,9 +5,9 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import * as fs from 'fs';
-import * as path from 'path';
-import { camelCase, flattenDeep, snakeCase } from 'lodash';
+// import * as fs from 'fs';
+// import * as path from 'path';
+import { camelCase } from 'lodash';
 import { middlewares } from './middleware';
 
 @Injectable()

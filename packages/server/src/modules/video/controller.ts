@@ -14,10 +14,20 @@ import { LessonDTO, VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
+import { ApiOperation } from '@nestjs/swagger';
+import {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from 'src/common/decorator/swagger-response.decorator';
+import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
+import { CourseService } from '@modules/course/service';
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private readonly courseService: CourseService,
+  ) {}
 
   @Get('/:id')
   async getVideosByCourse(@Param('id') id: string): Promise<VideoDTO[]> {
@@ -39,6 +49,31 @@ export class VideoController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @ApiOperation({
+    summary: 'Complete creating video',
+    description:
+      'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
+  })
+  @ApiSuccessResponse(CourseResponseDto, {
+    status: 201,
+    description: 'Creating video completed successfully',
+  })
+  @ApiErrorResponse({
+    status: 400,
+    description: 'Invalid request data - validation errors or invalid',
+  })
+  @ApiErrorResponse({
+    status: 401,
+    description: 'Unauthorized - valid authentication token required',
+  })
+  @ApiErrorResponse({
+    status: 409,
+    description: 'Conflict - creating already completed',
+  })
+  @ApiErrorResponse({
+    status: 500,
+    description: 'Internal server error during creating video',
+  })
   async create(
     @Body() createVideoDTO: VideoCreationDTO,
     @Req() req: RequestWithAccount,
@@ -60,6 +95,16 @@ export class VideoController {
   ) {
     const userId = req.user.id;
     return await this.videoService.createProgress(lessonId, userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/chapter/:lessonId/')
+  async getChapter(
+    @Param('lessonId') lessonId: string,
+    @Req() req: RequestWithAccount,
+  ) {
+    const userId = req.user.id;
+    return await this.videoService.getChapterByLesson(lessonId, userId);
   }
 
   @UseGuards(JwtAuthGuard)

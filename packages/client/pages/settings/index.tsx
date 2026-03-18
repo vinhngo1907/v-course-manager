@@ -6,24 +6,41 @@ import { AuthContext } from "@/context/AuthContext";
 import { ModalContext } from "@/context/ModalContext";
 
 const SettingsPage: React.FC = () => {
-    const { authState: { isAuthenticated, authLoading } } = useContext(AuthContext)!;
-    const { toggleModal } = useContext(ModalContext)!;
+    const {
+        authState: { isAuthenticated, authLoading },
+    } = useContext(AuthContext)!;
+
+    const { modalType, toggleModal } = useContext(ModalContext)!;
+
     useEffect(() => {
-        if (!authLoading && !isAuthenticated) {
+        if (authLoading) return;
+
+        if (!isAuthenticated && modalType !== "login") {
             toggleModal("login");
         }
-    }, [isAuthenticated, authLoading, toggleModal]);
+
+        if (isAuthenticated && modalType === "login") {
+            toggleModal("none");
+        }
+    }, [isAuthenticated, authLoading, modalType, toggleModal]);
+
+    if (authLoading) {
+        return (
+            <Layout title="Settings" isWide>
+                <p className="text-center text-gray-500">Loading...</p>
+            </Layout>
+        );
+    }
 
     if (!isAuthenticated) {
         return (
             <Layout title="Settings" isWide>
                 <p className="text-center text-gray-600">
-                   Please login to access Settings.
+                    Please login to access Settings.
                 </p>
             </Layout>
         );
     }
-
 
     return (
         <Layout title="Settings" isWide>

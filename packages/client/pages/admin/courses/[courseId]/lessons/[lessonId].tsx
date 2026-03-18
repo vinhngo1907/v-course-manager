@@ -4,24 +4,28 @@ import { AuthContext } from "@/context/AuthContext";
 import { ModalContext } from "@/context/ModalContext";
 import { axios } from "@/utils/axios";
 import type { Lesson, Video } from "@/types";
-import LessonForm, { Inputs } from "@/Components/Course/CourseForm/LessonForm";
+// import LessonForm from "@/Components/Lesson";
+import LessonForm, { Inputs } from "@/Components/Lesson";
 // import MuxPlayer from "@mux/mux-player-react/lazy";
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import type { SubmitHandler } from "react-hook-form";
-import Button from "@/Components/Layouts/Button";
-import VideoViewer from "@/Components/Video/VideoViewer";
+// import type { SubmitHandler } from "react-hook-form";
+// import VideoViewer from "@/Components/Video/VideoViewer";
 import Layout from "@/Components/Layouts";
 import Loading from "@/Components/Loading";
+import AdminLessonEditPage from "@/Components/Admin/AdminEditLesson";
+
 
 export default function AdminEditLesson() {
-    const router = useRouter();
-    const { lessonId } = router.query;
-
     const { authState: { isAuthenticated, authLoading } } = useContext(AuthContext)!;
+    const router = useRouter();
+
+    const { courseId, lessonId } = router.query;
+    // console.log({ courseId, lessonId })
+
     const { toggleModal } = useContext(ModalContext)!;
 
-    const [lesson, setLesson] = useState<Lesson & { video: Video | null } | null>(null);
+    const [lesson, setLesson] = useState<Lesson & { videos: Video[] | [] } | null>(null);
 
     useEffect(() => {
         if (!lessonId) return;
@@ -35,12 +39,12 @@ export default function AdminEditLesson() {
         const fetchLesson = async () => {
             try {
                 const res = await axios.get(`/video/lesson/${lessonId}`);
-                console.log({ res })
+                console.log({Chapter: res.data })
                 setLesson(res.data);
             } catch (error) {
                 console.error(error);
                 toast.error("Failed to fetch lesson");
-            }
+            } 
         };
 
         fetchLesson();
@@ -50,52 +54,44 @@ export default function AdminEditLesson() {
         return axios.put(`/video/lesson/${lessonId}`, data);
     };
 
-    const deleteLesson = () => {
-        return axios.delete(`/video/lesson/${lessonId}`);
-    };
+    // const deleteLesson = () => {
+    //     return axios.delete(`/video/lesson/${lessonId}`);
+    // };
 
-    const updateMutation = useMutation({
-        mutationFn: updateLesson,
-        onSuccess: () => {
-            toast.success("Lesson updated successfully");
-        },
-        onError: (error) => {
-            console.error(error);
-            toast.error("Something went wrong");
-        }
-    });
+    // const updateMutation = useMutation({
+    //     mutationFn: updateLesson,
+    //     onSuccess: () => {
+    //         toast.success("Lesson updated successfully");
+    //     },
+    //     onError: (error) => {
+    //         console.error(error);
+    //         toast.error("Something went wrong");
+    //     }
+    // });
 
-    const deleteMutation = useMutation({
-        mutationFn: deleteLesson,
-        onSuccess: () => {
-            if (lesson) {
-                console.log({ lesson });
-                router.push(`/admin/courses/${lesson.courseId}`);
-            } else {
-                router.push(`/admin/courses`);
-            }
-            toast.success("Lesson deleted successfully");
-        },
-        onError: (error) => {
-            console.error(error);
-            toast.error("Something went wrong");
-        }
-    });
+    // const deleteMutation = useMutation({
+    //     mutationFn: deleteLesson,
+    //     onSuccess: () => {
+    //         if (lesson) {
+    //             console.log({ lesson });
+    //             router.push(`/admin/courses/${lesson.courseId}`);
+    //         } else {
+    //             router.push(`/admin/courses`);
+    //         }
+    //         toast.success("Lesson deleted successfully");
+    //     },
+    //     onError: (error) => {
+    //         console.error(error);
+    //         toast.error("Something went wrong");
+    //     }
+    // });
 
-    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        updateMutation.mutate(data);
-    };
+    // const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    //     updateMutation.mutate(data);
+    // };
 
     if (authLoading) return (<Loading />)
-    if (!lesson) {
-        return (
-            <Layout title="Edit a lesson" isWide>
-                <div className="flex h-screen">
-                    <p className="text-red-500">Lesson not found or you do not have permission.</p>
-                </div>
-            </Layout>
-        );
-    }
+
     if (!isAuthenticated) {
         return (
             <Layout title="Edit a course" isWide>
@@ -114,32 +110,94 @@ export default function AdminEditLesson() {
             </Layout>
         );
     }
+
+    if (!courseId || !lessonId || !lesson) {
+        return null;
+    }
+   
     return (
-        <Layout title="Edit a lesson" isWide>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-                <div>
-                    {
-                        // lesson.video?.status === "ready" && 
+        // <>
+        //     {
+        //         !lesson?.published && (
+        //             <Banner
+        //                 variant="warning"
+        //                 label="This chapter is unpublished. It will not be visible in the course"
+        //             />
+        //         )
+        //     }
+        //     <div className="p-6">
+        //         <div className="flex items-center">
+        //             <div className="w-full">
 
-                        lesson &&
-                            lesson.video?.videoUrl ? (
-                            <VideoViewer urlVideo={lesson.video?.videoUrl || ''} />
-                        ) : (
-                            <div className='mb-6 w-full aspect-video bg-gray-200' />
-                        )}
-
-                    <Button intent="danger" onClick={() => deleteMutation.mutate()}>
-                        Delete this lesson
-                    </Button>
-                </div>
-                <div>
-                    <LessonForm
-                        lesson={lesson}
-                        onSubmit={onSubmit}
-                        isLoading={updateMutation.isPending}
-                    />
-                </div>
-            </div>
+        //                 <Link
+        //                     href={`/admin/course/${courseId}`}
+        //                 >
+        //                     <ArrowRightLeft className="h-4 w-4 mr-2" />
+        //                     Back to course setup
+        //                 </Link>
+        //                 <div className="flex items-center justify-between w-full">
+        //                     <div className="flex flex-col gap-y-2">
+        //                         <span className="text-sm text-slate-700 text-white">
+        //                             Complete all fields {completionText}
+        //                         </span>
+        //                     </div>
+        //                     <ChapterActions
+        //                         disabled={!isComplete}
+        //                         courseId={courseId as string}
+        //                         lessonId={lessonId as string}
+        //                         published={lesson.published}
+        //                     />
+        //                 </div>
+        //             </div>
+        //         </div>
+        //          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+        //             <div className="space-y-4">
+        //                 <div>
+        //                     <div className="flex items-center gap-x-2">
+        //                         <IconBadge icon={LayoutDashboard} />
+        //                         <h2 className="text-xl">
+        //                             Customize your chapter
+        //                         </h2>
+        //                     </div>
+        //                     <ChapterTitleForm
+        //                         initialData={chapter}
+        //                         courseId={params.courseId}
+        //                         chapterId={params.chapterId}
+        //                     />
+        //                     <ChapterDescriptionForm
+        //                         initialData={chapter}
+        //                         courseId={params.courseId}
+        //                         chapterId={params.chapterId}
+        //                     />
+        //                 </div>
+        //                 <div>
+        //                     <div className="flex items-center gap-x-2">
+        //                         <IconBadge icon={Eye} />
+        //                         <h2 className="text-xl">Access Settings</h2>
+        //                     </div>
+        //                     {/* <ChapterAccessForm
+        //                         initialData={chapter}
+        //                         courseId={params.courseId}
+        //                         chapterId={params.chapterId}
+        //                     /> */}
+        //                 </div>
+        //             </div>
+        //             <div>
+        //                 <div className="flex items-center gap-x-2">
+        //                     <IconBadge icon={Video} />
+        //                     <h2 className="text-xl">Add a video</h2>
+        //                 </div>
+        //                 <ChapterVideoForm
+        //                     initialData={chapter}
+        //                     chapterId={params.chapterId}
+        //                     courseId={params.courseId}
+        //                 />
+        //             </div>
+        //         </div>
+        //     </div>
+        // </>
+        <Layout title="Chapter creation" isWide>
+            <AdminLessonEditPage courseId={courseId} lesson={lesson}/>
         </Layout>
     );
 }

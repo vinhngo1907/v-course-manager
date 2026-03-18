@@ -74,13 +74,14 @@ export default function AdminEditCourse() {
     }
 
     if (!course) {
-        return (
-            <Layout title="Course setup" isWide>
-                <div className="flex h-screen items-center justify-center">
-                    <p className="text-gray-500">Course not found or you do not have permission.</p>
-                </div>
-            </Layout>
-        );
+        return null;
+        // return (
+        //     <Layout title="Course setup" isWide>
+        //         <div className="flex h-screen items-center justify-center">
+        //             <p className="text-gray-500">Course not found or you do not have permission.</p>
+        //         </div>
+        //     </Layout>
+        // );
     }
 
     return (

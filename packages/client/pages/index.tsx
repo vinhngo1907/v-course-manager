@@ -18,7 +18,7 @@ export default function Home() {
 		const fetchCourses = async () => {
 			try {
 				const res = await axios.get('/courses');
-				console.log({ res })
+				// console.log({ res })
 				setCourses(res?.data?.data);
 			} catch (err) {
 				console.error('Failed to fetch courses:', err);

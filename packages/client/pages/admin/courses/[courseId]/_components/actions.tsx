@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Button from "@/Components/Layouts/Button";
 import { Trash } from "lucide-react";
 import { ConfirmModal } from "@/Components/Modals/confirm-modal";
+import { AuthorizationHeader } from "@/services/request.extras";
 
 interface ActionProps {
     disabled: boolean;
@@ -25,6 +26,9 @@ export const Actions = ({ disabled, courseId, isPublished }: ActionProps) => {
 
             await axios.patch(`/course/${courseId}/publish`, {
                 published: newStatus,
+            }, {
+                withCredentials: true,
+                headers: AuthorizationHeader(),
             });
 
             if (newStatus) {
@@ -45,7 +49,11 @@ export const Actions = ({ disabled, courseId, isPublished }: ActionProps) => {
     const onDelete = async () => {
         try {
             setIsLoading(true);
-            await axios.delete(`/course/${courseId}`);
+            await axios.delete(`/course/${courseId}`, {
+                withCredentials: true,
+                headers: AuthorizationHeader(),
+            });
+            
             toast.success("Course deleted");
             router.refresh();
             router.push(`/admin/courses`);

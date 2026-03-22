@@ -54,7 +54,8 @@ export const ChaptersForm = ({
       toggleCreating();
 
       router.refresh();
-    } catch (err) {
+    } catch (err: any) {
+      console.log("[ERROR_REORDER]", err.response)
       toast.error("Something went wrong");
     }
   };

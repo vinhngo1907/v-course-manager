@@ -33,7 +33,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy --schema=prisma/schema.prisma",
     "prisma:migrate:reset": "prisma migrate reset --schema=prisma/schema.prisma",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:seed": "ts-node seeds/index.ts",
     "preview:setup": "npm run prisma:migrate:deploy && npm run prisma:seed",
     "db:sync": "prisma db pull && prisma generate",
     "db:generate": "prisma generate --schema=prisma/schema.prisma",
@@ -42,6 +42,7 @@
     "version:next": "bash scripts/generate-version.sh --dry-run"
   },
   "dependencies": {
+    "@mux/mux-node": "^12.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^9.0.0",

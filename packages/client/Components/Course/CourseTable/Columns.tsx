@@ -48,7 +48,7 @@ export const columns: ColumnDef<Course>[] = [
         },
     },
     {
-        accessorKey: "isPublished",
+        accessorKey: "published",
         header: ({ column }) => (
             <button
                 onClick={() =>
@@ -61,7 +61,7 @@ export const columns: ColumnDef<Course>[] = [
             </button>
         ),
         cell: ({ row }) => {
-            const isPublished = Boolean(row.getValue("isPublished"));
+            const isPublished = Boolean(row.getValue("published"));
             return (
                 <span
                     className={`inline-block rounded px-2 py-1 text-xs font-medium text-white ${isPublished ? "bg-sky-600" : "bg-slate-500"

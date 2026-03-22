@@ -2,7 +2,8 @@ import { DatabaseService } from '../modules/database/service';
 import { Logger } from '@nestjs/common';
 import { roles } from '../../prisma/mock/data';
 
-async function createRoles() {
+// async function createRoles() {
+export async function seedRoles() {
   if (process.env.NODE_ENV === 'production') return;
   const prisma = new DatabaseService();
   const logger = new Logger();
@@ -20,4 +21,4 @@ async function createRoles() {
   }
 }
 
-createRoles();
+// createRoles();

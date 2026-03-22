@@ -249,7 +249,6 @@ export class CourseController {
     @Body() body: ReorderChapterDto,
   ) {
     const accountId = req.user.id;
-    console.log('>>>>', body.list);
     return await this.courseService.updateChapterReorder(
       courseId,
       accountId,

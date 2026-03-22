@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import {
 } from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
 import { CourseService } from '@modules/course/service';
+import { LessonResponseDTO, LessonUpdateDTO } from './dto/lesson';
 
 @Controller('video')
 export class VideoController {
@@ -40,6 +42,42 @@ export class VideoController {
     @Param('lessonId') lessonId: string,
   ): Promise<LessonDTO> {
     return await this.videoService.findOneWithVideo(lessonId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/lesson/:lessonId')
+  @ApiOperation({
+    summary: 'Complete creating video',
+    description:
+      'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
+  })
+  @ApiSuccessResponse(LessonResponseDTO, {
+    status: 200,
+    description: 'Creating video to complete updating lesson successfully',
+  })
+  @ApiErrorResponse({
+    status: 400,
+    description: 'Invalid request data - validation errors or invalid',
+  })
+  @ApiErrorResponse({
+    status: 401,
+    description: 'Unauthorized - valid authentication token required',
+  })
+  @ApiErrorResponse({
+    status: 404,
+    description: 'Lesson does not exist',
+  })
+  @ApiErrorResponse({
+    status: 500,
+    description: 'Internal server error during updating lesson',
+  })
+  async updateLesson(
+    @Param('lessonId') lessonId: string,
+    @Body() data: LessonUpdateDTO,
+    @Req() req: RequestWithAccount,
+  ): Promise<LessonDTO> {
+    const userId = req.user.id;
+    return await this.videoService.updateLesson({ lessonId, ...data }, userId);
   }
 
   @Get('/:id')

@@ -24,7 +24,7 @@ export const Actions = ({ disabled, courseId, isPublished }: ActionProps) => {
 
             const newStatus = !isPublished;
 
-            await axios.patch(`/course/${courseId}/publish`, {
+            await axios.patch(`/courses/${courseId}/publish`, {
                 published: newStatus,
             }, {
                 withCredentials: true,

@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
-import { Course } from '@prisma/client';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { VideoDTO } from './video';
 
-export class VideoCreationDTO {
+export class LessonUpdateDTO {
   @ApiProperty({ default: 'this is title' })
   @IsString()
   @Type(() => String)
   @IsNotEmpty()
-  readonly title: string;
+  readonly name: string;
 
   @ApiProperty({ default: 'this is description' })
   @IsString()
@@ -32,21 +32,35 @@ export class VideoCreationDTO {
   @IsString()
   @Type(() => String)
   @IsNotEmpty()
-  readonly courseId?: string;
+  readonly courseId: string;
 
-  course?: Course;
-
-  @ApiProperty({ example: 60.5 })
-  @IsNumber()
-  readonly duration: number;
-
-  @ApiProperty({ example: 1 })
-  @IsNumber()
-  readonly position: number;
-
-  @ApiProperty({ default: 'this is lessonId', example: 'clx123abc' })
+  @ApiProperty({ default: 'this is lessonId' })
   @IsString()
   @Type(() => String)
   @IsNotEmpty()
   readonly lessonId: string;
+
+  // @ApiProperty({ default: 'this is userId' })
+  // @IsString()
+  // @Type(() => String)
+  // @IsNotEmpty()
+  // readonly userId: string;
+
+  //   course?: Course;
+
+  //   @ApiProperty({ example: 60.5 })
+  //   @IsNumber()
+  //   readonly duration: number;
+
+  //   @ApiProperty({ example: 1 })
+  //   @IsNumber()
+  //   readonly position: number;
+}
+
+export class LessonResponseDTO {
+  id: string;
+  name: string;
+  description: string;
+  videos: VideoDTO[];
+  courseId: string;
 }

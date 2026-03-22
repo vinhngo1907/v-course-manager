@@ -4,7 +4,8 @@ import { DatabaseService } from '../modules/database/service';
 import { Logger } from '@nestjs/common';
 import { hashPassword } from '../modules/auth/utils';
 
-async function main() {
+// async function main() {
+export async function seedAdmin() {
   const appConfigService = new AppConfigService(new ConfigService()); // Await the password retrieval
   const prisma = new DatabaseService();
   const logger = new Logger();
@@ -97,4 +98,4 @@ async function main() {
   }
 }
 
-main();
+// main();

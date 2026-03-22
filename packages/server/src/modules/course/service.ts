@@ -23,13 +23,14 @@ import { CourseResponseDto } from './dto/course-response.dto';
 // import { LessonDTO } from '@modules/video/dto/video';
 // import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
 import { AddLessonInput } from './lesson.interface';
+import { VideoBadRequestException } from '@modules/video/exception';
 
 @Injectable()
 export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
   async findAll(
     req: CrudRequest,
@@ -378,23 +379,35 @@ export class CourseService {
     userId: string,
     list: { id: string; position: number }[],
   ) {
-    try {
-      const courseOwner = await this.databaseService.course.findFirst({
-        where: { id: courseId, createdById: userId },
-      });
+    const courseOwner = await this.databaseService.course.findFirst({
+      where: { id: courseId, createdById: userId },
+    });
 
-      if (!courseOwner) throw new CourseNotFoundException(courseId);
-      for (const item of list) {
-        await this.databaseService.video.update({
+    if (!courseOwner) {
+      throw new CourseNotFoundException(courseId);
+    }
+
+    // 🔥 ensure videos belong to same lesson (optional but good)
+    const videoIds = list.map((i) => i.id);
+
+    const videos = await this.databaseService.video.findMany({
+      where: { id: { in: videoIds } },
+    });
+
+    if (videos.length !== list.length) {
+      throw new VideoBadRequestException('Some videos not found');
+    }
+
+    // ⚡ reorder
+    await this.databaseService.$transaction(
+      list.map((item) =>
+        this.databaseService.video.update({
           where: { id: item.id },
           data: { position: item.position },
-        });
-      }
+        }),
+      ),
+    );
 
-      return { message: 'Success' };
-    } catch (error) {
-      console.error(error);
-      throw new InternalServerErrorException(error.message);
-    }
+    return { message: 'Success' };
   }
 }

@@ -193,12 +193,12 @@ model Video {
     description String? @db.VarChar(300)
     thumbnail   String? @db.VarChar(300)
     videoUrl    String? @db.VarChar(300)
-    position    Int
+    position    Int     @default(0)
 
     subtitles Subtitle[]
 
     lesson   Lesson @relation(fields: [lessonId], references: [id])
-    lessonId String @unique
+    lessonId String
 
     // owner   User   @relation(fields: [ownerId], references: [id])
     // ownerId String

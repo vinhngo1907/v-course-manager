@@ -46,7 +46,7 @@ export class VideoController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/lesson/:lessonId')
-   @ApiOperation({
+  @ApiOperation({
     summary: 'Complete creating video',
     description:
       'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
@@ -74,10 +74,10 @@ export class VideoController {
   async updateLesson(
     @Param('lessonId') lessonId: string,
     @Body() data: LessonUpdateDTO,
-     @Req() req: RequestWithAccount,
+    @Req() req: RequestWithAccount,
   ): Promise<LessonDTO> {
-    const userId = req.user.id
-    return await this.videoService.updateLesson({lessonId, ...data}, userId);
+    const userId = req.user.id;
+    return await this.videoService.updateLesson({ lessonId, ...data }, userId);
   }
 
   @Get('/:id')

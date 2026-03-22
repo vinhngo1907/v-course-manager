@@ -8,7 +8,13 @@ import { MuxService } from './mux';
 @Global()
 @Module({
   imports: [ConfigModule.forRoot()],
-  providers: [AppConfigService, ConfigService, MinioService, LivekitService, MuxService],
+  providers: [
+    AppConfigService,
+    ConfigService,
+    MinioService,
+    LivekitService,
+    MuxService,
+  ],
   exports: [AppConfigService, MuxService],
 })
 export class AppConfigModule {}

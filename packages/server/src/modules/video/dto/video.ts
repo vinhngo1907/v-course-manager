@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
 
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class VideoDTO {
   title: string;

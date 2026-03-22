@@ -43,4 +43,10 @@ export class VideoCreationDTO {
   @ApiProperty({ example: 1 })
   @IsNumber()
   readonly position: number;
+
+  @ApiProperty({ default: 'this is lessonId', example: 'clx123abc' })
+  @IsString()
+  @Type(() => String)
+  @IsNotEmpty()
+  readonly lessonId: string;
 }

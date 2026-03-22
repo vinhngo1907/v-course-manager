@@ -30,7 +30,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async findAll(
     req: CrudRequest,

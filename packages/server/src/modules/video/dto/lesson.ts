@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsString } from "class-validator";
-import { VideoDTO } from "./video";
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { VideoDTO } from './video';
 
 export class LessonUpdateDTO {
   @ApiProperty({ default: 'this is title' })
@@ -46,15 +46,15 @@ export class LessonUpdateDTO {
   // @IsNotEmpty()
   // readonly userId: string;
 
-//   course?: Course;
+  //   course?: Course;
 
-//   @ApiProperty({ example: 60.5 })
-//   @IsNumber()
-//   readonly duration: number;
+  //   @ApiProperty({ example: 60.5 })
+  //   @IsNumber()
+  //   readonly duration: number;
 
-//   @ApiProperty({ example: 1 })
-//   @IsNumber()
-//   readonly position: number;
+  //   @ApiProperty({ example: 1 })
+  //   @IsNumber()
+  //   readonly position: number;
 }
 
 export class LessonResponseDTO {

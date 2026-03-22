@@ -8,7 +8,8 @@ import { AuthContext } from '@/context/AuthContext';
 import { ModalContext } from '@/context/ModalContext';
 import { isAdmin } from '@/libs/admin';
 import { CourseTable } from '../Course/CourseTable';
-import { columns } from '../Course/CourseTable/columns';
+import { columns } from '../Course/CourseTable/Columns';
+// import { columns } from '../Course/CourseTable/columns';
 
 export default function AdminPage() {
     const { authState: { isAuthenticated, user, authLoading } } = useContext(AuthContext)!;

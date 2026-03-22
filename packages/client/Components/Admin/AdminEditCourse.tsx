@@ -14,6 +14,7 @@ import { IconBadge } from "../Icon";
 import { LayoutDashboard, ListChecks } from "lucide-react";
 import { Actions } from "@/pages/admin/courses/[courseId]/_components/actions";
 import { ChaptersForm } from "@/pages/admin/courses/[courseId]/_components/chapters-form";
+import { Banner } from "../Banner";
 
 type CourseUpdateResult = {
     id: string;
@@ -69,6 +70,9 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
     const isComplete = requiredFields.every(Boolean);
     return (
         <>
+            {!course.published && (
+                <Banner label="This course is unpublished. It will not be visible to the students." />
+            )}
             <div className="p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col gap-y-2">
@@ -83,11 +87,11 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                         isPublished={course.published}
                     />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div>
                         <div className="flex items-center gap-x-2">
                             <IconBadge icon={LayoutDashboard} />
-                            <Heading as='h4'>Customize your course</Heading>
+                            <Heading as='h5' className="text-[#FFF1DC]">Customize your course</Heading>
                         </div>
                         <CourseForm onSubmit={onSubmit} course={course} isLoading={mutation.isPending} />
                     </div>
@@ -96,7 +100,7 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                         <div>
                             <div className="flex items-center gap-x-2">
                                 <IconBadge icon={ListChecks} />
-                                <Heading as='h4'>Course chapters</Heading>
+                                <Heading as='h5' className="text-[#FFF1DC]">Course chapters</Heading>
                             </div>
                             <ChaptersForm
                                 initialData={course}

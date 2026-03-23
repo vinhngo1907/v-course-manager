@@ -17,7 +17,7 @@ import { CommentsModule } from './comments';
 import { StreamModule } from './stream';
 import { CommentReactionsModule } from './comment-reactions';
 import { FileUploadModule } from './file-upload';
-import {CategoryModule} from "./category"
+import { CategoryModule } from './category';
 
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import {CategoryModule} from "./category"
     StreamModule,
     CommentReactionsModule,
     FileUploadModule,
-    CategoryModule
+    CategoryModule,
   ],
   providers: [
     Logger,

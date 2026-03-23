@@ -70,3 +70,9 @@ export type MuxData = {
     videoId: string;
     video: Video
 }
+
+export type Category = {
+    id: string;
+    name: string;
+    courses: Course[]
+}

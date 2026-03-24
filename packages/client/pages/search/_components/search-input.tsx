@@ -48,7 +48,7 @@ export const SearchInput = () => {
     }, [currentTitle]);
 
     return (
-        <div className="relative">
+        <div className="relative bg-red">
             <Search className="h-4 w-4 absolute top-3 left-3 text-slate-600" />
             <Input
                 onChange={(e:ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}

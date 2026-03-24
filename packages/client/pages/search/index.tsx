@@ -8,13 +8,6 @@ import { Categories } from "./_components/categories";
 import CourseList from "@/Components/Course/CourseList";
 import { useSearchParams } from "next/navigation";
 
-interface SearchPageProps {
-    searchParams: {
-        title: string;
-        categoryId: string;
-    }
-}
-
 const SearchPage = () => {
     const [categories, setCategories] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -23,13 +16,13 @@ const SearchPage = () => {
     const title = searchParams.get("title") || "";
     const categoryId = searchParams.get("categoryId") || "";
 
-        useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const [catRes, courseRes] = await Promise.all([
                     axios.get("/categories"),
                     axios.get("/courses/list", {
-                        params:{
+                        params: {
                             title, categoryId
                         }
                     }),
@@ -43,7 +36,7 @@ const SearchPage = () => {
         };
 
         fetchData();
-    }, []);
+    }, [title, categoryId]);
 
     return (
         <Layout title="Search Courses">

@@ -22,30 +22,30 @@ export const CategoryItem = ({
     const searchParams = useSearchParams();
 
     /*
-		The categoryId will be pushed in the url params once the onClick
-		in one of the categories below was executed. If the user visits
-		the /search with categoryId (/search?categoryId=) the value will
-		be read and stored in the currentCategoryId variable. The currentCategoryId
-		and the value which stores the id of the category will determine if
-		the category item is currently selected
-	*/
+        The categoryId will be pushed in the url params once the onClick
+        in one of the categories below was executed. If the user visits
+        the /search with categoryId (/search?categoryId=) the value will
+        be read and stored in the currentCategoryId variable. The currentCategoryId
+        and the value which stores the id of the category will determine if
+        the category item is currently selected
+    */
     const currentCategoryId = searchParams.get("categoryId");
 
     /*
-		We will have a search component and in there we will also push a new
-		url with params of title whenever the user searches the input in the
+        We will have a search component and in there we will also push a new
+        url with params of title whenever the user searches the input in the
         search-input.tsx. The title is the value inputted by the user in the 
-		search bar and we want that value to be preserved in the urt as title
+        search bar and we want that value to be preserved in the urt as title
         param
-	*/
+    */
     const currentTitle = searchParams.get("title");
 
     const isSelected = currentCategoryId === value;
 
     /*
-		This will have a toggle effect, if the category is already selected (the
-		isSelected is true) we will remove the value of categoryId in the params
-	*/
+        This will have a toggle effect, if the category is already selected (the
+        isSelected is true) we will remove the value of categoryId in the params
+    */
     const onClick = () => {
         const url = qs.stringifyUrl(
             {
@@ -65,8 +65,16 @@ export const CategoryItem = ({
         <button
             onClick={onClick}
             className={cn(
-                "py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 transition",
-                isSelected && "border-sky-700 bg-sky-200/20 text-sky-800"
+                "py-2 px-4 text-sm rounded-full flex items-center gap-x-2 transition-all duration-200",
+
+                // default
+                "border border-[#F5A028] text-[#2C2C2C] bg-white",
+
+                // hover
+                "hover:bg-[#FFF1DC] hover:border-[#FFB347]",
+
+                // selected
+                isSelected && "bg-[#FFB347] border-[#FFB347] text-white"
             )}
             type="button"
         >

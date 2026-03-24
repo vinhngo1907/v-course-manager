@@ -62,4 +62,10 @@ export class GetListCoursesQueryDto {
   @Min(1)
   @Max(50)
   readonly limit?: number = 10;
+
+  @IsOptional()
+  readonly title?: string;
+
+  @IsOptional()
+  readonly categoryId?: string;
 }

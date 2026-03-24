@@ -31,7 +31,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-  ) { }
+  ) {}
 
   async findAll(
     req: CrudRequest,
@@ -117,14 +117,12 @@ export class CourseService {
     }
   }
   async listCourse(query: GetListCoursesQueryDto) {
-    // const page = query.page || 1;
-    // const limit = query.limit || 10;
     const { page = 1, limit = 10, title, categoryId } = query;
     const where: Prisma.CourseWhereInput = {};
     if (title) {
       where.title = {
         contains: title,
-        mode: "insensitive", // search không phân biệt hoa thường
+        mode: 'insensitive',
       };
     }
 
@@ -139,7 +137,7 @@ export class CourseService {
         take: limit,
         // orderBy: { createdAt: 'desc' },
       }),
-      this.databaseService.course.count({where}),
+      this.databaseService.course.count({ where }),
     ]);
 
     const mappedCourses: CourseResponseDto[] = courses.map((course) => ({

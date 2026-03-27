@@ -136,6 +136,10 @@ export class CourseService {
         skip: (page - 1) * limit,
         take: limit,
         // orderBy: { createdAt: 'desc' },
+        include: {
+          lessons: {include: {videos: true}},
+          createdBy: true
+        }
       }),
       this.databaseService.course.count({ where }),
     ]);

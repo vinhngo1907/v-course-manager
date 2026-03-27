@@ -4,19 +4,13 @@ import {
   Logger,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
-import {
-  AccountBadRequestException,
-  AccountConflictException,
-} from '@modules/account/exception';
-import { AuthDTO } from './dto/auth';
+import { AccountConflictException } from '@modules/account/exception';
 import { RegisterPayload, TokenPayload } from './types';
 import { hashPassword, isMatch } from './utils';
 import { UsersService } from '@modules/user/service';
 import { AccountsService } from '@modules/account/service';
-import { Prisma } from '@prisma/client';
 import { AppConfigService } from 'src/config/service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import {
   UserConflictException,
   UserNotFoundException,

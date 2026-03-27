@@ -1,28 +1,32 @@
-import { Course } from "@/types";
+import { Course, Category } from "@/types";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./TextInput";
 import TextAreaInput from "./TextAreaInput";
-import Checkbox from "./Checkbox";
+// import Checkbox from "./Checkbox";
 import SubmitInput from "./SubmitInput";
 import { FileUploader } from "@/Components/FileUploader";
 import { useState } from "react";
 import { COURSE_THUMBNAIL_TYPE } from "@/constants/file";
 import EditableField from "./EditableField";
+// import { Combobox } from "@/Components/Globals/Ui/Combobox";
+import { CategoryForm } from "@/pages/admin/courses/[courseId]/_components/category-form";
 
 export type Inputs = {
   title: string;
   description: string;
   published?: boolean;
   thumbnailUrl?: string;
+  categoryId: string;
 };
 
 type Props = {
   course?: Course;
   onSubmit: SubmitHandler<Inputs>;
   isLoading: boolean;
+  categories: Category[] | []
 };
 
-const CourseForm = ({ course, onSubmit, isLoading }: Props) => {
+const CourseForm = ({ course, onSubmit, isLoading, categories }: Props) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(course?.thumbnail || "");
 
   const methods = useForm<Inputs>({
@@ -30,6 +34,7 @@ const CourseForm = ({ course, onSubmit, isLoading }: Props) => {
       title: course?.title || "",
       description: course?.description || "",
       published: course?.published || false,
+      categoryId: course?.categoryId || ""
     },
   });
 
@@ -39,10 +44,13 @@ const CourseForm = ({ course, onSubmit, isLoading }: Props) => {
       description: data.description || course?.description || "",
       published: data.published,
       thumbnailUrl: thumbnailUrl || course?.thumbnail || "",
+      categoryId: data.categoryId || ""
     };
 
     onSubmit(finalPayload);
   };
+
+  if (!course) return null;
 
   return (
     <FormProvider {...methods}>
@@ -75,13 +83,18 @@ const CourseForm = ({ course, onSubmit, isLoading }: Props) => {
         </EditableField>
 
         {/* PUBLISH */}
-        <EditableField
+        {/* <EditableField
           title="Publish"
           view={<p>{methods.getValues("published") ? "Yes" : "No"}</p>}
         >
           <Checkbox label="Publish" name="published" />
-        </EditableField>
-
+        </EditableField> */}
+        <CategoryForm courseId={course?.id} initialData={course}
+          options={categories.map((category) => ({
+            label: category.name,
+            value: category.id,
+          }))}
+        />
         {/* IMAGE */}
         <EditableField
           title="Course image"

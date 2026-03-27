@@ -17,7 +17,7 @@ export class LivekitWebhookController {
   ) {
     this.verifySignature(payload, authHeader);
 
-    const event = payload.event;
+    // const event = payload.event;
 
     // if (event === 'egress_ended') {
     //     await this.streamService.handleRecordingFinished(payload);

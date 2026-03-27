@@ -24,6 +24,7 @@ import { CourseResponseDto } from './dto/course-response.dto';
 // import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
 import { AddLessonInput } from './lesson.interface';
 import { VideoBadRequestException } from '@modules/video/exception';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CourseService {
@@ -116,16 +117,31 @@ export class CourseService {
     }
   }
   async listCourse(query: GetListCoursesQueryDto) {
-    const page = query.page || 1;
-    const limit = query.limit || 10;
+    const { page = 1, limit = 10, title, categoryId } = query;
+    const where: Prisma.CourseWhereInput = {};
+    if (title) {
+      where.title = {
+        contains: title,
+        mode: 'insensitive',
+      };
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
 
     const [courses, total] = await Promise.all([
       this.databaseService.course.findMany({
+        where,
         skip: (page - 1) * limit,
         take: limit,
         // orderBy: { createdAt: 'desc' },
+        include: {
+          lessons: { include: { videos: true } },
+          createdBy: true,
+        },
       }),
-      this.databaseService.course.count(),
+      this.databaseService.course.count({ where }),
     ]);
 
     const mappedCourses: CourseResponseDto[] = courses.map((course) => ({

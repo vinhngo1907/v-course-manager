@@ -7,14 +7,14 @@ const backgroundVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-[#FFB347]/100",
+                default: "bg-[#FFB347]",
                 success: "bg-emerald-100",
             },
             size: {
-                xs: "p-1",      // smallest
+                xs: "p-1",
                 sm: "p-1.5",
                 default: "p-2",
-                lg: "p-3",      // largest
+                lg: "p-3",
             },
         },
         defaultVariants: {
@@ -27,14 +27,14 @@ const backgroundVariants = cva(
 const iconVariants = cva("", {
     variants: {
         variant: {
-            default: "text-[#F5A028]/700",
+            default: "text-white", // 🔥 better contrast
             success: "text-emerald-700",
         },
         size: {
-            default: "h-8 w-8",
             xs: "h-4 w-4",
             sm: "h-6 w-6",
-            lg: "h-10 w-10"
+            default: "h-8 w-8",
+            lg: "h-10 w-10",
         },
     },
     defaultVariants: {
@@ -46,14 +46,34 @@ const iconVariants = cva("", {
 type BackgroundVariantsProps = VariantProps<typeof backgroundVariants>;
 type IconVariantsProps = VariantProps<typeof iconVariants>;
 
-interface IconBadgeProps extends BackgroundVariantsProps, IconVariantsProps {
+interface IconBadgeProps
+    extends BackgroundVariantsProps,
+        IconVariantsProps {
     icon: LucideIcon;
+    className?: string;        // ✅ wrapper override
+    iconClassName?: string;    // ✅ icon override
 }
 
-export const IconBadge = ({ icon: Icon, variant, size }: IconBadgeProps) => {
+export const IconBadge = ({
+    icon: Icon,
+    variant,
+    size,
+    className,
+    iconClassName,
+}: IconBadgeProps) => {
     return (
-        <div className={cn(backgroundVariants({ variant, size }))}>
-            <Icon className={cn(iconVariants({ variant, size }))} />
+        <div
+            className={cn(
+                backgroundVariants({ variant, size }),
+                className
+            )}
+        >
+            <Icon
+                className={cn(
+                    iconVariants({ variant, size }),
+                    iconClassName
+                )}
+            />
         </div>
     );
 };

@@ -1,12 +1,9 @@
 import CourseForm, { Inputs } from "@/Components/Course/CourseForm";
 import Heading from "@/Components/Course/Heading";
-import { Course, Lesson, Video } from "@/types";
+import { Category, Course, Lesson, Video } from "@/types";
 import { MutationFunction, useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { SubmitHandler } from "react-hook-form";
-// import Link from 'next/link';
-// import Image from 'next/image';
-// import Button from "@/Components/Layouts/Button";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { axios } from "@/utils/axios";
@@ -24,9 +21,10 @@ type AdminCourseEditPageProps = {
     course: Course & {
         lessons: (Lesson & { video: Video | null })[];
     };
+    categories: Category[] | []
 };
 
-const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
+const AdminCourseEditPage = ({ course, categories }: AdminCourseEditPageProps) => {
     const { authState: { user } } = useContext(AuthContext)!;
     const handler: MutationFunction<CourseUpdateResult, Inputs> = async (data) => {
         const res = await axios.put<CourseUpdateResult>(`/courses/${course.id}`, {
@@ -59,7 +57,7 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
         course.description,
         course.thumbnail,
         // course.price,
-        // course.categoryId,
+        course.categoryId,
         course.lessons.some((chapter) => chapter.id),
     ];
 
@@ -93,7 +91,10 @@ const AdminCourseEditPage = ({ course }: AdminCourseEditPageProps) => {
                             <IconBadge icon={LayoutDashboard} />
                             <Heading as='h5' className="text-[#FFF1DC]">Customize your course</Heading>
                         </div>
-                        <CourseForm onSubmit={onSubmit} course={course} isLoading={mutation.isPending} />
+                        <CourseForm onSubmit={onSubmit}
+                            course={course}
+                            isLoading={mutation.isPending}
+                            categories={categories} />
                     </div>
 
                     <div className="space-y-6">

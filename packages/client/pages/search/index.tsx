@@ -5,7 +5,7 @@ import Layout from "@/Components/Layouts";
 import { SearchInput } from "./_components/search-input";
 import { axios } from "@/utils/axios";
 import { Categories } from "./_components/categories";
-import CourseList from "@/Components/Course/CourseList";
+import { CoursesList } from "./_components/courses-list";
 import { useSearchParams } from "next/navigation";
 
 const SearchPage = () => {
@@ -46,7 +46,7 @@ const SearchPage = () => {
                 </div>
                 <div className="p-6 space-y-4">
                     <Categories items={categories} />
-                    <CourseList courses={courses} />
+                    <CoursesList items={courses} />
                 </div>
             </>
         </Layout>

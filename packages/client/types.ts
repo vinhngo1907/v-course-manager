@@ -13,6 +13,7 @@ export type Course = {
     description: string;
     published: boolean;
     lessons: Lesson[] | [];
+    categoryId?: string;
     createdBy: Profile
 }
 

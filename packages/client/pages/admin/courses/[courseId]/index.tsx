@@ -1,22 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Course, Lesson, Video } from '@/types';
+import { Category, Course, Lesson, Video } from '@/types';
 import { axios } from '@/utils/axios';
 import AdminCourseEditPage from '@/Components/Admin/AdminEditCourse';
 import Layout from '@/Components/Layouts';
 import { AuthContext } from '@/context/AuthContext';
-import { ModalContext } from '@/context/ModalContext';
+// import { ModalContext } from '@/context/ModalContext';
 
 export default function AdminEditCourse() {
     const { authState: { authLoading, isAuthenticated } } = useContext(AuthContext)!;
-    const { toggleModal } = useContext(ModalContext)!;
+    // const { toggleModal } = useContext(ModalContext)!;
     const router = useRouter();
     const { courseId } = router.query;
 
     const [course, setCourse] = useState<
         (Course & { lessons: (Lesson & { video: Video | null })[] }) | null
     >(null);
-
+    const [categories, setCategories] = useState<Category[] | null>(null)
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,11 +27,14 @@ export default function AdminEditCourse() {
         const fetchCourse = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`/courses/user/${courseId}`);
-                console.log({ res })
-                setCourse(res?.data);
+                const [courseRes, catRes] = await Promise.all([
+                    axios.get(`/courses/user/${courseId}`),
+                    axios.get('/categories'),
+                ]);
+                setCourse(courseRes?.data);
+                setCategories(catRes.data.data);
             } catch (err) {
-                console.error('Failed to fetch course:', err);
+                console.error('[ERR_FETCH_COURSE_CAT]:', err);
             } finally {
                 setLoading(false);
             }
@@ -41,7 +44,7 @@ export default function AdminEditCourse() {
     }, [courseId, authLoading, isAuthenticated]);
 
 
-    if (authLoading) {
+    if (authLoading || loading || !course || !categories) {
         return (
             <Layout title="Course setup" isWide>
                 <div className="flex items-center justify-center">
@@ -77,7 +80,7 @@ export default function AdminEditCourse() {
     
     return (
         <Layout title="Course setup" isWide>
-            <AdminCourseEditPage course={course} />
+            <AdminCourseEditPage course={course} categories={categories}/>
         </Layout>
     );
 }

@@ -11,7 +11,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Crud } from '@nestjsx/crud';
+// import { Crud } from '@nestjsx/crud';
 import { RoleService } from './service';
 import { RoleUpdateDTO } from './dto/role';
 

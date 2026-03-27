@@ -126,7 +126,7 @@ export class CourseController {
   @ApiResponse({ status: 400, description: 'Data input is not correct!' })
   async createCourse(
     @Body() dto: CourseCreationDTO,
-    @Req() req: RequestWithAccount,
+    // @Req() req: RequestWithAccount,
   ) {
     // const account = req.user;
     // console.log({dto, account });

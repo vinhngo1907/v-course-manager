@@ -137,9 +137,9 @@ export class CourseService {
         take: limit,
         // orderBy: { createdAt: 'desc' },
         include: {
-          lessons: {include: {videos: true}},
-          createdBy: true
-        }
+          lessons: { include: { videos: true } },
+          createdBy: true,
+        },
       }),
       this.databaseService.course.count({ where }),
     ]);

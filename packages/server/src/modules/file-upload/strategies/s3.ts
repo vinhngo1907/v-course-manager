@@ -67,17 +67,11 @@ export class FileUploadByS3 implements FileUpload {
       } else {
         await this.uploadMultiplePart(bucketName, objectName, file);
       }
-
-      // console.log({ uploadPromise });
-      // console.log('>>>>' + file.size + '<<<<');
-      // await this.uploadSinglePart(bucketName, objectName, file);
-      // await minioClient.putObject(bucketName, objectName, file.buffer, file.size, { 'Content-type': file.mimetype });
-      // console.log(
-      //   `${process.env.MINIO_PUBLIC_URL}/${bucketName}/${objectName}`,
-      // );
+      // console.log(`${publicUrl}/${bucketName}/${objectName}`,);
       return `${publicUrl}/${bucketName}/${objectName}`;
     } catch (error: any) {
-      this.logger.error(error);
+      // this.logger.error('[UPLOAD_FAILED]:', error.message);
+      console.log("[UPLOAD_FAILED]", error)
       throw new InternalServerErrorException(error.message);
     }
   }

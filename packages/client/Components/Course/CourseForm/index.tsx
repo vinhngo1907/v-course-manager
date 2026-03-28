@@ -9,7 +9,8 @@ import { useState } from "react";
 import { COURSE_THUMBNAIL_TYPE } from "@/constants/file";
 import EditableField from "./EditableField";
 // import { Combobox } from "@/Components/Globals/Ui/Combobox";
-import { CategoryForm } from "@/pages/admin/courses/[courseId]/_components/category-form";
+// import { CategoryForm } from "@/pages/admin/courses/[courseId]/_components/category-form";
+import SelectInput from "./SelectInput";
 
 export type Inputs = {
   title: string;
@@ -44,13 +45,23 @@ const CourseForm = ({ course, onSubmit, isLoading, categories }: Props) => {
       description: data.description || course?.description || "",
       published: data.published,
       thumbnailUrl: thumbnailUrl || course?.thumbnail || "",
-      categoryId: data.categoryId || ""
+      categoryId: data.categoryId ?? course?.categoryId ?? ""
     };
 
     onSubmit(finalPayload);
   };
 
   if (!course) return null;
+
+  const categoryOptions = categories.map((category) => ({
+    label: category.name,
+    value: category.id,
+  }));
+
+  const categoryId = methods.watch("categoryId");
+  const selectedCategory = categoryOptions.find(
+    (option) => option.value === categoryId
+  );
 
   return (
     <FormProvider {...methods}>
@@ -82,19 +93,27 @@ const CourseForm = ({ course, onSubmit, isLoading, categories }: Props) => {
           />
         </EditableField>
 
-        {/* PUBLISH */}
-        {/* <EditableField
-          title="Publish"
-          view={<p>{methods.getValues("published") ? "Yes" : "No"}</p>}
-        >
-          <Checkbox label="Publish" name="published" />
-        </EditableField> */}
-        <CategoryForm courseId={course?.id} initialData={course}
+        {/* <CategoryForm courseId={course?.id} initialData={course}
           options={categories.map((category) => ({
             label: category.name,
             value: category.id,
           }))}
-        />
+        /> */}
+        <EditableField
+          title="Category"
+          view={
+            <p>
+              {selectedCategory?.label || "No category"}
+            </p>
+          }
+        >
+          <SelectInput
+            name="categoryId"
+            // label="Select options"
+            options={categoryOptions}
+            registerOptions={{ required: true }}
+          />
+        </EditableField>
         {/* IMAGE */}
         <EditableField
           title="Course image"
@@ -128,7 +147,13 @@ const CourseForm = ({ course, onSubmit, isLoading, categories }: Props) => {
           isLoading={isLoading}
         />
       </form>
-    </FormProvider>
+      {/* <CategoryForm courseId={course?.id} initialData={course}
+        options={categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))}
+      /> */}
+    </FormProvider >
   );
 };
 

@@ -71,7 +71,7 @@ export class FileUploadByS3 implements FileUpload {
       return `${publicUrl}/${bucketName}/${objectName}`;
     } catch (error: any) {
       // this.logger.error('[UPLOAD_FAILED]:', error.message);
-      console.log("[UPLOAD_FAILED]", error)
+      console.log('[UPLOAD_FAILED]', error);
       throw new InternalServerErrorException(error.message);
     }
   }

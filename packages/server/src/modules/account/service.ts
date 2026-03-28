@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 // import { AuthService } from '../auth/service';
 import { DatabaseService } from '../database/service';
-import { AccountDTO, IAccount } from './dto/account';
+import { AccountDTO } from './dto/account';
 import { mapAccountToAccountDTO } from './mapper';
 import { AccountUpdationDTO } from './dto/account-updation.dto';
 import {

@@ -12,7 +12,7 @@ export class MinioService {
     const cfg = this.appConfigService.getMinioConfig();
     // console.log(">>>>>" ,{cfg});
     this.minio = new MinioClient({
-      endPoint: "minio-service-ijed.onrender.com",
+      endPoint: cfg.endPoint,
       // port: cfg.port,
       // useSSL: cfg.useSSL,
       useSSL: true,
@@ -45,7 +45,7 @@ export class MinioService {
     return this.minio.presignedGetObject(
       this.bucket,
       `${this.folder}/${fileName}`,
-      60 * 60 // 1 hour
+      60 * 60, // 1 hour
     );
   }
 }

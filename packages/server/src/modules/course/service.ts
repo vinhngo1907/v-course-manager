@@ -32,8 +32,8 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-    private readonly minioService: MinioService
-  ) { }
+    private readonly minioService: MinioService,
+  ) {}
 
   async getCourses(
     req: CrudRequest,
@@ -171,7 +171,7 @@ export class CourseService {
         page,
         limit,
         total: courses.length,
-        pageCount: Math.ceil(courses.length / limit)
+        pageCount: Math.ceil(courses.length / limit),
       };
     } catch (error) {
       this.logger.error(error.message);
@@ -317,7 +317,7 @@ export class CourseService {
     userId: string,
   ): Promise<any> {
     const { description, thumbnail, title, categoryId } = dto;
-console.log({dto});
+    console.log({ dto });
     // 👉 1. Get course
     const course = await this.databaseService.course.findUnique({
       where: { id },
@@ -336,7 +336,7 @@ console.log({dto});
         ...(title && { title }),
         ...(description && { description }),
         ...(thumbnail && { thumbnail }),
-        ...(categoryId && { categoryId })
+        ...(categoryId && { categoryId }),
       },
     });
 

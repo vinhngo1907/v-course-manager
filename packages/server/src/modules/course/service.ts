@@ -25,15 +25,17 @@ import { CourseResponseDto } from './dto/course-response.dto';
 import { AddLessonInput } from './lesson.interface';
 import { VideoBadRequestException } from '@modules/video/exception';
 import { Prisma } from '@prisma/client';
+import { MinioService } from 'src/config/minio';
 
 @Injectable()
 export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
+    private readonly minioService: MinioService,
   ) {}
 
-  async findAll(
+  async getCourses(
     req: CrudRequest,
     authorId: string,
   ): Promise<{
@@ -50,7 +52,10 @@ export class CourseService {
       const where = authorId ? { createdById: authorId } : {};
 
       const courses = await this.databaseService.course.findMany({
-        where,
+        where: {
+          ...where,
+          // published: true
+        },
         include: {
           lessons: {
             include: { videos: true },
@@ -78,6 +83,7 @@ export class CourseService {
           description: course.description,
           thumbnail: course.thumbnail ?? undefined,
           published: course.published,
+          categoryId: course.categoryId,
           totalLessons,
           totalVideos,
           totalDuration,
@@ -99,11 +105,67 @@ export class CourseService {
               // duration: video.duration,
               thumbnail: video.thumbnail ?? undefined,
               description: video.description ?? undefined,
+              // videoUrl: video.videoUrl
+              // ? await this.minioService.getVideoUrl(video.videoUrl)
+              // : undefined,
             })),
           })),
         };
       });
 
+      // const mappedCourses: CourseWithLessonsDTO[] = await Promise.all(
+      //   courses.map(async (course) => {
+      //     const totalLessons = course.lessons.length;
+
+      //     const totalVideos = course.lessons.reduce(
+      //       (sum, lesson) => sum + lesson.videos.length,
+      //       0,
+      //     );
+
+      //     const totalDuration = course.lessons.reduce(
+      //       (sum, lesson) =>
+      //         sum + lesson.videos.reduce((s, v) => s + (v.duration ?? 0), 0),
+      //       0,
+      //     );
+
+      //     return {
+      //       id: course.id,
+      //       title: course.title,
+      //       description: course.description,
+      //       thumbnail: course.thumbnail ?? undefined,
+      //       published: course.published,
+      //       totalLessons,
+      //       totalVideos,
+      //       totalDuration,
+
+      //       lessons: await Promise.all(
+      //         course.lessons.map(async (lesson) => ({
+      //           id: lesson.id,
+      //           name: lesson.name,
+      //           description: lesson.description,
+
+      //           totalVideos: lesson.videos.length,
+      //           totalDuration: lesson.videos.reduce(
+      //             (sum, v) => sum + (v.duration ?? 0),
+      //             0,
+      //           ),
+
+      //           videos: await Promise.all(
+      //             lesson.videos.map(async (video) => ({
+      //               id: video.id,
+      //               title: video.title,
+      //               thumbnail: video.thumbnail ?? undefined,
+      //               description: video.description ?? undefined,
+      //               videoUrl: video.videoUrl
+      //                 ? await this.minioService.getVideoUrl(video.videoUrl)
+      //                 : undefined,
+      //             }))
+      //           ),
+      //         }))
+      //       ),
+      //     };
+      //   })
+      // );
       return {
         data: mappedCourses,
         page,
@@ -254,8 +316,8 @@ export class CourseService {
     id: string,
     userId: string,
   ): Promise<any> {
-    const { description, thumbnail, title } = dto;
-
+    const { description, thumbnail, title, categoryId } = dto;
+    console.log({ dto });
     // 👉 1. Get course
     const course = await this.databaseService.course.findUnique({
       where: { id },
@@ -274,6 +336,7 @@ export class CourseService {
         ...(title && { title }),
         ...(description && { description }),
         ...(thumbnail && { thumbnail }),
+        ...(categoryId && { categoryId }),
       },
     });
 

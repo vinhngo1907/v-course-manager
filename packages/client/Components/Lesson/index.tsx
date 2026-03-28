@@ -70,12 +70,12 @@ const LessonForm = ({ courseId, lesson, onSubmit, isLoading }: Props) => {
                 </EditableField>
 
                 {/* PUBLISH */}
-                <EditableField
+                {/* <EditableField
                     title="Publish"
                     view={<p>{methods.getValues("published") ? "Yes" : "No"}</p>}
                 >
                     <Checkbox label="Publish" name="published" />
-                </EditableField>
+                </EditableField> */}
                 <SubmitInput value={`${lesson ? 'Update' : 'Create'} lesson`} isLoading={isLoading} />
             </form>
         </FormProvider>

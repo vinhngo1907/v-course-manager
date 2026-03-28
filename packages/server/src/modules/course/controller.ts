@@ -85,7 +85,7 @@ export class CourseController {
     @ParsedRequest() req: CrudRequest,
     @Query('authorId') authorId?: string,
   ): Promise<any> {
-    return await this.courseService.findAll(req, authorId);
+    return await this.courseService.getCourses(req, authorId);
   }
 
   @Get('/list')
@@ -173,7 +173,6 @@ export class CourseController {
     @Req() req: RequestWithAccount,
   ) {
     const userId = req.user.id;
-    console.log('Hello world');
     return await this.courseService.updateCourse(dto, id, userId);
   }
 

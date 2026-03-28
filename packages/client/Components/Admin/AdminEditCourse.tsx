@@ -31,7 +31,8 @@ const AdminCourseEditPage = ({ course, categories }: AdminCourseEditPageProps) =
             title: data.title,
             description: data.description,
             thumbnail: data.thumbnailUrl,
-            authorId: user?.id
+            authorId: user?.id,
+            categoryId: data.categoryId
         });
 
         return res.data;

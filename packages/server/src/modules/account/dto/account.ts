@@ -1,4 +1,4 @@
-import { IUser } from '@modules/user/types';
+// import { IUser } from '@modules/user/types';
 
 export interface AccountDTO {
   username: string;

@@ -17,6 +17,10 @@ export class CourseUpdateDTO {
   @IsNotEmpty()
   @IsString()
   authorId: string;
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string;
 }
 
 export class CourseUpdatePublishDto {

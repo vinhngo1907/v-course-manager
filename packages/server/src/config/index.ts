@@ -15,6 +15,6 @@ import { MuxService } from './mux';
     LivekitService,
     MuxService,
   ],
-  exports: [AppConfigService, MuxService],
+  exports: [AppConfigService, MuxService, MinioService],
 })
 export class AppConfigModule {}

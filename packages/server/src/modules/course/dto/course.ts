@@ -28,6 +28,7 @@ export interface CourseWithLessonsDTO {
   description: string;
   thumbnail?: string;
   published?: boolean;
+  categoryId?: string;
 
   createdBy?: {
     id: string;

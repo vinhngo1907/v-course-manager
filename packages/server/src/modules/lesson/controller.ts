@@ -8,7 +8,7 @@ import { LessonService } from './service';
 
 @ApiTags('Lessons')
 @Controller({
-  path: 'lesson',
+  path: 'lessons',
   version: '1'
 })
 @ApiBearerAuth()
@@ -20,9 +20,9 @@ export class LessonController {
     private readonly lessonService: LessonService
   ) { }
 
-  @Patch()
+  @Patch(':id/status')
   async updateStatus(
-    @Param(':id/status') lessonId: string,
+    @Param('id') lessonId: string,
     @Req() req: RequestWithAccount,
     @Body('published') isPublished: boolean
   ){

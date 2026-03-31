@@ -48,11 +48,11 @@ const CourseCard = ({ course, isAdmin, forcePublic, isAuthenticated }: Props) =>
             />
 
             <div className="p-8">
-                {!course.published && (
+                {/* {!course.published && (
                     <span className="bg-slate-200 text-slate-700 rounded-full text-xs py-1 px-3 mb-2 inline-block">
                         Draft
                     </span>
-                )}
+                )} */}
 
                 <Heading as="h3">{course.title}</Heading>
                 <p className="text-[#fff1dc]">{course.description}</p>

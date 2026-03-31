@@ -87,4 +87,15 @@ export class AppConfigService {
       apiSecret: this.getValue(configKeys.LIVEKIT_API_SECRET),
     };
   }
+
+  public getSupabaseConfig() {
+    return {
+      endPoint: this.getValue(configKeys.SUPABASE_URL),
+      accessKey: this.getValue(configKeys.SUPABASE_KEY),
+      // secretKey: this.getValue(configKeys.MINIO_SECRET_KEY),
+      bucket: this.getValue(configKeys.SUPABASE_BUCKET),
+      url: this.getValue(configKeys.SUPABASE_URL),
+      folder: this.getValue(configKeys.SUPABASE_FOLDER),
+    };
+  }
 }

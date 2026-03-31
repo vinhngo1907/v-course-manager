@@ -52,16 +52,7 @@ export function FileUploader({
 		const file = event.target.files?.[0];
 		if (!file) return;
 
-		uploadFile(file)
-
-		// setUploading(true);
-		// try {
-		//     const { uploadFile } = await import('@/services/file');
-		//     const newUrl = await uploadFile(type, file, setProgress);
-		//     if (newUrl) setUrl(newUrl);
-		// } finally {
-		//     setUploading(false);
-		// }
+		uploadFile(file);
 	};
 
 	const getAcceptedFileType = () =>

@@ -26,12 +26,21 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 	if (!courseId || !lessonId) return;
 	// const [chapter, setChapter] = useState<Chapter & { muxData: MuxData | null } | null>(null);
 
+	// const [videos, setVideos] = useState<{ videoUrl: string; thumbnail: string }[]>(
+	// 	lesson.videos?.map((v) => ({
+	// 		videoUrl: v.videoUrl || "",
+	// 		thumbnail: v.thumbnail || ""
+	// 	}))
+	// )
+
 	const [videos, setVideos] = useState<{ videoUrl: string; thumbnail: string }[]>(
-		lesson.videos?.map((v) => ({
-			videoUrl: v.videoUrl || "",
-			thumbnail: v.thumbnail || ""
-		}))
-	)
+		lesson.videos?.length
+			? lesson.videos.map((v) => ({
+				videoUrl: v.videoUrl || "",
+				thumbnail: v.thumbnail || "",
+			}))
+			: [{ videoUrl: "", thumbnail: "" }] // ✅ fallback
+	);
 
 	const updateLesson = (data: Inputs) => {
 		return axios.put(`/video/lesson/${lessonId}`, data);
@@ -48,10 +57,20 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 		}
 	});
 
+	// const name = methods.watch("name");
+	// const description = methods.watch("description");
+	const firstVideo = videos?.[0];
+
+	// const requiredFields = [
+	// 	name,
+	// 	description,
+	// 	firstVideo?.videoUrl,
+	// ];
+
 	const requiredFields = [
 		lesson.name,
 		lesson.description,
-		lesson.video?.videoUrl,
+		firstVideo?.videoUrl,
 	];
 
 	const totalFields = requiredFields.length;
@@ -59,21 +78,23 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 	const completionText = `(${completedFields}/${totalFields})`;
 
 	/*
-		 The isComplete will be set to true if every requiredFields have truthy value
- */
+		The isComplete will be set to true if every requiredFields have truthy value
+	  */
 	const isComplete = requiredFields.every(Boolean);
 
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
-		const firstVideo = videos[0] || {};
+		// const firstVideo = videos[0] || {};
+		const firstVideo = videos?.[0]
 		const payload = {
-			name: data.name, // ✅ map name → title
+			name: data.name,
 			description: data.description,
-			videoUrl: firstVideo.videoUrl || "",
-			thumbnailUrl: firstVideo.thumbnail || "",
+			videoUrl: firstVideo?.videoUrl || "",
+			thumbnailUrl: firstVideo?.thumbnail || "",
 			courseId: courseId as string,
 			lessonId: lessonId as string,
 		};
 
+		console.log("PAYLOAD:", payload);
 		updateMutation.mutate(payload);
 	};
 
@@ -96,15 +117,13 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 					</Link>
 					<div className="flex items-center justify-between w-full">
 						<div className="flex flex-col gap-y-2">
-							{/* <Heading as="h1">
-                                Chapter Creation
-                            </Heading> */}
 							<span className="text-white text-sm text-slate-700">
 								Complete all fields {completionText}
 							</span>
 						</div>
 						<ChapterActions
-							disabled={!isComplete}
+							// disabled={!isComplete}
+							disabled={!isComplete && !lesson.published}
 							courseId={courseId}
 							lessonId={lessonId}
 							published={lesson.published}
@@ -134,7 +153,6 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 								videos.map((video, index) => (
 									<ChapterVideoForm
 										key={index}
-										// initialData={video}
 										initialData={{
 											videoUrl: video.videoUrl,
 											thumbnail: video.thumbnail,

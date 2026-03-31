@@ -11,7 +11,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 // import { FileUpload } from './file-upload.interface';
-import { FileUploadByS3 } from './strategies/s3';
+// import { FileUploadByS3 } from './strategies/s3';
+import { FileUploadBySupabase } from './strategies/supabase';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDTO } from './dto/file-upload.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
@@ -25,7 +26,10 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 @UseGuards(JwtAuthGuard)
 export class FileUploadController {
   // private fileUpload: FileUpload;
-  constructor(private readonly fileUpload: FileUploadByS3) {
+  constructor(
+    // private readonly fileUpload: FileUploadByS3,
+    private readonly fileUpload: FileUploadBySupabase,
+  ) {
     // this.fileUpload = new FileUploadByS3();
   }
   @Post()
@@ -34,7 +38,6 @@ export class FileUploadController {
     @UploadedFile() file: Express.Multer.File,
     @Body() fileUploadDTO: FileUploadDTO,
   ) {
-    // console.log('>>>>', fileUploadDTO);
     if (!file) throw new BadRequestException('File is required');
     if (!fileUploadDTO.type) throw new BadRequestException('Type is required');
 

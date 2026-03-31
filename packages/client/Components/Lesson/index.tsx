@@ -4,14 +4,7 @@ import TextAreaInput from './TextAreaInput';
 import SubmitInput from './SubmitInput';
 import { Lesson } from "@/types";
 import EditableField from "./EditableField";
-import Checkbox from "./Checkbox";
-// import { Banner } from "@/Components/Banner";
-// import Link from "next/link";
-// import { ArrowRightLeft, Eye, Video } from "lucide-react";
-// import { redirect } from "next/navigation";
-// import ChapterActions from "../_components/chapter-actions";
-// import { IconBadge } from "@/Components/Icon";
-// import Button from "@/Components/Layouts/Button";
+// import Checkbox from "./Checkbox";
 
 export type Inputs = {
     name: string;
@@ -28,7 +21,12 @@ type Props = {
 
 
 const LessonForm = ({ courseId, lesson, onSubmit, isLoading }: Props) => {
-    const methods = useForm<Inputs>({ defaultValues: { name: lesson?.name, description: lesson?.description } });
+    const methods = useForm<Inputs>({
+        defaultValues: {
+            name: lesson?.name,
+            description: lesson?.description,
+        }
+    });
     if (!courseId || !lesson) {
         return null;
     }
@@ -53,7 +51,7 @@ const LessonForm = ({ courseId, lesson, onSubmit, isLoading }: Props) => {
                 >
                     <TextInput
                         // label="Title"
-                        name="title"
+                        name="name"
                         options={{ required: true }}
                     />
                 </EditableField>

@@ -4,46 +4,46 @@ export default (): Partial<AppConfig> => ({
   env: (process.env.NODE_ENV as Environment) || Environment.Development,
   port: parseInt(process.env.PORT || '3001', 10),
   app: {
-    rssThreshold: parseInt(process.env.APP_RSS_THRESHOLD!, 10),
-    heapThreshold: parseInt(process.env.APP_HEAP_THRESHOLD!, 10),
-    diskThreshold: parseFloat(process.env.APP_DISK_THRESHOLD!),
+    rssThreshold: parseInt(process.env.APP_RSS_THRESHOLD ?? '', 10),
+    heapThreshold: parseInt(process.env.APP_HEAP_THRESHOLD ?? '', 10),
+    diskThreshold: parseFloat(process.env.APP_DISK_THRESHOLD ?? ''),
   },
   appVersion: process.env.APP_VERSION,
   viasrApi: {
-    key: process.env.VIASR_API_KEY!,
-    url: process.env.VIASR_API_URL!,
+    key: process.env.VIASR_API_KEY ?? '',
+    url: process.env.VIASR_API_URL ?? '',
   },
   supabase: {
-    url: process.env.SUPABASE_URL!,
-    anonKey: process.env.SUPABASE_ANON_KEY!,
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    url: process.env.SUPABASE_URL ?? '',
+    anonKey: process.env.SUPABASE_ANON_KEY ?? '',
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
   },
   branch: {
-    key: process.env.BRANCH_IO_KEY!,
-    secret: process.env.BRANCH_IO_SECRET!,
+    key: process.env.BRANCH_IO_KEY ?? '',
+    secret: process.env.BRANCH_IO_SECRET ?? '',
     webhookSecret: process.env.BRANCH_WEBHOOK_SECRET,
-    webAppUrl: process.env.BRANCH_IO_WEB_APP_URL!,
-    iosAppStoreUrl: process.env.BRANCH_IO_IOS_APP_STORE_URL!,
-    androidPlayStoreUrl: process.env.BRANCH_IO_ANDROID_PLAY_STORE_URL!,
+    webAppUrl: process.env.BRANCH_IO_WEB_APP_URL ?? '',
+    iosAppStoreUrl: process.env.BRANCH_IO_IOS_APP_STORE_URL ?? '',
+    androidPlayStoreUrl: process.env.BRANCH_IO_ANDROID_PLAY_STORE_URL ?? '',
   },
   revenueCat: {
-    projectId: process.env.REVENUECAT_PROJECT_ID!,
-    secretKey: process.env.REVENUECAT_SECRET_KEY!,
+    projectId: process.env.REVENUECAT_PROJECT_ID ?? '',
+    secretKey: process.env.REVENUECAT_SECRET_KEY ?? '',
     webhookSecret: process.env.REVENUECAT_WEBHOOK_SECRET,
   },
   rabbitmq: {
-    url: process.env.RABBITMQ_URL!,
+    url: process.env.RABBITMQ_URL ?? '',
     queueName: process.env.RABBITMQ_QUEUE_NAME || 'murror.main.queue',
     exchange: 'murror.main.direct',
     exchangeType: 'direct',
     consumerTag: 'murror.main.consumer',
     articles: {
-      inputQueue: process.env.RABBITMQ_ARTICLES_INPUT_QUEUE!,
+      inputQueue: process.env.RABBITMQ_ARTICLES_INPUT_QUEUE ?? '',
     },
   },
   oneSignal: {
-    appId: process.env.ONESIGNAL_APP_ID!,
-    restApiKey: process.env.ONESIGNAL_REST_API_KEY!,
+    appId: process.env.ONESIGNAL_APP_ID ?? '',
+    restApiKey: process.env.ONESIGNAL_REST_API_KEY ?? '',
   },
   monitoring: {
     excludedEndpoints: process.env.MONITORING_EXCLUDED_ENDPOINTS
@@ -63,7 +63,7 @@ export default (): Partial<AppConfig> => ({
     url: process.env.REDIS_URL!,
   },
   statsig: {
-    serverSecretKey: process.env.STATSIG_SERVER_SECRET_KEY!,
+    serverSecretKey: process.env.STATSIG_SERVER_SECRET_KEY ?? '',
     enabled: process.env.STATSIG_ENABLED !== 'false', // Default to true unless explicitly disabled
     // Optional: Override fallback defaults via environment variables
     // Format: STATSIG_FALLBACK_DEFAULTS={"article_push_notifications":true}

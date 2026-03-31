@@ -11,6 +11,7 @@ import { Pencil, PlusCircle, Video as Video } from "lucide-react";
 import { FileUploader } from "@/Components/FileUploader";
 import Button from "@/Components/Layouts/Button";
 import EditableField from "@/Components/Lesson/EditableField";
+import { FileUpload } from "@/Components/FileUpload";
 
 interface ChapterVideoFormProps {
 	// initialData: Chapter & { muxData?: MuxData | null } | null;
@@ -132,6 +133,10 @@ export const ChapterVideoForm = ({
 							title="Upload thumbnail"
 							name={`chapter-video-thumb-${lessonId}`}
 						/>
+						{/* <FileUpload
+							endpoint="serverImage"
+							onChange={(url) => setThumbnailUrl(url)}
+						/> */}
 					</EditableField>
 
 					<EditableField
@@ -155,13 +160,6 @@ export const ChapterVideoForm = ({
 							name={`chapter-video-file-${lessonId}`}
 						/>
 					</EditableField>
-
-					{/* <Button
-                        onClick={handleSave}
-                        className="bg-primary text-white hover:opacity-90 rounded-lg px-4 py-2"
-                    >
-                        {initialData ? "Update" : "Add"} Video
-                    </Button> */}
 					<div className="text-xs text-dark/60">
 						Upload this chapter&apos;s video and thumbnail
 					</div>

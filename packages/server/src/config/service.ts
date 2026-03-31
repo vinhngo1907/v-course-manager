@@ -7,7 +7,7 @@ export class AppConfigService {
   constructor(
     // private readonly env: { [k: string]: string | undefined },
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   private getValue(key: string, throwOnMissing = true): string {
     const value = this.configService.get(configKeys[key]);
@@ -86,5 +86,16 @@ export class AppConfigService {
       apiKey: this.getValue(configKeys.LIVEKIT_API_KEY),
       apiSecret: this.getValue(configKeys.LIVEKIT_API_SECRET),
     };
+  }
+
+  public getSupabaseConfig() {
+    return {
+      endPoint: this.getValue(configKeys.SUPABASE_URL),
+      accessKey: this.getValue(configKeys.SUPABASE_KEY),
+      // secretKey: this.getValue(configKeys.MINIO_SECRET_KEY),
+      bucket: this.getValue(configKeys.SUPABASE_BUCKET),
+      url: this.getValue(configKeys.SUPABASE_URL),
+      folder: this.getValue(configKeys.SUPABASE_FOLDER),
+    }
   }
 }

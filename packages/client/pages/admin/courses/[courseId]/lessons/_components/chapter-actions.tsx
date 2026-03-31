@@ -19,26 +19,32 @@ const ChapterActions = ({ disabled, courseId, lessonId, published }: ChapterActi
     const onClick = async () => {
         try {
             setIsLoading(true);
-            if (published) {
-                await axios.patch(`/courses/${courseId}/lessons/${lessonId}/unpublish`,
-                    {
-                        withCredentials: true,
-                        headers: AuthorizationHeader()
-                    });
-                toast.success("Chapter unpublished")
-            } else {
-                await axios.patch(`/courses/${courseId}/lessons/${lessonId}/publish`,
-                    {
-                        withCredentials: true,
-                        headers: AuthorizationHeader()
-                    }
-                )
-                toast.success("Chapter published")
-            }
-            router.refresh();
+            // if (published) {
+            //     await axios.patch(`/courses/${courseId}/lessons/${lessonId}/unpublish`,
+            //         {
+            //             withCredentials: true,
+            //             headers: AuthorizationHeader()
+            //         });
+            //     toast.success("Chapter published");
+            // } else {
+            //     await axios.patch(`/courses/${courseId}/lessons/${lessonId}/publish`,
+            //         {
+            //             withCredentials: true,
+            //             headers: AuthorizationHeader()
+            //         }
+            //     )
+            //     toast.success("Chapter published")
+            // }
+            await axios.patch(`/lessons/${lessonId}/status`, { published: !published },
+                {
+                    headers: AuthorizationHeader(),
+                    withCredentials: true
+                });
+            toast.success(published ? "Chapter published" : "Chapter unpublished")
+            router.refresh?.();
         } catch (error) {
             console.error(error);
-            toast("Something went wrong!!!")
+            toast("Something went wrong!!")
         } finally {
             setIsLoading(false);
         }

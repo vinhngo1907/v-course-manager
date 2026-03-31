@@ -4,6 +4,7 @@ import { AppConfigService } from 'src/config/service';
 import { MinioService } from './minio';
 import { LivekitService } from './livekit';
 import { MuxService } from './mux';
+import { SupabaseService } from './supabase';
 
 @Global()
 @Module({
@@ -14,7 +15,8 @@ import { MuxService } from './mux';
     MinioService,
     LivekitService,
     MuxService,
+    SupabaseService
   ],
-  exports: [AppConfigService, MuxService, MinioService],
+  exports: [AppConfigService, MuxService, MinioService, SupabaseService],
 })
 export class AppConfigModule {}

@@ -79,7 +79,9 @@ export class FileUploadBySupabase implements FileUpload {
 
   async getVideoByRange(startTime: string, endTime: any) {
     // ❌ Supabase does NOT support range streaming like S3
-    this.logger.warn('Range streaming is not supported in Supabase');
+    this.logger.warn(
+      'Range streaming is not supported in Supabase' + startTime + endTime,
+    );
     throw new Error('Range streaming is not supported in Supabase');
   }
 }

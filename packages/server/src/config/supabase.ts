@@ -30,9 +30,7 @@ export class SupabaseService {
   }
 
   async getPublicUrl(path: string) {
-    const { data } = this.client.storage
-      .from(this.bucket)
-      .getPublicUrl(path);
+    const { data } = this.client.storage.from(this.bucket).getPublicUrl(path);
 
     return data.publicUrl;
   }

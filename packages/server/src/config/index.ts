@@ -15,7 +15,7 @@ import { SupabaseService } from './supabase';
     MinioService,
     LivekitService,
     MuxService,
-    SupabaseService
+    SupabaseService,
   ],
   exports: [AppConfigService, MuxService, MinioService, SupabaseService],
 })

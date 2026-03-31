@@ -42,7 +42,7 @@ export class VideoService {
           thumbnail: video.thumbnail ?? '',
           vieoUrl: video.videoUrl,
           subtitles: [],
-          lessonId: video.lessonId!,
+          lessonId: video.lessonId ?? '',
           // ownerId: video.ownerId,
           duration: video.duration,
         })),

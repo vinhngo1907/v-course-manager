@@ -7,7 +7,11 @@ import { FileUploadBySupabase } from './strategies/supabase';
 
 @Module({
   controllers: [FileUploadController],
-  providers: [FileUploadByS3, MinioService, SupabaseService, FileUploadBySupabase
+  providers: [
+    FileUploadByS3,
+    MinioService,
+    SupabaseService,
+    FileUploadBySupabase,
     // {
     //   provide: 'FileUpload',
     //   useClass:

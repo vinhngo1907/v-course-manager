@@ -78,7 +78,7 @@ export default function AdminNewCoursePage() {
                     What would you like to name your course? Don&apos;t worry,
                     you can change this later
                 </p>
-                <CourseForm onSubmit={onSubmit} isLoading={mutation.isPending} />
+                <CourseForm onSubmit={onSubmit} isLoading={mutation.isPending} categories={[]}/>
             </div>
         </div>
     )

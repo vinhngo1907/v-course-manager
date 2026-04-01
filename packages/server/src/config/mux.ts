@@ -7,8 +7,8 @@ export class MuxService {
 
   constructor() {
     this.mux = new Mux({
-      tokenId: process.env.MUX_TOKEN_ID!,
-      tokenSecret: process.env.MUX_TOKEN_SECRET!,
+      tokenId: process.env.MUX_TOKEN_ID ?? '',
+      tokenSecret: process.env.MUX_TOKEN_SECRET ?? '',
     });
   }
 

@@ -19,22 +19,6 @@ const ChapterActions = ({ disabled, courseId, lessonId, published }: ChapterActi
     const onClick = async () => {
         try {
             setIsLoading(true);
-            // if (published) {
-            //     await axios.patch(`/courses/${courseId}/lessons/${lessonId}/unpublish`,
-            //         {
-            //             withCredentials: true,
-            //             headers: AuthorizationHeader()
-            //         });
-            //     toast.success("Chapter published");
-            // } else {
-            //     await axios.patch(`/courses/${courseId}/lessons/${lessonId}/publish`,
-            //         {
-            //             withCredentials: true,
-            //             headers: AuthorizationHeader()
-            //         }
-            //     )
-            //     toast.success("Chapter published")
-            // }
             await axios.patch(`/lessons/${lessonId}/status`, { published: !published },
                 {
                     headers: AuthorizationHeader(),

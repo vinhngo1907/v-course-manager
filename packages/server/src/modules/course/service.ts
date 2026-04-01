@@ -20,19 +20,15 @@ import { CourseUpdateDTO, CourseUpdatePublishDto } from './dto/update-course';
 import { CourseNotFoundException } from './exception';
 import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
-// import { LessonDTO } from '@modules/video/dto/video';
-// import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
 import { AddLessonInput } from './lesson.interface';
-import { VideoBadRequestException } from '@modules/video/exception';
 import { Prisma } from '@prisma/client';
-import { MinioService } from 'src/config/minio';
+// import { MinioService } from 'src/config/minio';
 
 @Injectable()
 export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
-    private readonly logger: Logger,
-    private readonly minioService: MinioService,
+    private readonly logger: Logger, // private readonly minioService: MinioService,
   ) {}
 
   async getCourses(
@@ -453,40 +449,40 @@ export class CourseService {
     return lesson;
   }
 
-  async updateChapterReorder(
-    courseId: string,
-    userId: string,
-    list: { id: string; position: number }[],
-  ) {
-    const courseOwner = await this.databaseService.course.findFirst({
-      where: { id: courseId, createdById: userId },
-    });
+  // async updateChapterReorder(
+  //   courseId: string,
+  //   userId: string,
+  //   list: { id: string; position: number }[],
+  // ) {
+  //   const courseOwner = await this.databaseService.course.findFirst({
+  //     where: { id: courseId, createdById: userId },
+  //   });
 
-    if (!courseOwner) {
-      throw new CourseNotFoundException(courseId);
-    }
+  //   if (!courseOwner) {
+  //     throw new CourseNotFoundException(courseId);
+  //   }
 
-    // 🔥 ensure videos belong to same lesson (optional but good)
-    const videoIds = list.map((i) => i.id);
+  //   // 🔥 ensure videos belong to same lesson (optional but good)
+  //   const videoIds = list.map((i) => i.id);
 
-    const videos = await this.databaseService.video.findMany({
-      where: { id: { in: videoIds } },
-    });
+  //   const videos = await this.databaseService.video.findMany({
+  //     where: { id: { in: videoIds } },
+  //   });
 
-    if (videos.length !== list.length) {
-      throw new VideoBadRequestException('Some videos not found');
-    }
+  //   if (videos.length !== list.length) {
+  //     throw new VideoBadRequestException('Some videos not found');
+  //   }
 
-    // ⚡ reorder
-    await this.databaseService.$transaction(
-      list.map((item) =>
-        this.databaseService.video.update({
-          where: { id: item.id },
-          data: { position: item.position },
-        }),
-      ),
-    );
+  //   // ⚡ reorder
+  //   await this.databaseService.$transaction(
+  //     list.map((item) =>
+  //       this.databaseService.video.update({
+  //         where: { id: item.id },
+  //         data: { position: item.position },
+  //       }),
+  //     ),
+  //   );
 
-    return { message: 'Success' };
-  }
+  //   return { message: 'Success' };
+  // }
 }

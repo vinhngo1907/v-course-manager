@@ -4,22 +4,22 @@ import {
   InternalServerErrorException,
   Logger,
   UnauthorizedException,
+  // UnauthorizedException,
 } from '@nestjs/common';
-import { LessonDTO, VideoDTO } from './dto/video';
+import { VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
 import { CourseService } from '@modules/course/service';
 import { VideoBadRequestException } from './exception';
-import { LessonUpdateDTO } from './dto/lesson';
-import { CourseNotFoundException } from '@modules/course/exception';
-import { MuxService } from 'src/config/mux';
+// import { LessonUpdateDTO } from './dto/lesson';
+// import { CourseNotFoundException } from '@modules/course/exception';
+// import { MuxService } from 'src/config/mux';
 
 @Injectable()
 export class VideoService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
-    private readonly courseService: CourseService,
-    private readonly muxService: MuxService,
+    private readonly courseService: CourseService, // private readonly muxService: MuxService,
   ) {}
 
   async findVideosByCourse(courseId: string): Promise<VideoDTO[]> {
@@ -82,17 +82,17 @@ export class VideoService {
     }
   }
 
-  async findOneWithVideo(lessonId: string): Promise<LessonDTO | null> {
-    try {
-      return await this.databaseService.lesson.findUnique({
-        where: { id: lessonId },
-        include: { videos: true },
-      });
-    } catch (error) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException(error);
-    }
-  }
+  // async findOneWithVideo(lessonId: string): Promise<LessonDTO | null> {
+  //   try {
+  //     return await this.databaseService.lesson.findUnique({
+  //       where: { id: lessonId },
+  //       include: { videos: true },
+  //     });
+  //   } catch (error) {
+  //     this.logger.error(error.message);
+  //     throw new InternalServerErrorException(error);
+  //   }
+  // }
 
   async createProgress(lessonId: string, userId: string) {
     return this.databaseService.userLessonProgress.create({
@@ -104,13 +104,16 @@ export class VideoService {
   }
 
   async getChapterByLesson(lessonId: string, userId: string) {
-    console.log({ userId });
-    return this.databaseService.video.findFirst({
-      where: {
-        lessonId,
-      },
+    if (!userId) throw new UnauthorizedException('Unauthorized');
+
+    return await this.databaseService.lesson.findUnique({
+      where: { id: lessonId },
       include: {
-        muxData: true,
+        videos: {
+          include: {
+            muxData: true,
+          },
+        },
       },
     });
   }
@@ -178,90 +181,90 @@ export class VideoService {
     }
   }
 
-  async updateLesson(data: LessonUpdateDTO, userId: string) {
-    const { courseId, lessonId, videoUrl, thumbnailUrl, ...values } = data;
-    if (!userId) {
-      throw new UnauthorizedException('Unauthorized');
-    }
+  // async updateLesson(data: LessonUpdateDTO, userId: string) {
+  //   const { courseId, lessonId, videoUrl, thumbnailUrl, ...values } = data;
+  //   if (!userId) {
+  //     throw new UnauthorizedException('Unauthorized');
+  //   }
 
-    const courseOwner = await this.databaseService.course.findFirst({
-      where: {
-        id: courseId,
-        createdById: userId,
-      },
-    });
-    if (!courseOwner)
-      throw new CourseNotFoundException(`Course ${courseId} does not exist`);
+  //   const courseOwner = await this.databaseService.course.findFirst({
+  //     where: {
+  //       id: courseId,
+  //       createdById: userId,
+  //     },
+  //   });
+  //   if (!courseOwner)
+  //     throw new CourseNotFoundException(`Course ${courseId} does not exist`);
 
-    const lesson = await this.databaseService.lesson.update({
-      where: {
-        id: lessonId,
-      },
-      data: {
-        ...values,
-      },
-      include: {
-        videos: { include: { muxData: true } },
-        usersCompleted: true,
-      },
-    });
+  //   const lesson = await this.databaseService.lesson.update({
+  //     where: {
+  //       id: lessonId,
+  //     },
+  //     data: {
+  //       ...values,
+  //     },
+  //     include: {
+  //       videos: { include: { muxData: true } },
+  //       usersCompleted: true,
+  //     },
+  //   });
 
-    if (videoUrl && thumbnailUrl) {
-      const chapter = await this.create(
-        {
-          title: values.name,
-          courseId,
-          videoUrl,
-          duration: 10,
-          thumbnailUrl,
-          position: 0,
-          lessonId: lesson.id,
-          ...data,
-        },
-        userId,
-      );
+  //   if (videoUrl && thumbnailUrl) {
+  //     const chapter = await this.create(
+  //       {
+  //         title: values.name,
+  //         courseId,
+  //         videoUrl,
+  //         duration: 10,
+  //         thumbnailUrl,
+  //         position: 0,
+  //         lessonId: lesson.id,
+  //         ...data,
+  //       },
+  //       userId,
+  //     );
 
-      /*  
-         Find if the chapter already have an uploaded video in the database
-         by checking if the id of the chapter (chapterId) matched a certain
-         muxData in the database. If so, delete the existingMuxData on MUX 
-         and in the database
-     */
-      const existingMuxData = await this.databaseService.muxData.findFirst({
-        where: {
-          videoId: chapter.id,
-        },
-      });
+  //     /*
+  //        Find if the chapter already have an uploaded video in the database
+  //        by checking if the id of the chapter (chapterId) matched a certain
+  //        muxData in the database. If so, delete the existingMuxData on MUX
+  //        and in the database
+  //    */
+  //     const existingMuxData = await this.databaseService.muxData.findFirst({
+  //       where: {
+  //         videoId: chapter.id,
+  //       },
+  //     });
 
-      if (existingMuxData) {
-        // await Video.Assets.del(existingMuxData.assetId);
-        await this.muxService.deleteAsset(existingMuxData.assetId);
-        await this.databaseService.muxData.delete({
-          where: {
-            id: existingMuxData.id,
-          },
-        });
-      }
+  //     if (existingMuxData) {
+  //       // await Video.Assets.del(existingMuxData.assetId);
+  //       await this.muxService.deleteAsset(existingMuxData.assetId);
+  //       await this.databaseService.muxData.delete({
+  //         where: {
+  //           id: existingMuxData.id,
+  //         },
+  //       });
+  //     }
 
-      /*  
-          Start to upload the videoUrl of the chapter (generated by the UploadThing)
-          into MUX
-      */
-      const asset = await this.muxService.createAssetFromUrl(videoUrl);
+  //     /*
+  //         Start to upload the videoUrl of the chapter (generated by the UploadThing)
+  //         into MUX
+  //     */
+  //     const asset = await this.muxService.createAssetFromUrl(videoUrl);
 
-      /*  
-          Once the upload of videoUrl of the chapter into MUX has finished proceed
-          in storing the muxData into the database
-      */
-      await this.databaseService.muxData.create({
-        data: {
-          videoId: chapter.id,
-          assetId: asset.id,
-          playbackId: asset.playback_ids?.[0]?.id,
-        },
-      });
-    }
+  //     /*
+  //         Once the upload of videoUrl of the chapter into MUX has finished proceed
+  //         in storing the muxData into the database
+  //     */
+  //     await this.databaseService.muxData.create({
+  //       data: {
+  //         videoId: chapter.id,
+  //         assetId: asset.id,
+  //         playbackId: asset.playback_ids?.[0]?.id,
+  //       },
+  //     });
+  //   }
 
-    return lesson;
-  }
+  //   return lesson;
+  // }
 }

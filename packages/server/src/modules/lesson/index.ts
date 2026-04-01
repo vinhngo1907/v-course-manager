@@ -4,6 +4,7 @@ import { LessonService } from './service';
 import { DatabaseService } from '@modules/database/service';
 import { VideoService } from '@modules/video/service';
 import { CourseService } from '@modules/course/service';
+import { MuxService } from 'src/config/mux';
 
 @Module({
   providers: [
@@ -12,6 +13,7 @@ import { CourseService } from '@modules/course/service';
     VideoService,
     CourseService,
     Logger,
+    MuxService,
   ],
   controllers: [LessonController],
   exports: [LessonService],

@@ -150,8 +150,6 @@ export class CourseController {
     @Body() dto: LessonCreationDTO,
   ) {
     const account = req.user;
-    console.log({ name: dto.name, courseId, accountId: account.id });
-    // return true;
     return await this.courseService.addLesson({
       ...dto,
       courseId,
@@ -217,7 +215,6 @@ export class CourseController {
     @Res() res: Response,
   ) {
     const account = req.user;
-    // console.log({ account })
     const course = await this.courseService.findCourseByUser({
       courseId: id,
       userId: account.id,

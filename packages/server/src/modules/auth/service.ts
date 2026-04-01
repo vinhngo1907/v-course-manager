@@ -2,7 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  UnauthorizedException,
+  // UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
 import { AccountConflictException } from '@modules/account/exception';
@@ -132,8 +132,7 @@ export class AuthService {
         signOptions: { expiresIn },
       } = this.appConfigService.getJwtConfig();
       const token = this.jwtService.sign(payload);
-
-      return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn};SameSite=Lax;`;
+      return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn}; SameSite=Lax;`;
     } catch (error) {
       // this.logger.error(error);
       console.log(error);
@@ -146,8 +145,7 @@ export class AuthService {
     return `Authentication=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax;`;
   }
 
-  async validateJwtUser({ userId, username }): Promise<any> {
-    if (!userId) throw new UnauthorizedException('Unauthorized');
+  async validateJwtUser({ username }): Promise<any> {
     try {
       // const user = await this.databaseService.user.findUnique({
       //     where: {

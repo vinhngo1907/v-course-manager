@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/service';
 import { AccountConflictException } from '@modules/account/exception';
@@ -146,6 +147,7 @@ export class AuthService {
   }
 
   async validateJwtUser({ userId, username }): Promise<any> {
+    if (!userId) throw new UnauthorizedException('Unauthorized');
     try {
       // const user = await this.databaseService.user.findUnique({
       //     where: {

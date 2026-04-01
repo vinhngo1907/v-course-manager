@@ -43,7 +43,7 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 	);
 
 	const updateLesson = (data: Inputs) => {
-		return axios.put(`/video/lesson/${lessonId}`, data);
+		return axios.put(`/lessons/${lessonId}`, data);
 	};
 
 	const updateMutation = useMutation({
@@ -94,7 +94,7 @@ const AdminLessonEditPage = ({ courseId, lesson }: AdminLessonEditPageProps) => 
 			lessonId: lessonId as string,
 		};
 
-		console.log("PAYLOAD:", payload);
+		// console.log("PAYLOAD:", payload);
 		updateMutation.mutate(payload);
 	};
 

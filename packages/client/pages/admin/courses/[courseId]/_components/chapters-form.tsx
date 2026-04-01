@@ -43,7 +43,7 @@ export const ChaptersForm = ({
 
   const onSubmit = async (data: Inputs) => {
     try {
-      console.log({courseId, data})
+      // console.log({courseId, data})
       await axios.post(`/courses/${courseId}/chapters`, {
         name: data.title
       });
@@ -66,7 +66,7 @@ export const ChaptersForm = ({
     try {
       setIsUpdating(true);
 
-      await axios.put(`/courses/${courseId}/chapters/reorder`, {
+      await axios.put(`/lessons/${courseId}/chapters/reorder`, {
         list: updateData,
       });
 

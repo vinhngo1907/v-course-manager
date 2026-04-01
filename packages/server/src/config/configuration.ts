@@ -60,7 +60,7 @@ export default (): Partial<AppConfig> => ({
     bucket: process.env.INFLUXDB_BUCKET || '',
   },
   redis: {
-    url: process.env.REDIS_URL!,
+    url: process.env.REDIS_URL ?? '',
   },
   statsig: {
     serverSecretKey: process.env.STATSIG_SERVER_SECRET_KEY ?? '',

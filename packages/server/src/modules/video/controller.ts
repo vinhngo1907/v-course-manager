@@ -5,12 +5,11 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { VideoService } from './service';
-import { LessonDTO, VideoDTO } from './dto/video';
+import { VideoDTO } from './dto/video';
 import { VideoCreationDTO } from './dto/create-video.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
@@ -20,64 +19,59 @@ import {
   ApiSuccessResponse,
 } from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
-import { CourseService } from '@modules/course/service';
-import { LessonResponseDTO, LessonUpdateDTO } from './dto/lesson';
 
 @Controller('video')
 export class VideoController {
-  constructor(
-    private readonly videoService: VideoService,
-    private readonly courseService: CourseService,
-  ) {}
+  constructor(private readonly videoService: VideoService) {}
 
   @Get('/:id')
   async getVideosByCourse(@Param('id') id: string): Promise<VideoDTO[]> {
     return await this.videoService.findVideosByCourse(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/lesson/:lessonId')
-  async getVideoByLesson(
-    @Param('lessonId') lessonId: string,
-  ): Promise<LessonDTO> {
-    return await this.videoService.findOneWithVideo(lessonId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/lesson/:lessonId')
+  // async getVideoByLesson(
+  //   @Param('lessonId') lessonId: string,
+  // ): Promise<LessonDTO> {
+  //   return await this.videoService.findOneWithVideo(lessonId);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Put('/lesson/:lessonId')
-  @ApiOperation({
-    summary: 'Complete creating video',
-    description:
-      'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
-  })
-  @ApiSuccessResponse(LessonResponseDTO, {
-    status: 200,
-    description: 'Creating video to complete updating lesson successfully',
-  })
-  @ApiErrorResponse({
-    status: 400,
-    description: 'Invalid request data - validation errors or invalid',
-  })
-  @ApiErrorResponse({
-    status: 401,
-    description: 'Unauthorized - valid authentication token required',
-  })
-  @ApiErrorResponse({
-    status: 404,
-    description: 'Lesson does not exist',
-  })
-  @ApiErrorResponse({
-    status: 500,
-    description: 'Internal server error during updating lesson',
-  })
-  async updateLesson(
-    @Param('lessonId') lessonId: string,
-    @Body() data: LessonUpdateDTO,
-    @Req() req: RequestWithAccount,
-  ): Promise<LessonDTO> {
-    const userId = req.user.id;
-    return await this.videoService.updateLesson({ lessonId, ...data }, userId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Put('/lesson/:lessonId')
+  // @ApiOperation({
+  //   summary: 'Complete creating video',
+  //   description:
+  //     'Completes the creating video process for the authenticated user by saving their profile information, goals, and preferences.',
+  // })
+  // @ApiSuccessResponse(LessonResponseDTO, {
+  //   status: 200,
+  //   description: 'Creating video to complete updating lesson successfully',
+  // })
+  // @ApiErrorResponse({
+  //   status: 400,
+  //   description: 'Invalid request data - validation errors or invalid',
+  // })
+  // @ApiErrorResponse({
+  //   status: 401,
+  //   description: 'Unauthorized - valid authentication token required',
+  // })
+  // @ApiErrorResponse({
+  //   status: 404,
+  //   description: 'Lesson does not exist',
+  // })
+  // @ApiErrorResponse({
+  //   status: 500,
+  //   description: 'Internal server error during updating lesson',
+  // })
+  // async updateLesson(
+  //   @Param('lessonId') lessonId: string,
+  //   @Body() data: LessonUpdateDTO,
+  //   @Req() req: RequestWithAccount,
+  // ): Promise<LessonDTO> {
+  //   const userId = req.user.id;
+  //   return await this.videoService.updateLesson({ lessonId, ...data }, userId);
+  // }
 
   @Get('/:id')
   async getOne(@Param('id') id: string) {
@@ -134,15 +128,15 @@ export class VideoController {
     return await this.videoService.createProgress(lessonId, userId);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/chapter/:lessonId/')
-  async getChapter(
-    @Param('lessonId') lessonId: string,
-    @Req() req: RequestWithAccount,
-  ) {
-    const userId = req.user.id;
-    return await this.videoService.getChapterByLesson(lessonId, userId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/chapter/:lessonId/')
+  // async getChapter(
+  //   @Param('lessonId') lessonId: string,
+  //   @Req() req: RequestWithAccount,
+  // ) {
+  //   const userId = req.user.id;
+  //   return await this.videoService.getChapterByLesson(lessonId, userId);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/lesson/:lessonId/progress')

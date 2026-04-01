@@ -38,7 +38,7 @@ export default function AdminEditLesson() {
 
         const fetchLesson = async () => {
             try {
-                const res = await axios.get(`/video/lesson/${lessonId}`);
+                const res = await axios.get(`/lessons/${lessonId}/chapters`);
                 console.log({Chapter: res.data })
                 setLesson(res.data);
             } catch (error) {
@@ -50,9 +50,9 @@ export default function AdminEditLesson() {
         fetchLesson();
     }, [lessonId, authLoading, isAuthenticated]);
 
-    const updateLesson = (data: Inputs) => {
-        return axios.put(`/video/lesson/${lessonId}`, data);
-    };
+    // const updateLesson = (data: Inputs) => {
+    //     return axios.put(`/video/lesson/${lessonId}`, data);
+    // };
 
     // const deleteLesson = () => {
     //     return axios.delete(`/video/lesson/${lessonId}`);

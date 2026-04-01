@@ -51,6 +51,7 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  // async login(@Req() req: RequestWithAccount, @Res() res: Response) {
   async login(@Req() req: RequestWithAccount, @Res() res: Response) {
     const { cookie, user } = await this.authService.login(req.user);
     res.setHeader('Set-cookie', cookie);
@@ -145,12 +146,6 @@ export class AuthController {
   @Get('profile')
   async getProfile(@Req() req: RequestWithAccount, @Res() res: Response) {
     const user = req.user;
-    // console.log("????",{user})
-    // const account = req.user;
-    // if (!user || !user.userId) {
-    //     throw new UnauthorizedException('Account not found or not authenticated.');
-    // }
-
     return res.send({ ...user, role: 'admin' });
   }
 }

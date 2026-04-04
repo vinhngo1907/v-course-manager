@@ -18,7 +18,6 @@ model Admin {
     userId String @unique
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
-
 model Mod {
     id     String @id @default(uuid())
     userId String @unique

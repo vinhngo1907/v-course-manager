@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   Post,
   Query,
   UploadedFile,
@@ -10,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-// import { FileUpload } from './file-upload.interface';
+import { FileUpload } from './file-upload.interface';
 // import { FileUploadByS3 } from './strategies/s3';
 import { FileUploadBySupabase } from './strategies/supabase';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,10 +29,10 @@ export class FileUploadController {
   // private fileUpload: FileUpload;
   constructor(
     // private readonly fileUpload: FileUploadByS3,
-    private readonly fileUpload: FileUploadBySupabase,
-  ) {
-    // this.fileUpload = new FileUploadByS3();
-  }
+    // private readonly fileUpload: FileUploadBySupabase,
+    @Inject('FileUpload')
+    private readonly fileUpload: FileUpload,
+  ) { }
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(

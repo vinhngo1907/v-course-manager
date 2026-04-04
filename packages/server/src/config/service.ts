@@ -98,4 +98,8 @@ export class AppConfigService {
       folder: this.getValue(configKeys.SUPABASE_FOLDER),
     };
   }
+  public getStorageType(): 's3' | 'supabase' {
+  return (this.getValue(configKeys.STORAGE_TYPE, false) ||
+    's3') as 's3' | 'supabase';
+}
 }

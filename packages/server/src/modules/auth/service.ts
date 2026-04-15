@@ -45,7 +45,7 @@ export class AuthService {
           fullName,
         },
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error);
       throw new InternalServerErrorException(`Error when logining: ${error}`);
     }
@@ -67,7 +67,7 @@ export class AuthService {
         };
       }
       return null;
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       return null;
     }

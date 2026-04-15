@@ -173,7 +173,7 @@ export class CourseService {
         total: courses.length,
         pageCount: Math.ceil(courses.length / limit),
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
@@ -281,7 +281,7 @@ export class CourseService {
           id: `${courseId}`,
         },
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error('[DELETE COURSE ERROR]', e);
       throw new InternalServerErrorException(e.message);
     }
@@ -305,7 +305,7 @@ export class CourseService {
         ...newCourse,
         authorId: newCourse.createdById,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }

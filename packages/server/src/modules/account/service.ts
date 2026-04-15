@@ -43,7 +43,7 @@ export class AccountsService {
       }
 
       return mapAccountToAccountDTO(account);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }

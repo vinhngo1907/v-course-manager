@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
+  // Delete,
   Get,
   Param,
   Post,
@@ -118,15 +118,15 @@ export class VideoController {
     return await this.videoService.create(createVideoDTO, account.id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('/lesson/:lessonId/progress')
-  async markLessonCompleted(
-    @Param('lessonId') lessonId: string,
-    @Req() req: RequestWithAccount,
-  ) {
-    const userId = req.user.id;
-    return await this.videoService.createProgress(lessonId, userId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('/lesson/:lessonId/progress')
+  // async markLessonCompleted(
+  //   @Param('lessonId') lessonId: string,
+  //   @Req() req: RequestWithAccount,
+  // ) {
+  //   const userId = req.user.id;
+  //   return await this.videoService.createProgress(lessonId, userId);
+  // }
 
   // @UseGuards(JwtAuthGuard)
   // @Get('/chapter/:lessonId/')
@@ -138,15 +138,15 @@ export class VideoController {
   //   return await this.videoService.getChapterByLesson(lessonId, userId);
   // }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete('/lesson/:lessonId/progress')
-  async unmarkLessonCompleted(
-    @Param('lessonId') lessonId: string,
-    @Req() req: RequestWithAccount,
-  ) {
-    const userId = req.user.id;
-    return await this.videoService.removeProgress(lessonId, userId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Delete('/lesson/:lessonId/progress')
+  // async unmarkLessonCompleted(
+  //   @Param('lessonId') lessonId: string,
+  //   @Req() req: RequestWithAccount,
+  // ) {
+  //   const userId = req.user.id;
+  //   return await this.videoService.removeProgress(lessonId, userId);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Get()

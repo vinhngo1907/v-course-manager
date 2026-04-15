@@ -62,7 +62,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
         try {
             const response = await axios.get(`${apiUrl}/auth/profile`);
-            console.log("Load User ",{ response })
+            console.log("Load User ",{ response: response.data })
             if (response.data) {
                 dispatch(setAuth({
                     isAuthenticated: true, user: response.data

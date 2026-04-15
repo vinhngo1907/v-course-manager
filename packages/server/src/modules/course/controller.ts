@@ -41,7 +41,7 @@ import { CourseResponseDto } from './dto/course-response.dto';
 import { ApiPaginatedResponse } from 'src/common/decorator/api-paginated-response.decorator';
 import { PaginatedResult } from 'src/common/interfaces/response.interface';
 import { LessonCreationDTO } from '@modules/video/dto/create-lesson.dto';
-import { ReorderChapterDto } from '@modules/video/dto/video';
+// import { ReorderChapterDto } from '@modules/video/dto/video';
 
 @Injectable()
 @ApiTags('Courses')
@@ -150,8 +150,6 @@ export class CourseController {
     @Body() dto: LessonCreationDTO,
   ) {
     const account = req.user;
-    console.log({ name: dto.name, courseId, accountId: account.id });
-    // return true;
     return await this.courseService.addLesson({
       ...dto,
       courseId,
@@ -217,7 +215,6 @@ export class CourseController {
     @Res() res: Response,
   ) {
     const account = req.user;
-    // console.log({ account })
     const course = await this.courseService.findCourseByUser({
       courseId: id,
       userId: account.id,
@@ -240,18 +237,18 @@ export class CourseController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Put(':courseId/chapters/reorder')
-  async updateReorder(
-    @Param('courseId') courseId: string,
-    @Req() req: RequestWithAccount,
-    @Body() body: ReorderChapterDto,
-  ) {
-    const accountId = req.user.id;
-    return await this.courseService.updateChapterReorder(
-      courseId,
-      accountId,
-      body.list,
-    );
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Put(':courseId/chapters/reorder')
+  // async updateReorder(
+  //   @Param('courseId') courseId: string,
+  //   @Req() req: RequestWithAccount,
+  //   @Body() body: ReorderChapterDto,
+  // ) {
+  //   const accountId = req.user.id;
+  //   return await this.courseService.updateChapterReorder(
+  //     courseId,
+  //     accountId,
+  //     body.list,
+  //   );
+  // }
 }

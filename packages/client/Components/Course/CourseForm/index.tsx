@@ -51,7 +51,7 @@ const CourseForm = ({ course, onSubmit, isLoading, categories }: Props) => {
     onSubmit(finalPayload);
   };
 
-  if (!course) return null;
+  // if (!course) return null;
 
   const categoryOptions = categories.map((category) => ({
     label: category.name,

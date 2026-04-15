@@ -73,13 +73,14 @@ export function CourseTable<TData, TValue>({
 
                 <Link href="/admin/courses">
                     {/* <button className="ml-4 inline-flex items-center rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"> */}
-                    <button className=" ml-4 inline-flex items-center
-        rounded-md
-        bg-[#ffb347]
-        px-4 py-2
-        text-sm font-medium
-        text-black
-        hover:opacity-90">
+                    <button className="ml-4 inline-flex items-center
+                        rounded-md
+                        bg-[#ffb347]
+                        px-4 py-2
+                        text-sm font-medium
+                        text-black
+                        hover:opacity-90"
+                    >
                         <PlusCircle className="mr-2 h-4 w-4" />
                         New course
                     </button>

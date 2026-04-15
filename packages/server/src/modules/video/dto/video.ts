@@ -1,3 +1,4 @@
+import { MuxData } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
 
@@ -11,6 +12,7 @@ export class VideoDTO {
   subtitles?: [];
   lessonId: string;
   // ownerId?: string;
+  muxData?: MuxData;
   duration: number;
 }
 
@@ -21,11 +23,6 @@ export class LessonDTO {
   videos: VideoDTO[];
   courseId: string;
 }
-
-// class ChapterReorderItemDto {
-//   id: string;
-//   position: number;
-// }
 
 export class ReorderChapterDto {
   @IsArray()

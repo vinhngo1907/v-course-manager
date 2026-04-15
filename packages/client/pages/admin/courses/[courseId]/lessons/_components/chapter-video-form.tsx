@@ -79,20 +79,21 @@ export const ChapterVideoForm = ({
 			{/* preview / player */}
 			{!isEditing && (
 				<>
-					{!videoUrl ? (
+					{
+					!videoUrl ? (
 						<div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
 							<Video className="h-10 w-10 text-slate-500" />
 						</div>
 					) : (
 						<div className="relative aspect-video mt-2">
-							{/* <MuxPlayer playbackId={initialData?.muxData?.playbackId || ""} /> */}
-							{initialData?.muxData?.playbackId ? (
+							<MuxPlayer playbackId={initialData?.muxData?.playbackId || ""} />
+							{/* {initialData?.muxData?.playbackId ? (
 								<MuxPlayer playbackId={initialData.muxData.playbackId} />
 							) : (
 								<div className="flex items-center justify-center h-full bg-slate-200 rounded-md">
 									Processing video...
 								</div>
-							)}
+							)} */}
 						</div>
 					)}
 					{videoUrl && (

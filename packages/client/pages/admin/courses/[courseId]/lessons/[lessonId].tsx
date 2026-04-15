@@ -5,7 +5,7 @@ import { ModalContext } from "@/context/ModalContext";
 import { axios } from "@/utils/axios";
 import type { Lesson, Video } from "@/types";
 // import LessonForm from "@/Components/Lesson";
-import LessonForm, { Inputs } from "@/Components/Lesson";
+// import LessonForm, { Inputs } from "@/Components/Lesson";
 // import MuxPlayer from "@mux/mux-player-react/lazy";
 // import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -38,7 +38,7 @@ export default function AdminEditLesson() {
 
         const fetchLesson = async () => {
             try {
-                const res = await axios.get(`/video/lesson/${lessonId}`);
+                const res = await axios.get(`/lessons/${lessonId}/chapters`);
                 console.log({Chapter: res.data })
                 setLesson(res.data);
             } catch (error) {
@@ -50,9 +50,9 @@ export default function AdminEditLesson() {
         fetchLesson();
     }, [lessonId, authLoading, isAuthenticated]);
 
-    const updateLesson = (data: Inputs) => {
-        return axios.put(`/video/lesson/${lessonId}`, data);
-    };
+    // const updateLesson = (data: Inputs) => {
+    //     return axios.put(`/video/lesson/${lessonId}`, data);
+    // };
 
     // const deleteLesson = () => {
     //     return axios.delete(`/video/lesson/${lessonId}`);

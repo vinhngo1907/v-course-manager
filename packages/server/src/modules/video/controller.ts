@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import {
   ApiSuccessResponse,
 } from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
+import { UpdateProgressDto, UserVideoProgressResponseDto } from './dto/progress.dto';
 
 @Controller('video')
 export class VideoController {
@@ -148,9 +150,33 @@ export class VideoController {
   //   return await this.videoService.removeProgress(lessonId, userId);
   // }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async getAll(): Promise<VideoDTO[]> {
-    return await this.videoService.findAll();
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // async getAll(): Promise<VideoDTO[]> {
+  //   return await this.videoService.findAll();
+  // }
+
+  @Put(':chapterId')
+  @ApiOperation({
+    summary: 'Update user progress for a chapter',
+    description:
+      'Mark a chapter as completed or not completed. Will create or update progress (upsert).',
+  })
+  @ApiSuccessResponse(UserVideoProgressResponseDto)
+  @ApiErrorResponse({
+    description: 'Unauthorized or internal error',
+  })
+  async put(
+    @Param('chapterId') chapterId: string,
+    @Req() req: RequestWithAccount,
+    @Body() body: UpdateProgressDto,
+  ) {
+    const userId = req.user.id;
+
+    return await this.videoService.upsertProgress({
+      userId,
+      chapterId,
+      isCompleted: body.isCompleted,
+    });
   }
 }

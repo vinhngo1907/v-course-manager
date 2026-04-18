@@ -267,4 +267,35 @@ export class VideoService {
 
   //   return lesson;
   // }
+
+  async upsertProgress({
+  userId,
+  chapterId,
+  isCompleted,
+}: {
+  userId: string;
+  chapterId: string;
+  isCompleted: boolean;
+}) {
+   if (!userId) {
+      throw new UnauthorizedException();
+    }
+    return await this.databaseService.userVideoProgress.upsert({
+      where: {
+        userId_videoId: {
+          userId,
+          videoId: chapterId,
+        },
+      },
+      update: {
+        isCompleted,
+      },
+      create: {
+        userId,
+        videoId: chapterId,
+        isCompleted,
+        duration: 0,
+      },
+    });
+  }
 }

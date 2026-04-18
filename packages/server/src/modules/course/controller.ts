@@ -88,6 +88,7 @@ export class CourseController {
     return await this.courseService.getCourses(req, authorId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/list')
   @ApiOperation({
     summary: 'Get list course',
@@ -112,7 +113,9 @@ export class CourseController {
   })
   async findAll(
     @Query() query: GetListCoursesQueryDto,
+    @Req() req: RequestWithAccount,
   ): Promise<PaginatedResult<CourseResponseDto>> {
+    // const account = req.user;
     return await this.courseService.listCourse(query);
   }
 
@@ -187,7 +190,7 @@ export class CourseController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getCourse(
+  async getCourseDetail(
     @Param('id') courseId: string,
     @Req() req: RequestWithAccount,
   ) {

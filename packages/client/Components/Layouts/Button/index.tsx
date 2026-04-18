@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 
-type Intent = "primary" | "secondary" | "danger" | "highlight";
+type Intent = "primary" | "secondary" | "danger" | "highlight" | "success";
 type Variant = "solid" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
@@ -54,6 +54,15 @@ const intentStyle: Record<Intent, Record<Variant, string>> = {
       "border border-[#2C2C2C] text-[#2C2C2C] hover:bg-[#FFF1DC] focus:ring-[#2C2C2C]",
     ghost:
       "text-[#2C2C2C] hover:bg-[#FFF1DC] focus:ring-[#2C2C2C]",
+  },
+
+  success: {
+    solid:
+      "bg-green-600 text-white hover:bg-green-700 focus:ring-green-600",
+    outline:
+      "border border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-600",
+    ghost:
+      "text-green-600 hover:bg-green-50 focus:ring-green-600",
   },
 };
 

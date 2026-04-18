@@ -36,19 +36,36 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
   async close() {
     await this.$disconnect();
   }
-
   async dropDatabase() {
     if (process.env.NODE_ENV === 'production') {
       throw new Error('Cannot drop database in production');
     }
 
-    const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
+    const modelKeys = Object.keys(this).filter(
+      (key) =>
+        !key.startsWith('$') && // remove prisma internals
+        typeof (this as any)[key]?.deleteMany === 'function'
+    );
+
     return Promise.all(
       modelKeys.map((modelName) =>
-        (this[camelCase(modelName)] as any).deleteMany(),
-      ),
+        (this as any)[modelName].deleteMany()
+      )
     );
   }
+
+  // async dropDatabase() {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     throw new Error('Cannot drop database in production');
+  //   }
+
+  //   const modelKeys = Prisma.dmmf.datamodel.models.map((m) => m.name);
+  //   return Promise.all(
+  //     modelKeys.map((modelName) =>
+  //       (this[camelCase(modelName)] as any).deleteMany(),
+  //     ),
+  //   );
+  // }
 
   // async seedDatabase() {
   //     if (process.env.NODE_ENV === 'production') {

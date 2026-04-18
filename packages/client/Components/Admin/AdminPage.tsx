@@ -31,7 +31,7 @@ export default function AdminPage() {
 
         loadCourses()
     }, [user]);
-    
+
 
     if (authLoading) {
         return (
@@ -65,15 +65,18 @@ export default function AdminPage() {
         <>
             {/* <h2>Your courses</h2> */}
 
-            {courses.length > 0 ? (
-                // <CourseGrid courses={courses} isAdmin isAuthenticated={isAuthenticated} />
-                <CourseTable columns={columns} data={courses} />
+            {/* {courses.length > 0 ? (
+                <CourseGrid courses={courses} isAdmin isAuthenticated={isAuthenticated} />
+                // <CourseTable columns={columns} data={courses} />
             ) : (
                 <div>
                     <h3 className="mt-2 text-gray-300">You don&apos;t have any courses yet.</h3>
                 </div>
-            )}
+            )} */}
 
+            <div className="p-6">
+                <CourseTable columns={columns} data={courses} />
+            </div>
             {/* <Link href="/admin/courses">
                 <Button className='mt-4 inline-block rounded bg-[#FFB347] px-4 py-2 text-white hover:bg-[#F5A028] cursor-pointer'>Create a course</Button>
             </Link> */}

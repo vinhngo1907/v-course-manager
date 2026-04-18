@@ -29,7 +29,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger, // private readonly minioService: MinioService,
-  ) {}
+  ) { }
 
   async getCourses(
     req: CrudRequest,
@@ -174,7 +174,7 @@ export class CourseService {
       throw new InternalServerErrorException(error);
     }
   }
-  async listCourse(query: GetListCoursesQueryDto) {
+  async listCourse(query: GetListCoursesQueryDto, userId?: string) {
     const { page = 1, limit = 10, title, categoryId } = query;
     const where: Prisma.CourseWhereInput = {};
     if (title) {
@@ -195,7 +195,21 @@ export class CourseService {
         take: limit,
         // orderBy: { createdAt: 'desc' },
         include: {
-          lessons: { include: { videos: true } },
+          // lessons: { include: { videos: true } },
+          lessons: {
+            include: {
+              videos: {
+                where: { published: true },
+                select: {
+                  id: true,
+                  userVideoProgresses: {
+                    where: { isCompleted: true },
+                    // select: {id: true}
+                  }
+                }
+              }
+            }
+          },
           createdBy: true,
         },
       }),
@@ -207,6 +221,10 @@ export class CourseService {
       thumbnailUrl: course.thumbnail,
     }));
 
+    // const mappedCourses: CourseResponseDto[] = courses.map((course) =>
+    //   this.mapToCourseDto(course, userId),
+    // );
+
     return {
       data: mappedCourses,
       meta: {
@@ -217,6 +235,7 @@ export class CourseService {
       },
     };
   }
+
   async registerCourse(dto: RegisterCourseDTO) {
     return await this.databaseService.courseRegistration.create({
       data: {
@@ -224,6 +243,40 @@ export class CourseService {
         courseId: dto.courseId,
       },
     });
+  }
+
+  private mapToCourseDto(
+    course: any,
+    userId: string,
+  ): CourseResponseDto {
+    let totalVideos = 0;
+    let completedVideos = 0;
+
+    course.lessons.forEach((lesson) => {
+      lesson.videos.forEach((video) => {
+        totalVideos++;
+        if (video.userVideoProgresses.length > 0) {
+          completedVideos++;
+        }
+      });
+    });
+
+    const progress =
+      totalVideos === 0
+        ? 0
+        : Math.round((completedVideos / totalVideos) * 100);
+
+    return {
+      id: course.id,
+      title: course.title,
+      description: course.description,
+      // thumbnail: course.thumbnail,
+      thumbnailUrl: course.thumbnail,
+      published: course.published,
+      progress,
+      totalVideos,
+      completedVideos,
+    };
   }
 
   async getUserRegistrations(userId: string) {
@@ -237,7 +290,15 @@ export class CourseService {
     const course = await this.databaseService.course.findFirst({
       where: { id: courseId },
       include: {
-        lessons: { include: { videos: true } },
+        lessons: {
+          orderBy: { position: 'asc' },
+          include: {
+            videos: {
+              orderBy: { position: 'asc' },
+              include: { userVideoProgresses: { where: { userId } } }
+            }
+          }
+        },
         createdBy: true,
       },
     });

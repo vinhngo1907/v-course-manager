@@ -12,10 +12,19 @@ export class CourseResponseDto {
   description: string;
 
   @ApiProperty()
-  thumbnail: string;
+  thumbnailUrl: string;
 
   @ApiProperty()
   published?: boolean;
+
+  @ApiProperty({ required: false })
+  progress?: number;
+
+  @ApiProperty({ required: false })
+  totalVideos?: number;
+
+  @ApiProperty({ required: false })
+  completedVideos?: number;
 
   // @ApiProperty()
   // createdAt: Date;

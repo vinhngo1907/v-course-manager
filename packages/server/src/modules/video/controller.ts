@@ -112,11 +112,6 @@ export class VideoController {
     @Req() req: RequestWithAccount,
   ): Promise<VideoCreationDTO> {
     const account = req.user;
-
-    // if (!account || !account.userId) {
-    //     throw new BadRequestException('Account not found or not authenticated.');
-    // }
-    // console.log({ account })
     return await this.videoService.create(createVideoDTO, account.id);
   }
 

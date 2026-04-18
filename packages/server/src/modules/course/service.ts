@@ -362,8 +362,8 @@ export class CourseService {
         ...newCourse,
         authorId: newCourse.createdById,
       };
-    } catch (error: any) {
-      this.logger.error(error.message);
+    } catch (error) {
+      console.error("[ADD_COURSE_ERROR]", error);
       throw new InternalServerErrorException(error);
     }
   }

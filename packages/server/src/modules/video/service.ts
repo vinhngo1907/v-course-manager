@@ -127,14 +127,14 @@ export class VideoService {
   //   });
   // }
 
-  async findAll(): Promise<VideoDTO[]> {
-    try {
-      return await this.databaseService.video.findMany();
-    } catch (error: any) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException(error);
-    }
-  }
+  // async findAll(): Promise<VideoDTO[]> {
+  //   try {
+  //     return await this.databaseService.video.findMany();
+  //   } catch (error: any) {
+  //     this.logger.error(error.message);
+  //     throw new InternalServerErrorException(error);
+  //   }
+  // }
 
   async create(createVideoDto: VideoCreationDTO, userId: string) {
     try {
@@ -269,15 +269,15 @@ export class VideoService {
   // }
 
   async upsertProgress({
-  userId,
-  chapterId,
-  isCompleted,
-}: {
-  userId: string;
-  chapterId: string;
-  isCompleted: boolean;
-}) {
-   if (!userId) {
+    userId,
+    chapterId,
+    isCompleted,
+  }: {
+    userId: string;
+    chapterId: string;
+    isCompleted: boolean;
+  }) {
+    if (!userId) {
       throw new UnauthorizedException();
     }
     return await this.databaseService.userVideoProgress.upsert({

@@ -20,7 +20,10 @@ import {
   ApiSuccessResponse,
 } from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
-import { UpdateProgressDto, UserVideoProgressResponseDto } from './dto/progress.dto';
+import {
+  UpdateProgressDto,
+  UserVideoProgressResponseDto,
+} from './dto/progress.dto';
 
 @Controller('video')
 export class VideoController {
@@ -112,11 +115,6 @@ export class VideoController {
     @Req() req: RequestWithAccount,
   ): Promise<VideoCreationDTO> {
     const account = req.user;
-
-    // if (!account || !account.userId) {
-    //     throw new BadRequestException('Account not found or not authenticated.');
-    // }
-    // console.log({ account })
     return await this.videoService.create(createVideoDTO, account.id);
   }
 

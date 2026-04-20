@@ -13,7 +13,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileUpload } from './file-upload.interface';
 // import { FileUploadByS3 } from './strategies/s3';
-import { FileUploadBySupabase } from './strategies/supabase';
+// import { FileUploadBySupabase } from './strategies/supabase';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDTO } from './dto/file-upload.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
@@ -32,7 +32,7 @@ export class FileUploadController {
     // private readonly fileUpload: FileUploadBySupabase,
     @Inject('FileUpload')
     private readonly fileUpload: FileUpload,
-  ) { }
+  ) {}
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(

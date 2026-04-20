@@ -13,9 +13,11 @@ export default function SidebarToggle() {
       <div className="hidden lg:flex w-full items-center justify-center pt-4 mb-4">
         <Button
           onClick={onExpand}
-          className="h-9 w-9 p-0 flex items-center justify-center cursor-pointer"
+          className="h-9 w-9 p-0 rounded-full"
+          size="sm"
+          variant="outline"
         >
-          <ArrowRightFromLine className="w-5 h-5 text-[#F5A028]" />
+          <ArrowRightFromLine className="w-5 h-5 text-[#F5A028] stroke-current fill-transparent" /> 
         </Button>
       </div>
     );
@@ -26,10 +28,14 @@ export default function SidebarToggle() {
       <p className="font-semibold text-[#FFB347]">For you</p>
 
       <Button
-        className="h-9 w-9 p-0 ml-auto flex items-center justify-center cursor-pointer"
+        // className="h-10 w-10 ml-auto rounded-full flex items-center justify-center"
+        className="ml-auto h-10 w-10"
         onClick={onCollapse}
+        intent="secondary"
+        variant="outline"
+        size="sm"
       >
-        <ArrowLeftFromLine className="w-5 h-5 text-[#F5A028]" />
+        <ArrowLeftFromLine className="w-100 h-5 text-[#F5A028]" />
       </Button>
     </div>
   );

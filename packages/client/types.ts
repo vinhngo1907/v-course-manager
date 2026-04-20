@@ -22,7 +22,7 @@ export type Lesson = {
     id: string;
     name: string;
     description: string;
-    video: Video;
+    videos: Video[];
     courseId: string
     published: boolean
 }
@@ -35,6 +35,7 @@ export type Video = {
     dislikes: number;
     viewsCount: number;
     // publicPlaybackId?: boolean
+    position: number;
     thumbnail: string
     videoUrl: string;
     duration: number;

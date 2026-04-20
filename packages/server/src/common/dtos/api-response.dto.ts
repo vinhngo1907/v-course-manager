@@ -2,6 +2,14 @@ import { Type } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 
 /**
+ * Status enum for API responses
+ */
+export enum ApiResponseStatus {
+  Success = 'success',
+  Error = 'error',
+}
+
+/**
  * Base metadata structure for all responses
  */
 export class ApiResponseMetaDto {
@@ -65,9 +73,10 @@ export class ApiResponseDto<T = any> {
   @ApiProperty({
     example: 'success',
     description: 'Response status',
-    enum: ['success', 'error'],
+    enum: ApiResponseStatus,
+    enumName: 'ApiResponseStatus',
   })
-  status: string;
+  status: ApiResponseStatus;
 
   @ApiProperty({
     example: 200,
@@ -99,9 +108,11 @@ export class ApiResponseDto<T = any> {
  */
 export class ApiSuccessResponseDto<T = any> extends ApiResponseDto<T> {
   @ApiProperty({
-    example: 'success',
+    example: ApiResponseStatus.Success,
+    enum: ApiResponseStatus,
+    enumName: 'ApiResponseStatus',
   })
-  status = 'success';
+  status = ApiResponseStatus.Success;
 }
 
 /**
@@ -110,8 +121,10 @@ export class ApiSuccessResponseDto<T = any> extends ApiResponseDto<T> {
 export class ApiErrorResponseDto extends ApiResponseDto<null> {
   @ApiProperty({
     example: 'error',
+    enum: ApiResponseStatus,
+    enumName: 'ApiResponseStatus',
   })
-  status = 'error';
+  status = ApiResponseStatus.Error;
 
   @ApiProperty({
     example: null,
@@ -129,9 +142,11 @@ export class ApiErrorResponseDto extends ApiResponseDto<null> {
  */
 export class ApiPaginatedResponseDto<T = any> extends ApiResponseDto<T[]> {
   @ApiProperty({
-    example: 'success',
+    example: ApiResponseStatus.Success,
+    enum: ApiResponseStatus,
+    enumName: 'ApiResponseStatus',
   })
-  status = 'success';
+  status = ApiResponseStatus.Success;
 
   @ApiProperty({
     isArray: true,
@@ -152,7 +167,7 @@ export class ApiPaginatedResponseDto<T = any> extends ApiResponseDto<T[]> {
  */
 export function createResponseSchema<T>(
   dataType: Type<T> | [Type<T>],
-  schemaOptions?: ApiPropertyOptions,
+  schemaOptions?: any,
 ) {
   class ResponseDto extends ApiSuccessResponseDto<T> {
     @ApiProperty({
@@ -185,7 +200,7 @@ export function createResponseSchema<T>(
  */
 export function createPaginatedResponseSchema<T>(
   itemType: Type<T>,
-  schemaOptions?: ApiPropertyOptions,
+  schemaOptions?: any,
 ) {
   class PaginatedResponseDto extends ApiPaginatedResponseDto<T> {
     @ApiProperty({

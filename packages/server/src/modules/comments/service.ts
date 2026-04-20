@@ -80,7 +80,7 @@ export class CommentsService {
         pageCount: Math.ceil(total / limit),
         limit,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
@@ -160,7 +160,7 @@ export class CommentsService {
       }
 
       return comment;
-    } catch (error) {
+    } catch (error: any) {
       console.log('Error: ', error);
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);

@@ -62,7 +62,7 @@ export class VideoService {
           id: videoId,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
@@ -76,7 +76,7 @@ export class VideoService {
         },
         include: { lesson: true },
       });
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
@@ -94,14 +94,14 @@ export class VideoService {
   //   }
   // }
 
-  async createProgress(lessonId: string, userId: string) {
-    return this.databaseService.userLessonProgress.create({
-      data: {
-        userId,
-        lessonId,
-      },
-    });
-  }
+  // async createProgress(lessonId: string, userId: string) {
+  //   return this.databaseService.userLessonProgress.create({
+  //     data: {
+  //       userId,
+  //       lessonId,
+  //     },
+  //   });
+  // }
 
   async getChapterByLesson(lessonId: string, userId: string) {
     if (!userId) throw new UnauthorizedException('Unauthorized');
@@ -118,23 +118,23 @@ export class VideoService {
     });
   }
 
-  async removeProgress(lessonId: string, userId: string) {
-    return this.databaseService.userLessonProgress.deleteMany({
-      where: {
-        lessonId,
-        userId,
-      },
-    });
-  }
+  // async removeProgress(lessonId: string, userId: string) {
+  //   return this.databaseService.userLessonProgress.deleteMany({
+  //     where: {
+  //       lessonId,
+  //       userId,
+  //     },
+  //   });
+  // }
 
-  async findAll(): Promise<VideoDTO[]> {
-    try {
-      return await this.databaseService.video.findMany();
-    } catch (error) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException(error);
-    }
-  }
+  // async findAll(): Promise<VideoDTO[]> {
+  //   try {
+  //     return await this.databaseService.video.findMany();
+  //   } catch (error: any) {
+  //     this.logger.error(error.message);
+  //     throw new InternalServerErrorException(error);
+  //   }
+  // }
 
   async create(createVideoDto: VideoCreationDTO, userId: string) {
     try {
@@ -267,4 +267,35 @@ export class VideoService {
 
   //   return lesson;
   // }
+
+  async upsertProgress({
+    userId,
+    chapterId,
+    isCompleted,
+  }: {
+    userId: string;
+    chapterId: string;
+    isCompleted: boolean;
+  }) {
+    if (!userId) {
+      throw new UnauthorizedException();
+    }
+    return await this.databaseService.userVideoProgress.upsert({
+      where: {
+        userId_videoId: {
+          userId,
+          videoId: chapterId,
+        },
+      },
+      update: {
+        isCompleted,
+      },
+      create: {
+        userId,
+        videoId: chapterId,
+        isCompleted,
+        duration: 0,
+      },
+    });
+  }
 }

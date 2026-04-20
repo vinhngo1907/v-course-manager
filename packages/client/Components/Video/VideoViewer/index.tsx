@@ -9,7 +9,6 @@ interface IProps {
 }
 
 const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
-    // console.log({urlVideo})
     const videoRef = useRef<any>(null);
     const [isSpeed, setIsSpeed] = useState(false);
     const [isVideoStarted, setIsVideoStarted] = useState(false);

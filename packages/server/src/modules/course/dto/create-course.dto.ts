@@ -14,6 +14,9 @@ export class CourseCreationDTO {
   // @ApiProperty()
   thumbnailUrl?: string;
 
+  @IsOptional()
+  categoryId?: string;
+
   @IsNotEmpty()
   authorId: string;
 }

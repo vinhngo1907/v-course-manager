@@ -22,6 +22,7 @@ export const CourseCard = ({
     progress,
     category,
 }: CourseCardProps) => {
+    console.log({progress})
     return (
         <Link href={`/courses/${id}`}>
             <div className="group transition overflow-hidden rounded-lg p-3 h-full 

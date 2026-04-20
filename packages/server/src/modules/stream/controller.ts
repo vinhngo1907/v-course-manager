@@ -8,16 +8,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiInternalServerErrorResponse,
+  // ApiInternalServerErrorResponse,
   ApiOperation,
   ApiTags,
-  ApiUnauthorizedResponse,
+  // ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { StreamService } from './service';
 import { CreateTokenDto } from './dto/create-token';
 import { LivekitService } from 'src/config/livekit';
 import RequestWithAccount from '@modules/auth/interfaces/RequestWithAccount';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt';
+import { ApiErrorResponse } from 'src/common/decorator/swagger-response.decorator';
 // import { CreateStreamDto } from './dto/create-stream';
 
 @Injectable()
@@ -43,11 +44,11 @@ export class StreamController {
   //     status: 400,
   //     description: 'Invalid request data - validation errors or invalid goal IDs',
   //   })
-  @ApiUnauthorizedResponse({
+  @ApiErrorResponse({
     status: 401,
     description: 'Unauthorized - valid authentication token required',
   })
-  @ApiInternalServerErrorResponse({
+  @ApiErrorResponse({
     status: 500,
     description: 'Internal server error during create stream token',
   })

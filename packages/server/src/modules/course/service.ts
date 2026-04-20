@@ -29,7 +29,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger, // private readonly minioService: MinioService,
-  ) { }
+  ) {}
 
   async getCourses(
     req: CrudRequest,
@@ -50,7 +50,7 @@ export class CourseService {
       const courses = await this.databaseService.course.findMany({
         where: {
           ...where,
-          // published: true
+          published: true,
         },
         include: {
           lessons: {
@@ -205,10 +205,10 @@ export class CourseService {
                   userVideoProgresses: {
                     where: { isCompleted: true },
                     // select: {id: true}
-                  }
-                }
-              }
-            }
+                  },
+                },
+              },
+            },
           },
           createdBy: true,
         },
@@ -245,10 +245,7 @@ export class CourseService {
     });
   }
 
-  private mapToCourseDto(
-    course: any,
-    userId: string,
-  ): CourseResponseDto {
+  private mapToCourseDto(course: any, userId: string): CourseResponseDto {
     let totalVideos = 0;
     let completedVideos = 0;
 
@@ -262,9 +259,7 @@ export class CourseService {
     });
 
     const progress =
-      totalVideos === 0
-        ? 0
-        : Math.round((completedVideos / totalVideos) * 100);
+      totalVideos === 0 ? 0 : Math.round((completedVideos / totalVideos) * 100);
 
     return {
       id: course.id,
@@ -295,9 +290,9 @@ export class CourseService {
           include: {
             videos: {
               orderBy: { position: 'asc' },
-              include: { userVideoProgresses: { where: { userId } } }
-            }
-          }
+              include: { userVideoProgresses: { where: { userId } } },
+            },
+          },
         },
         createdBy: true,
       },
@@ -354,6 +349,7 @@ export class CourseService {
           title: dto.title,
           description: dto.description,
           thumbnail: dto.thumbnailUrl,
+          categoryId: dto.categoryId,
           createdById: userId,
         },
       });
@@ -363,7 +359,7 @@ export class CourseService {
         authorId: newCourse.createdById,
       };
     } catch (error) {
-      console.error("[ADD_COURSE_ERROR]", error);
+      console.error('[ADD_COURSE_ERROR]', error);
       throw new InternalServerErrorException(error);
     }
   }

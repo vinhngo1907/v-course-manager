@@ -99,7 +99,8 @@ export class AppConfigService {
     };
   }
   public getStorageType(): 's3' | 'supabase' {
-  return (this.getValue(configKeys.STORAGE_TYPE, false) ||
-    's3') as 's3' | 'supabase';
-}
+    return (this.getValue(configKeys.STORAGE_TYPE, false) || 's3') as
+      | 's3'
+      | 'supabase';
+  }
 }

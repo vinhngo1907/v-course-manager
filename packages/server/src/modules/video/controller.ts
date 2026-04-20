@@ -20,7 +20,10 @@ import {
   ApiSuccessResponse,
 } from 'src/common/decorator/swagger-response.decorator';
 import { CourseResponseDto } from '@modules/course/dto/course-response.dto';
-import { UpdateProgressDto, UserVideoProgressResponseDto } from './dto/progress.dto';
+import {
+  UpdateProgressDto,
+  UserVideoProgressResponseDto,
+} from './dto/progress.dto';
 
 @Controller('video')
 export class VideoController {

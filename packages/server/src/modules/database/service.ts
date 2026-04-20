@@ -4,10 +4,10 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 // import * as fs from 'fs';
 // import * as path from 'path';
-import { camelCase } from 'lodash';
+// import { camelCase } from 'lodash';
 import { middlewares } from './middleware';
 
 @Injectable()
@@ -44,13 +44,11 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     const modelKeys = Object.keys(this).filter(
       (key) =>
         !key.startsWith('$') && // remove prisma internals
-        typeof (this as any)[key]?.deleteMany === 'function'
+        typeof (this as any)[key]?.deleteMany === 'function',
     );
 
     return Promise.all(
-      modelKeys.map((modelName) =>
-        (this as any)[modelName].deleteMany()
-      )
+      modelKeys.map((modelName) => (this as any)[modelName].deleteMany()),
     );
   }
 

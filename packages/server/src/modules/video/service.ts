@@ -269,15 +269,15 @@ export class VideoService {
   // }
 
   async upsertProgress({
-  userId,
-  chapterId,
-  isCompleted,
-}: {
-  userId: string;
-  chapterId: string;
-  isCompleted: boolean;
-}) {
-   if (!userId) {
+    userId,
+    chapterId,
+    isCompleted,
+  }: {
+    userId: string;
+    chapterId: string;
+    isCompleted: boolean;
+  }) {
+    if (!userId) {
       throw new UnauthorizedException();
     }
     return await this.databaseService.userVideoProgress.upsert({

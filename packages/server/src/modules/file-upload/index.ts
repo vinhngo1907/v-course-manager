@@ -32,8 +32,8 @@ import { AppConfigService } from 'src/config/service';
         return type === 'supabase' ? supabase : s3;
       },
       inject: [AppConfigService, FileUploadByS3, FileUploadBySupabase],
-    }
+    },
   ],
   exports: [FileUploadByS3, FileUploadBySupabase],
 })
-export class FileUploadModule { }
+export class FileUploadModule {}

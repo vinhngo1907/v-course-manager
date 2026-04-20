@@ -11,7 +11,6 @@ import { Pencil, PlusCircle, Video as Video } from "lucide-react";
 import { FileUploader } from "@/Components/FileUploader";
 import Button from "@/Components/Layouts/Button";
 import EditableField from "@/Components/Lesson/EditableField";
-import { FileUpload } from "@/Components/FileUpload";
 
 interface ChapterVideoFormProps {
 	// initialData: Chapter & { muxData?: MuxData | null } | null;

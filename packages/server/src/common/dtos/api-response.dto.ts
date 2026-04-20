@@ -167,7 +167,7 @@ export class ApiPaginatedResponseDto<T = any> extends ApiResponseDto<T[]> {
  */
 export function createResponseSchema<T>(
   dataType: Type<T> | [Type<T>],
-  schemaOptions?: any,
+  schemaOptions?: ApiPropertyOptions,
 ) {
   class ResponseDto extends ApiSuccessResponseDto<T> {
     @ApiProperty({
@@ -200,7 +200,7 @@ export function createResponseSchema<T>(
  */
 export function createPaginatedResponseSchema<T>(
   itemType: Type<T>,
-  schemaOptions?: any,
+  schemaOptions?: ApiPropertyOptions,
 ) {
   class PaginatedResponseDto extends ApiPaginatedResponseDto<T> {
     @ApiProperty({

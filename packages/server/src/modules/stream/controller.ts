@@ -8,10 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  // ApiInternalServerErrorResponse,
+  ApiInternalServerErrorResponse,
   ApiOperation,
   ApiTags,
-  // ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { StreamService } from './service';
 import { CreateTokenDto } from './dto/create-token';
@@ -44,11 +44,11 @@ export class StreamController {
   //     status: 400,
   //     description: 'Invalid request data - validation errors or invalid goal IDs',
   //   })
-  @ApiErrorResponse({
+  @ApiUnauthorizedResponse({
     status: 401,
     description: 'Unauthorized - valid authentication token required',
   })
-  @ApiErrorResponse({
+  @ApiInternalServerErrorResponse({
     status: 500,
     description: 'Internal server error during create stream token',
   })

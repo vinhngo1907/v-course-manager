@@ -67,7 +67,7 @@ export class AuthService {
         };
       }
       return null;
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       return null;
     }

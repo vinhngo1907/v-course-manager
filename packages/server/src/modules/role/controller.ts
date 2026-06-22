@@ -35,7 +35,7 @@ export class RoleController {
         message: 'success',
         data: results,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error('Error while fetching roles:', error.message);
       throw error; // Ensure errors are propagated correctly
     }
@@ -49,7 +49,7 @@ export class RoleController {
         message: 'success',
         data: result,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error('Error while fetching roles:', error.message);
       throw error; // Ensure errors are propagated correctly
     }
@@ -58,7 +58,7 @@ export class RoleController {
   async createRoles(@Body('roles') roles: string[]) {
     try {
       return await this.roleService.createRolesByRolesStrArr(roles);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error('Error while creating roles:', error.message);
       throw error; // Ensure errors are propagated correctly
     }
@@ -68,7 +68,7 @@ export class RoleController {
   async remove(@Param('id') id: string) {
     try {
       return await this.roleService.deleteRoleById(id);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error('Error while deleteing roles:', error.message);
       throw error;
     }
@@ -78,7 +78,7 @@ export class RoleController {
   async updateRole(@Param('id') id: string, @Body() roleData: RoleUpdateDTO) {
     try {
       return await this.roleService.updateRole(id, roleData);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error('Error while update role:', error.message);
       throw error;
     }

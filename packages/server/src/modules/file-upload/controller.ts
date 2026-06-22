@@ -32,7 +32,7 @@ export class FileUploadController {
     // private readonly fileUpload: FileUploadBySupabase,
     @Inject('FileUpload')
     private readonly fileUpload: FileUpload,
-  ) { }
+  ) {}
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(

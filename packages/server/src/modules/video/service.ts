@@ -62,7 +62,7 @@ export class VideoService {
           id: videoId,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
@@ -76,32 +76,32 @@ export class VideoService {
         },
         include: { lesson: true },
       });
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
   }
 
-  async findOneWithVideo(lessonId: string): Promise<LessonDTO | null> {
-    try {
-      return await this.databaseService.lesson.findUnique({
-        where: { id: lessonId },
-        include: { videos: true },
-      });
-    } catch (error) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException(error);
-    }
-  }
+  // async findOneWithVideo(lessonId: string): Promise<LessonDTO | null> {
+  //   try {
+  //     return await this.databaseService.lesson.findUnique({
+  //       where: { id: lessonId },
+  //       include: { videos: true },
+  //     });
+  //   } catch (error: any) {
+  //     this.logger.error(error.message);
+  //     throw new InternalServerErrorException(error);
+  //   }
+  // }
 
-  async createProgress(lessonId: string, userId: string) {
-    return this.databaseService.userLessonProgress.create({
-      data: {
-        userId,
-        lessonId,
-      },
-    });
-  }
+  // async createProgress(lessonId: string, userId: string) {
+  //   return this.databaseService.userLessonProgress.create({
+  //     data: {
+  //       userId,
+  //       lessonId,
+  //     },
+  //   });
+  // }
 
   async getChapterByLesson(lessonId: string, userId: string) {
     console.log({ userId });
@@ -115,19 +115,19 @@ export class VideoService {
     });
   }
 
-  async removeProgress(lessonId: string, userId: string) {
-    return this.databaseService.userLessonProgress.deleteMany({
-      where: {
-        lessonId,
-        userId,
-      },
-    });
-  }
+  // async removeProgress(lessonId: string, userId: string) {
+  //   return this.databaseService.userLessonProgress.deleteMany({
+  //     where: {
+  //       lessonId,
+  //       userId,
+  //     },
+  //   });
+  // }
 
   async findAll(): Promise<VideoDTO[]> {
     try {
       return await this.databaseService.video.findMany();
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }

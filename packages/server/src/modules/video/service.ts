@@ -88,7 +88,7 @@ export class VideoService {
   //       where: { id: lessonId },
   //       include: { videos: true },
   //     });
-  //   } catch (error) {
+  //   } catch (error: any) {
   //     this.logger.error(error.message);
   //     throw new InternalServerErrorException(error);
   //   }
@@ -127,14 +127,14 @@ export class VideoService {
   //   });
   // }
 
-  // async findAll(): Promise<VideoDTO[]> {
-  //   try {
-  //     return await this.databaseService.video.findMany();
-  //   } catch (error: any) {
-  //     this.logger.error(error.message);
-  //     throw new InternalServerErrorException(error);
-  //   }
-  // }
+  async findAll(): Promise<VideoDTO[]> {
+    try {
+      return await this.databaseService.video.findMany();
+    } catch (error: any) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException(error);
+    }
+  }
 
   async create(createVideoDto: VideoCreationDTO, userId: string) {
     try {

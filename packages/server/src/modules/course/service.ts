@@ -333,7 +333,7 @@ export class CourseService {
           id: `${courseId}`,
         },
       });
-    } catch (e: any) {
+    } catch (e: any & unknown) {
       console.error('[DELETE COURSE ERROR]', e);
       throw new InternalServerErrorException(e.message);
     }
@@ -358,8 +358,8 @@ export class CourseService {
         ...newCourse,
         authorId: newCourse.createdById,
       };
-    } catch (error) {
-      console.error('[ADD_COURSE_ERROR]', error);
+    } catch (error: any) {
+      this.logger.error(error.message);
       throw new InternalServerErrorException(error);
     }
   }

@@ -5,17 +5,25 @@ import VideoDuration from '../VideoDuration';
 
 const SpeedOptions = ['0.5', '1.0', '1.5'];
 interface IProps {
-    urlVideo: string
+    urlVideo: string;
+    onEnded?: () => void;
 }
 
-const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
+const VideoViewer: React.FC<IProps> = ({ urlVideo, onEnded }) => {
     const videoRef = useRef<any>(null);
     const [isSpeed, setIsSpeed] = useState(false);
     const [isVideoStarted, setIsVideoStarted] = useState(false);
     const [isVolumeMuted, setIsVolumeMuted] = useState(false);
     const [speed, setSpeed] = useState(SpeedOptions[1]);
-    const videoEnd = useCallback(() => setIsVideoStarted(false), []);
+    // const videoEnd = useCallback(() => setIsVideoStarted(false), []);
     const [progress, setProgress] = useState(0);
+
+    const handleVideoEnd = () => {
+      setIsVideoStarted(false);
+      if(onEnded) {
+        onEnded();
+      }
+    }
 
     const startVideo = () => {
         const video = videoRef.current;
@@ -69,11 +77,11 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
                     }
                     
                 }}
-                onEnded={videoEnd}
+                onEnded={handleVideoEnd}
             />
-            <div className={style.ProgressBar}>
+            {/* <div className={style.ProgressBar}>
                 <div className={style.ProgressFill} style={{ width: `${progress}%` }} />
-            </div>
+            </div> */}
             <div className={style.Control}>
                 <span onClick={startVideo}>
                     <img src={isVideoStarted ? STOP : START} alt="stop" />
@@ -90,7 +98,7 @@ const VideoViewer: React.FC<IProps> = ({ urlVideo }) => {
                         </ul>
                     )}
                 </span>
-                <VideoDuration videoRef={videoRef} endVideo={videoEnd} />
+                <VideoDuration videoRef={videoRef} endVideo={handleVideoEnd} />
                 <span className={style.Volume} onClick={toggleVolume}>
                     <img src={isVolumeMuted ? MUTED_VOLUME : VOLUME} />
                 </span>

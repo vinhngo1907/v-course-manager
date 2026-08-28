@@ -113,6 +113,9 @@
     position: relative;
     height: 420px;
     margin: auto;
+    overflow: hidden;
+    border-radius: 15px;
+    background-color: #000;
 }
 
 .VideoDetailWrapper .volume {
@@ -147,13 +150,16 @@
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     width: calc(100% - 100px);
-    background: rgba(255, 255, 255, 0.15);
-    -webkit-backdrop-filter: blur(120px);
-    backdrop-filter: blur(120px);
+    /* background: rgba(255, 255, 255, 0.15); */
+    background: rgba(20, 20, 20, 0.55);
+    /* -webkit-backdrop-filter: blur(120px); */
+    -webkit-backdrop-filter: blur(16px);
+    /* backdrop-filter: blur(120px); */
+    backdrop-filter: blur(16px);
     border-radius: 15px;
     padding: 8px 23px;
-    /* opacity: 0;
-    visibility: hidden; */
+    opacity: 0;
+    visibility: hidden;
     -webkit-transition: all 0.2s linear;
     -o-transition: all 0.2s linear;
     transition: all 0.2s linear;

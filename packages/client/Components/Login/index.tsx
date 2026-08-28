@@ -3,7 +3,7 @@ import FormItem from '@/Components/FormItem';
 import { useContext, useRef, useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { axios } from '@/utils/axios';
+// import { axios } from '@/utils/axios';
 import styles from './index.module.css';
 import { ModalTypeEnum } from '@/Components/Layouts';
 import { AuthContext } from '@/context/AuthContext';
@@ -42,8 +42,13 @@ export default function LoginModal({ toggleModal }: Props) {
 			await loginUser(data);
 			toggleModal(ModalTypeEnum.None);
 		} catch (error: any) {
-			console.log(error.message);
-			setErrorMessage('Failed to login, please try again!');
+			const errMsg = error.response?.data?.message;
+			// setErrorMessage('Failed to login, please try again!');
+			setErrorMessage(
+            typeof errMsg === 'string' 
+                ? errMsg 
+                : 'Failed to login, please try again!'
+        );
 		} finally {
 			setLoading(false);
 		}
@@ -67,7 +72,7 @@ export default function LoginModal({ toggleModal }: Props) {
 						Click here
 					</span>
 				</div>
-				{errorMessage && <span>{errorMessage}</span>}
+				{errorMessage && <span className="text-red-500 text-sm block">{errorMessage}</span>}
 				<FormItem
 					isFirstVisit={isFirstVisit}
 					labelName="Username"

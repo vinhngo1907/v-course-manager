@@ -181,6 +181,9 @@ import { CONTENT, COMMENT, AUTHOR, DISLIKE, LIKE } from '@/constants/icons';
 import { Course } from '@/types';
 import Button from '@/Components/Layouts/Button';
 import { Separator } from '@radix-ui/react-dropdown-menu';
+import toast from 'react-hot-toast';
+import { useConfettiStore } from '@/hooks/use-confetti-store';
+import { getNextVideo } from '@/actions/get-next-chapter';
 
 const TabTitle: any[] = [CONTENT, COMMENT, AUTHOR];
 
@@ -230,7 +233,7 @@ export default function CoursePage() {
             fetchCourse();
         }
     }, [id, isAuthenticated]);
-
+    const confetti = useConfettiStore();
     return (
         <Layout title={course ? course.title : "Course Detail"} isWide>
             {!course ? (
@@ -239,7 +242,35 @@ export default function CoursePage() {
                 <div className={style.coursePageWrap}>
                     <div className={style.courseLeft}>
                         {currentVideoUrl ? (
-                            <VideoViewer urlVideo={currentVideoUrl} />
+                            <VideoViewer 
+                              urlVideo={currentVideoUrl}
+                              onEnded={async () => {
+                                try {
+                                  if(!currentVideoId || !course) return;
+                                  // 1. update progress on backend
+                                  await axios.put(`/video/${currentVideoId}/progress`, {
+                                    isCompleted: true
+                                  });
+
+                                  // 2. Update local state
+                                  if(!completedVideoIds.includes(currentVideoId)) {
+                                    setCompletedVideoIds(prev => [...prev, currentVideoId]);
+                                  }
+                                  toast.success("Progress updated");
+                                  
+                                  // 3. Find next video
+                                  const nextVideo = getNextVideo(course.lessons, currentVideoId);
+                                  if(!nextVideo) {confetti.onOpen}
+                                  else {
+                                    setCurrentVideoId(nextVideo.videoUrl);
+                                    setCurrentVideoId(nextVideo.id);
+                                  }
+                                }catch(err: any) {
+                                  console.error(">>>>>>",err);
+                                  toast.error("Something went wrong");
+                                }
+                              }} 
+                            />
                         ) : (
                             <div className="relative">
                                 <img

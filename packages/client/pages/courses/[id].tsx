@@ -188,109 +188,109 @@ import { getNextVideo } from '@/actions/get-next-chapter';
 const TabTitle: any[] = [CONTENT, COMMENT, AUTHOR];
 
 export default function CoursePage() {
-    const router = useRouter();
-    const { id } = router.query;
+  const router = useRouter();
+  const { id } = router.query;
 
-    const { authState } = useContext(AuthContext)!;
-    const { isAuthenticated } = authState;
-    const { toggleModal } = useContext(ModalContext);
+  const { authState } = useContext(AuthContext)!;
+  const { isAuthenticated } = authState;
+  const { toggleModal } = useContext(ModalContext);
 
-    const [course, setCourse] = useState<Course | null>(null);
-    // Note: completedLessons here should ideally represent Video IDs based on your Prisma schema
-    const [completedVideoIds, setCompletedVideoIds] = useState<string[]>([]);
-    const [isCurrentTab, setIsCurrentTab] = useState(0);
-    const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
-    const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
-    const [isOpen, setIsOpen] = useState(true);
+  const [course, setCourse] = useState<Course | null>(null);
+  // Note: completedLessons here should ideally represent Video IDs based on your Prisma schema
+  const [completedVideoIds, setCompletedVideoIds] = useState<string[]>([]);
+  const [isCurrentTab, setIsCurrentTab] = useState(0);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+  const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
-    useEffect(() => {
-        if (!id) return;
+  useEffect(() => {
+    if (!id) return;
 
-        const fetchCourse = async () => {
-            try {
-                const res = await axios.get(`/courses/${id}`);
-                const fetchedCourse = res.data.course;
+    const fetchCourse = async () => {
+      try {
+        const res = await axios.get(`/courses/${id}`);
+        const fetchedCourse = res.data.course;
 
-                setCourse(fetchedCourse);
-                setCompletedVideoIds(res.data.completedVideoIds || []);
+        setCourse(fetchedCourse);
+        setCompletedVideoIds(res.data.completedVideoIds || []);
 
-                // ✅ UX: Auto-play the first video of the first lesson if nothing is selected
-                if (fetchedCourse.lessons?.length > 0) {
-                    const firstLesson = fetchedCourse.lessons[0];
-                    if (firstLesson.videos?.length > 0) {
-                        setCurrentVideoUrl(firstLesson.videos[0].videoUrl);
-                        setCurrentVideoId(firstLesson.videos[0].id);
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        if (!isAuthenticated) {
-            toggleModal('login');
-        } else {
-            fetchCourse();
+        // ✅ UX: Auto-play the first video of the first lesson if nothing is selected
+        if (fetchedCourse.lessons?.length > 0) {
+          const firstLesson = fetchedCourse.lessons[0];
+          if (firstLesson.videos?.length > 0) {
+            setCurrentVideoUrl(firstLesson.videos[0].videoUrl);
+            setCurrentVideoId(firstLesson.videos[0].id);
+          }
         }
-    }, [id, isAuthenticated]);
-    const confetti = useConfettiStore();
-    return (
-        <Layout title={course ? course.title : "Course Detail"} isWide>
-            {!course ? (
-                <Loading />
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (!isAuthenticated) {
+      toggleModal('login');
+    } else {
+      fetchCourse();
+    }
+  }, [id, isAuthenticated]);
+  const confetti = useConfettiStore();
+  return (
+    <Layout title={course ? course.title : "Course Detail"} isWide>
+      {!course ? (
+        <Loading />
+      ) : (
+        <div className={style.coursePageWrap}>
+          <div className={style.courseLeft}>
+            {currentVideoUrl ? (
+              <VideoViewer
+                urlVideo={currentVideoUrl}
+                onEnded={async () => {
+                  try {
+                    if (!currentVideoId || !course) return;
+                    // 1. update progress on backend
+                    await axios.put(`/video/${currentVideoId}/progress`, {
+                      isCompleted: true
+                    });
+
+                    // 2. Update local state
+                    if (!completedVideoIds.includes(currentVideoId)) {
+                      setCompletedVideoIds(prev => [...prev, currentVideoId]);
+                    }
+                    toast.success("Progress updated");
+
+                    // 3. Find next video
+                    const nextVideo = getNextVideo(course.lessons || [], currentVideoId);
+                    if (!nextVideo) { confetti.onOpen }
+                    else {
+                      setCurrentVideoId(nextVideo.videoUrl);
+                      setCurrentVideoId(nextVideo.id);
+                    }
+                  } catch (err: any) {
+                    console.error(err);
+                    toast.error("Something went wrong");
+                  }
+                }}
+              />
             ) : (
-                <div className={style.coursePageWrap}>
-                    <div className={style.courseLeft}>
-                        {currentVideoUrl ? (
-                            <VideoViewer 
-                              urlVideo={currentVideoUrl}
-                              onEnded={async () => {
-                                try {
-                                  if(!currentVideoId || !course) return;
-                                  // 1. update progress on backend
-                                  await axios.put(`/video/${currentVideoId}/progress`, {
-                                    isCompleted: true
-                                  });
+              <div className="relative">
+                <img
+                  src={course.thumbnail || ''}
+                  alt="Course thumbnail"
+                  className="w-full max-h-[400px] object-cover rounded shadow-lg"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                  <p className="text-white font-bold">Select a chapter to start learning</p>
+                </div>
+              </div>
+            )}
 
-                                  // 2. Update local state
-                                  if(!completedVideoIds.includes(currentVideoId)) {
-                                    setCompletedVideoIds(prev => [...prev, currentVideoId]);
-                                  }
-                                  toast.success("Progress updated");
-                                  
-                                  // 3. Find next video
-                                  const nextVideo = getNextVideo(course.lessons, currentVideoId);
-                                  if(!nextVideo) {confetti.onOpen}
-                                  else {
-                                    setCurrentVideoId(nextVideo.videoUrl);
-                                    setCurrentVideoId(nextVideo.id);
-                                  }
-                                }catch(err: any) {
-                                  console.error(">>>>>>",err);
-                                  toast.error("Something went wrong");
-                                }
-                              }} 
-                            />
-                        ) : (
-                            <div className="relative">
-                                <img
-                                    src={course.thumbnail || ''}
-                                    alt="Course thumbnail"
-                                    className="w-full max-h-[400px] object-cover rounded shadow-lg"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                    <p className="text-white font-bold">Select a chapter to start learning</p>
-                                </div>
-                            </div>
-                        )}
+            <div>
+              <div className="p-4 flex flex-col md:flex-row items-center justify-between">
+                <h2 className="text-2xl font-semibold mb-2">
+                  {course.title}
+                </h2>
 
-                        <div>
-                            <div className="p-4 flex flex-col md:flex-row items-center justify-between">
-                                <h2 className="text-2xl font-semibold mb-2">
-                                    {course.title}
-                                </h2>
-
-                                {/* {purchase ? (
+                {/* {purchase ? (
                                     <CourseProgressButton
                                         chapterId={params.chapterId}
                                         courseId={params.courseId}
@@ -303,9 +303,9 @@ export default function CoursePage() {
                                         price={course.price!}
                                     />
                                 )} */}
-                            </div>
-                            <Separator />
-                            {/* <div>
+              </div>
+              <Separator />
+              {/* <div>
                                 <Preview value={chapter.description!} />
                             </div>
                             {!!attachments.length && (
@@ -328,99 +328,99 @@ export default function CoursePage() {
                                     </div>
                                 </>
                             )} */}
-                        </div>
+            </div>
 
-                        {course && course.createdBy.id !== authState.user?.id && (
-                            <Button
-                                onClick={async () => {
-                                    try {
-                                        await axios.post(`/courses/registration`, {
-                                            userId: authState.user?.id,
-                                            courseId: course.id,
-                                        });
-                                        alert('Đăng ký thành công!');
-                                    } catch (err) {
-                                        console.error(err);
-                                        alert('Lỗi đăng ký.');
-                                    }
-                                }}
-                                className="mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded cursor-pointer font-medium"
-                            >
-                                Register for the course
-                            </Button>
-                        )}
-
-                        {currentVideoId && (
-                            <>
-                                <div className={style.courseActions}>
-                                    <span>
-                                        <img src={LIKE} alt="" /> 145
-                                    </span>
-                                    <span className="text-white">
-                                        <img src={DISLIKE} alt="" /> 6
-                                    </span>
-                                </div>
-                                <div
-                                    className={style.courseLanguage}
-                                    onClick={() => setIsOpen(!isOpen)}
-                                >
-                                    English
-                                    <span className={`${style.arrow} ${isOpen ? style.arrowOpen : ''}`} />
-                                </div>
-                                <CourseSubtitle isOpen={isOpen} />
-                            </>
-                        )}
-                    </div>
-
-                    <div className="tab">
-                        <ul className={style.tabTitle}>
-                            {TabTitle.map((title, index) => (
-                                <li
-                                    className={isCurrentTab === index ? style.tabTitleActive : ''}
-                                    key={`tab-${index}`}
-                                    onClick={() => setIsCurrentTab(index)}
-                                >
-                                    <img src={title} alt="tab" />
-                                </li>
-                            ))}
-                        </ul>
-
-                        <div className={style.tabBody}>
-                            {isCurrentTab === 0 && (
-                                <CourseLesson
-                                    lessons={course.lessons}
-                                    // Change prop name to onSelectVideo to be more accurate
-                                    onSelectVideo={(videoUrl: string, videoId: string) => {
-                                        setCurrentVideoUrl(videoUrl);
-                                        setCurrentVideoId(videoId);
-                                    }}
-                                    completedVideoIds={completedVideoIds}
-                                    currentVideoId={currentVideoId}
-                                />
-                            )}
-
-                            {isCurrentTab === 1 && (
-                                currentVideoId ? (
-                                    <CourseComment videoId={currentVideoId} />
-                                ) : (
-                                    <div className="w-full py-6 flex justify-center">
-                                        <p className="text-sm text-gray-400 italic">
-                                            📺 Please select a chapter to view comments.
-                                        </p>
-                                    </div>
-                                )
-                            )}
-
-                            {isCurrentTab === 2 && (
-                                <CourseAuthor author={{
-                                    ...course.createdBy,
-                                    bio: course.description
-                                }} />
-                            )}
-                        </div>
-                    </div>
-                </div>
+            {course && course.createdBy.id !== authState.user?.id && (
+              <Button
+                onClick={async () => {
+                  try {
+                    await axios.post(`/courses/registration`, {
+                      userId: authState.user?.id,
+                      courseId: course.id,
+                    });
+                    alert('Đăng ký thành công!');
+                  } catch (err) {
+                    console.error(err);
+                    alert('Lỗi đăng ký.');
+                  }
+                }}
+                className="mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded cursor-pointer font-medium"
+              >
+                Register for the course
+              </Button>
             )}
-        </Layout>
-    );
+
+            {currentVideoId && (
+              <>
+                <div className={style.courseActions}>
+                  <span>
+                    <img src={LIKE} alt="" /> 145
+                  </span>
+                  <span className="text-white">
+                    <img src={DISLIKE} alt="" /> 6
+                  </span>
+                </div>
+                <div
+                  className={style.courseLanguage}
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  English
+                  <span className={`${style.arrow} ${isOpen ? style.arrowOpen : ''}`} />
+                </div>
+                <CourseSubtitle isOpen={isOpen} />
+              </>
+            )}
+          </div>
+
+          <div className="tab">
+            <ul className={style.tabTitle}>
+              {TabTitle.map((title, index) => (
+                <li
+                  className={isCurrentTab === index ? style.tabTitleActive : ''}
+                  key={`tab-${index}`}
+                  onClick={() => setIsCurrentTab(index)}
+                >
+                  <img src={title} alt="tab" />
+                </li>
+              ))}
+            </ul>
+
+            <div className={style.tabBody}>
+              {isCurrentTab === 0 && (
+                <CourseLesson
+                  lessons={course.lessons || []}
+                  // Change prop name to onSelectVideo to be more accurate
+                  onSelectVideo={(videoUrl: string, videoId: string) => {
+                    setCurrentVideoUrl(videoUrl);
+                    setCurrentVideoId(videoId);
+                  }}
+                  completedVideoIds={completedVideoIds}
+                  currentVideoId={currentVideoId}
+                />
+              )}
+
+              {isCurrentTab === 1 && (
+                currentVideoId ? (
+                  <CourseComment videoId={currentVideoId} />
+                ) : (
+                  <div className="w-full py-6 flex justify-center">
+                    <p className="text-sm text-gray-400 italic">
+                      📺 Please select a chapter to view comments.
+                    </p>
+                  </div>
+                )
+              )}
+
+              {isCurrentTab === 2 && (
+                <CourseAuthor author={{
+                  ...course.createdBy,
+                  bio: course.description
+                }} />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </Layout>
+  );
 }

@@ -115,8 +115,8 @@ export class CourseController {
     @Query() query: GetListCoursesQueryDto,
     @Req() req: RequestWithAccount,
   ): Promise<PaginatedResult<CourseResponseDto>> {
-    // const account = req.user;
-    return await this.courseService.listCourse(query);
+    const userId = req.user?.id;
+    return await this.courseService.listCourse(query, userId);
   }
 
   // @UseGuards(JwtAuthGuard)

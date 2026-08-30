@@ -12,7 +12,7 @@ export type Course = {
     thumbnail: string;
     description: string;
     published: boolean;
-    lessons: Lesson[] | [];
+    lessons?: Lesson[] | [];
     categoryId?: string;
     createdBy: Profile
 }

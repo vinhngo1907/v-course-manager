@@ -166,7 +166,9 @@ model UserLessonProgress {
     isCompleted Boolean   @default(false)
     completedAt DateTime?
 
-    // @@id([userId, lessonId])
+    @@id([userId, lessonId])
+    @@index([userId])
+    @@index([lessonId])
     @@map("UserLessonProgress")
 }
 

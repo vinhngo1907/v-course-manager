@@ -8,11 +8,12 @@ import { TEST_VIDEO } from '@/constants/videos';
 type Props = {
     isAdmin: boolean;
     forcePublic?: boolean;
-    course: Course & {
-        lessons: (Lesson & {
-            video: Video | null;
-        })[];
-    },
+    // course: Course & {
+    //     lessons: (Lesson & {
+    //         video: Video | null;
+    //     })[];
+    // },
+    course: Course,
     isAuthenticated: boolean
 }
 
@@ -25,8 +26,7 @@ const CourseCard = ({ course, isAdmin, forcePublic, isAuthenticated }: Props) =>
             ? `/admin/courses/${course.id}`
             : `/courses/${course.id}`;
 
-
-    const fallbackThumbnail = course.lessons?.[0]?.video?.thumbnail;
+    const fallbackThumbnail = course.lessons?.[0]?.videos?.[0].thumbnail;
     const thumbnailUrl = course.thumbnail ?? fallbackThumbnail ?? `${TEST_VIDEO}`;
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

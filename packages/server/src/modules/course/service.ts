@@ -22,6 +22,7 @@ import { GetListCoursesQueryDto } from './dto/get-course-query.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { AddLessonInput } from './lesson.interface';
 import { Prisma } from '@prisma/client';
+import { AutUnauthorizedException } from '@modules/auth/exception';
 // import { MinioService } from 'src/config/minio';
 
 @Injectable()
@@ -29,7 +30,7 @@ export class CourseService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger, // private readonly minioService: MinioService,
-  ) {}
+  ) { }
 
   async getCourses(
     req: CrudRequest,
@@ -175,6 +176,8 @@ export class CourseService {
     }
   }
   async listCourse(query: GetListCoursesQueryDto, userId?: string) {
+    if (!userId) throw new AutUnauthorizedException("Unauthorizied", 'N/A', 'LOGIN');
+
     const { page = 1, limit = 10, title, categoryId } = query;
     const where: Prisma.CourseWhereInput = {};
     if (title) {
@@ -203,7 +206,10 @@ export class CourseService {
                 select: {
                   id: true,
                   userVideoProgresses: {
-                    where: { isCompleted: true },
+                    where: {
+                      isCompleted: true,
+                      ...(userId && { userId })
+                    },
                     // select: {id: true}
                   },
                 },
@@ -216,14 +222,94 @@ export class CourseService {
       this.databaseService.course.count({ where }),
     ]);
 
-    const mappedCourses: CourseResponseDto[] = courses.map((course) => ({
-      ...course,
-      thumbnailUrl: course.thumbnail,
-    }));
+    // const mappedCourses: CourseResponseDto[] = courses.map((course) => ({
+    //   ...course,
+    //   thumbnailUrl: course.thumbnail,
+    // }));
 
-    // const mappedCourses: CourseResponseDto[] = courses.map((course) =>
-    //   this.mapToCourseDto(course, userId),
-    // );
+    //     const mappedCourses = courses.map((course) => {
+    //       let totalVideos = 0;
+    //       let completedVideos = 0;
+
+    //       course.lessons.forEach((lesson) => {
+    //         lesson.videos.forEach((video) => {
+    //           totalVideos++;
+    //           // If userVideoProgresses has records, this video was completed by the user
+    //           if (video.userVideoProgresses && video.userVideoProgresses.length > 0) {
+    //             completedVideos++;
+    //           }
+    //         });
+    //       });
+    //       // Calculate progress percentage (0 to 100)
+    //       const progress = totalVideos > 0 
+    //         ? Math.round((completedVideos / totalVideos) * 100) 
+    //         : 0;
+    // console.log({progress})
+    //       return {
+    //         ...course,
+    //         thumbnailUrl: course.thumbnail,
+    //         progress,          // e.g., 75 (%)
+    //         totalVideos,       // Total published videos
+    //         completedVideos,   // Videos finished by this user
+    //       };
+    //     });
+
+    const mappedCourses = courses.map((course) => {
+      const totalLessons = course.lessons.length;
+      let totalCourseProgressSum = 0;
+
+      let totalVideosInCourse = 0;
+      let completedVideosInCourse = 0;
+
+      const mappedLessons = course.lessons.map((lesson) => {
+        const totalVideosInLesson = lesson.videos.length;
+        let completedVideosInLesson = 0;
+
+        const mappedVideos = lesson.videos.map((video) => {
+          totalVideosInCourse++;
+          const isCompleted = video.userVideoProgresses && video.userVideoProgresses.length > 0;
+
+          if (isCompleted) {
+            completedVideosInLesson++;
+            completedVideosInCourse++;
+          }
+
+          return {
+            ...video,
+            isCompleted,
+          };
+        });
+
+        // 1. Calculate progress for THIS lesson based on its videos
+        const lessonProgress = totalVideosInLesson > 0
+          ? Math.round((completedVideosInLesson / totalVideosInLesson) * 100)
+          : 0;
+
+        // Accumulate for course progress
+        totalCourseProgressSum += lessonProgress;
+
+        return {
+          ...lesson,
+          videos: mappedVideos,
+          progress: lessonProgress, // Lesson progress percentage
+          isCompleted: totalVideosInLesson > 0 && completedVideosInLesson === totalVideosInLesson,
+        };
+      });
+
+      // 2. Calculate overall course progress based on its lessons
+      const courseProgress = totalLessons > 0
+        ? Math.round(totalCourseProgressSum / totalLessons)
+        : 0;
+
+      return {
+        ...course,
+        lessons: mappedLessons,
+        thumbnailUrl: course.thumbnail,
+        progress: courseProgress,         // Course progress % (derived from lessons)
+        totalVideos: totalVideosInCourse,
+        completedVideos: completedVideosInCourse,
+      };
+    });
 
     return {
       data: mappedCourses,

@@ -62,17 +62,16 @@ Content-Type: application/json
 POST {{serverUrl}}/auth/login
 Content-Type: application/json
 
-{
-    "username": "admin",
-    "password": "test"
-}
-
 # {
-#    "email": "vinhngotrung1999@gmail.com",
-#    "username":"kookuu",
-#    "fullName": "Imma Kuu Koo",
-#    "password": "123456"
+#     "username": "admin",
+#     "password": "test"
 # }
+
+#    "email": "vinhngotrung1999@gmail.com",
+{
+   "username":"vinnyngo",
+   "password": "123456"
+}
 
 # {
 #    "email": "vinhngotrung1999@gmail.com",

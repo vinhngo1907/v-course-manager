@@ -5,31 +5,31 @@ import CourseCard from '../CourseCard';
 import { AuthContext } from '@/context/AuthContext';
 
 interface Props {
-    courses: Course[];
+  courses: Course[];
 }
 
 const CourseList: React.FC<Props> = ({ courses }) => {
-    const { authState: { user, isAuthenticated } } = useContext(AuthContext)!
-    const [isAdmin, setIsAdmin] = useState(false);
+  const { authState: { user, isAuthenticated } } = useContext(AuthContext)!
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    useEffect(() => {
-        if (user && user.role.toLowerCase() === "admin") {
-            setIsAdmin(true)
-        }
-    }, [user, setIsAdmin])
-
-    if (!courses || courses.length === 0) {
-        return <p className="text-gray-500">No courses found.</p>;
+  useEffect(() => {
+    if (user && user.role.toLowerCase() === "admin") {
+      setIsAdmin(true)
     }
+  }, [user, setIsAdmin])
 
-    return (
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${styles.courseList}`}>
-            {courses.map((course) => (
+  if (!courses || courses.length === 0) {
+    return <p className="text-gray-500">No courses found.</p>;
+  }
 
-                <CourseCard key={course.id} course={course} isAdmin={isAdmin} forcePublic isAuthenticated={isAuthenticated}/>
-            ))}
-        </div>
-    );
+  return (
+    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${styles.courseList}`}>
+      {courses.map((course) => (
+
+        <CourseCard key={course.id} course={course} isAdmin={isAdmin} forcePublic isAuthenticated={isAuthenticated} />
+      ))}
+    </div>
+  );
 };
 
 export default CourseList;

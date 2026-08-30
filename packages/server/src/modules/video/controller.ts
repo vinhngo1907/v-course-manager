@@ -154,7 +154,8 @@ export class VideoController {
   //   return await this.videoService.findAll();
   // }
 
-  @Put(':chapterId')
+  @UseGuards(JwtAuthGuard)
+  @Put(':chapterId/progress')
   @ApiOperation({
     summary: 'Update user progress for a chapter',
     description:
@@ -169,7 +170,7 @@ export class VideoController {
     @Req() req: RequestWithAccount,
     @Body() body: UpdateProgressDto,
   ) {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     return await this.videoService.upsertProgress({
       userId,

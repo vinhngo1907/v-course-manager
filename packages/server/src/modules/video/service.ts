@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   UnauthorizedException,
   // UnauthorizedException,
 } from '@nestjs/common';
@@ -20,7 +21,7 @@ export class VideoService {
     private readonly databaseService: DatabaseService,
     private readonly logger: Logger,
     private readonly courseService: CourseService, // private readonly muxService: MuxService,
-  ) {}
+  ) { }
 
   async findVideosByCourse(courseId: string): Promise<VideoDTO[]> {
     try {
@@ -106,16 +107,38 @@ export class VideoService {
   async getChapterByLesson(lessonId: string, userId: string) {
     if (!userId) throw new UnauthorizedException('Unauthorized');
 
-    return await this.databaseService.lesson.findUnique({
-      where: { id: lessonId },
+    const lesson = await this.databaseService.lesson.findUnique({
+      where: {
+        id: lessonId
+      },
       include: {
         videos: {
+          orderBy: { position: 'asc' },
           include: {
-            muxData: true,
-          },
-        },
-      },
+            muxData: true
+          }
+        }
+      }
     });
+    if (!lesson) {
+      throw new NotFoundException('Lesson does not exist');
+    }
+
+    const videoIds = lesson.videos.map(video => video.id);
+    const userVideoProgress = await this.databaseService.userVideoProgress.findMany({
+      where: {
+        userId: userId,
+        videoId: { in: videoIds }
+      }
+    });
+
+    return {
+      ...lesson,
+      videos: lesson.videos.map(video => ({
+        ...video,
+        isCompleted: userVideoProgress.some(progress => progress.videoId === video.id && progress.isCompleted),
+      }))
+    };
   }
 
   // async removeProgress(lessonId: string, userId: string) {
@@ -280,7 +303,7 @@ export class VideoService {
     if (!userId) {
       throw new UnauthorizedException();
     }
-    return await this.databaseService.userVideoProgress.upsert({
+    const videoProgress = await this.databaseService.userVideoProgress.upsert({
       where: {
         userId_videoId: {
           userId,
@@ -289,6 +312,7 @@ export class VideoService {
       },
       update: {
         isCompleted,
+        completedAt: isCompleted ? new Date() : null,
       },
       create: {
         userId,
@@ -297,5 +321,61 @@ export class VideoService {
         duration: 0,
       },
     });
+
+    // const video = await this.databaseService.video.findUnique({
+    //   where: { id: chapterId },
+    //   include: {
+    //     lesson: {
+    //       include: {
+    //         videos: {
+    //           where: { published: true },
+    //           select: { id: true }
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
+
+    // if (video && video.lesson) {
+    //   const lesson = video.lesson;
+    //   const lessonId = lesson.id;
+    //   const totalVideosInLesson = lesson.videos.length;
+
+    //   // 3. Fetch all completed video progresses for this user in this lesson
+    //   const videoIdsInLesson = lesson.videos.map((v) => v.id);
+    //   const completedVideosCount = await this.databaseService.userVideoProgress.count({
+    //     where: {
+    //       userId,
+    //       videoId: { in: videoIdsInLesson },
+    //       isCompleted: true,
+    //     },
+    //   });
+
+    //   // 4. Determine if the entire lesson is now complete
+    //   const isLessonCompleted = totalVideosInLesson > 0 && completedVideosCount === totalVideosInLesson;
+    //   await this.databaseService.userLessonProgress.upsert({
+    //     where: {
+    //       // Assuming your unique compound key or relation uses userId and lessonId
+    //       // Adjust based on your actual Prisma schema for UserLessonProgress
+    //       user: {
+    //         userId,
+    //         lessonId,
+    //       },
+    //     },
+    //     update: {
+    //       isCompleted: isLessonCompleted,
+    //       completedAt: isLessonCompleted ? new Date() : null,
+    //     },
+    //     create: {
+    //       userId,
+    //       lessonId,
+    //       isCompleted: isLessonCompleted,
+    //       completedAt: isLessonCompleted ? new Date() : null,
+    //     },
+    //   });
+
+    // }
+
+    return videoProgress;
   }
 }
